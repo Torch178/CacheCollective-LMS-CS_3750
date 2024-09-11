@@ -1,0 +1,9 @@
+﻿@page "{id:int?}"
+@model RazorPagesMovie.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>
+    Welcome @Html.DisplayFor(model => model.User.FirstName) @Html.DisplayFor(model => model.User.LastName)!
+</h1>

@@ -4,6 +4,51 @@
     ViewData["Title"] = "Users";
 }
 
-<h1>
-    Welcome @Html.DisplayFor(model => model.User.FirstName) @Html.DisplayFor(model => model.User.LastName)!
-</h1>
+@if(!User.Identity.IsAuthenticated) 
+{
+    <h1>
+    @Html.DisplayFor(model => model.User.FirstName) @Html.DisplayFor(model => model.User.LastName)
+    </h1>
+    //container start
+    <div class="container">
+        <!-- row start -->
+        <div class="row justify-content-center">
+            <div class="card course" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">CS 3750 - Fall 2024</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Section: 123456</h6>
+                    <p class="card-text">MW Online 9:30 AM - 11:30 AM</p>
+                </div>
+            </div>
+            <div class="card course" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">CS 3750 - Fall 2024</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Section: 123456</h6>
+                    <p class="card-text">MW Online 9:30 AM - 11:30 AM</p>
+                </div>
+            </div>
+        </div>
+        <!-- row end -->
+        <!-- row start -->
+        <div class="row justify-content-center">
+            <div class="card course" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">CS 3750 - Fall 2024</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Section: 123456</h6>
+                <p class="card-text">MW Online 9:30 AM - 11:30 AM</p>
+            </div>
+        </div>
+            <div class="card course" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">CS 3750 - Fall 2024</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Section: 123456</h6>
+                <p class="card-text">MW Online 9:30 AM - 11:30 AM</p>
+            </div>
+        </div>
+            
+        </div>
+        <!-- row end -->
+        </div>
+    //container end
+
+}

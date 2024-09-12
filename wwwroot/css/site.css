@@ -20,3 +20,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.card {
+    margin: 2rem;
+}
+
+.card.course {
+    border: solid medium Black;
+    background-image: linear-gradient(to bottom, lightblue 50%, mediumpurple );
+}

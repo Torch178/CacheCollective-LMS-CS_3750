@@ -75,10 +75,6 @@ namespace RazorPagesMovie.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<bool?>("IsInstructor")
-                        .IsRequired()
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(30)

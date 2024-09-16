@@ -3,26 +3,60 @@
 @{
 }
 
-<h1> Login </h1>
-<hr />
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .login-container {
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align items at the start of the container */
+            padding-top: 10%; /* Adjust this percentage to move the form higher or lower */
+        }
 
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div class="form-group">
-                <label asp-for="User.Email" class="control-label"></label>
-                <input asp-for="User.Email" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="User.Password" class="control-label"></label>
-                <input asp-for="User.Password" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary mt-5 px-5" />
-                <div asp-validation-summary="All" class="text-danger"></div>
-            </div>
-        </form>
-        <br />
-        <a class="nav-link p-0" asp-page="./Create">Need to create an account?</a> 
+        .login-form {
+            width: 100%;
+            max-width: 400px; /* Max width for the form */
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: .5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+            .login-form h1 {
+                margin-bottom: 1rem;
+            }
+
+            .login-form .form-group {
+                margin-bottom: 1rem;
+            }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <h1>Login</h1>
+            <form method="post">
+                <div class="form-group">
+                    <label asp-for="User.Email" class="control-label"></label>
+                    <input asp-for="User.Email" class="form-control" placeholder="Email" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.Password" class="control-label"></label>
+                    <input asp-for="User.Password" class="form-control" type="password" placeholder="Password" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Login" class="btn btn-primary btn-block" />
+                    <div asp-validation-summary="All" class="text-danger mt-2"></div>
+                </div>
+                <div class="text-center mt-3">
+                    <a class="nav-link p-0" asp-page="./Create">Need to create an account?</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</body>
+</html>

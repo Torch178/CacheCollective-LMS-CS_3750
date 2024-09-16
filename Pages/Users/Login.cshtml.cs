@@ -5,6 +5,7 @@ using RazorPagesMovie.Data;
 using RazorPagesMovie.Pages.Movies;
 using RazorPagesMovie.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace RazorPagesMovie.Pages.Users
 {
@@ -39,8 +40,10 @@ namespace RazorPagesMovie.Pages.Users
                 return Page();
             }
 
-            var validCredentials = userExists.Password == User.Password;
-            if (validCredentials == false) // user's password doesn't match
+            // Use PasswordHasher to verify the password
+            var passwordHasher = new PasswordHasher<User>();
+            var result = passwordHasher.VerifyHashedPassword(userExists, userExists.Password, User.Password);
+            if (result != PasswordVerificationResult.Success) // updated for hashing password
             {
                 ModelState.AddModelError(string.Empty, "Password is incorrect.");
                 return Page();

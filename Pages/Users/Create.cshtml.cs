@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Identity; // New directive for hashing password
 using RazorPagesMovie.Models;
 using RazorPagesMovie.Data;
 
@@ -39,10 +40,15 @@ namespace RazorPagesMovie.Pages.Users
             }
             else
             {
+                // Password hashing logic before saving the user
+                var passwordHasher = new PasswordHasher<User>();
+                User.Password = passwordHasher.HashPassword(User, User.Password);
+
                 _context.User.Add(User);
                 await _context.SaveChangesAsync();
 
-                return Redirect("/Users/" + User.Id); ;
+                return Redirect("/Users/" + User.Id);
+
             }
         }
     }

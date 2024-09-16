@@ -13,7 +13,7 @@ namespace RazorPagesMovie.Models
         [Required]
         public string Email { get; set; }
 
-        [StringLength(20, MinimumLength = 5)]
+        [StringLength(255)] // Increase the maximum length to 255 to incorporate the hashing
         [DataType(DataType.Password)]
         [Required]
         public string Password { get; set; }

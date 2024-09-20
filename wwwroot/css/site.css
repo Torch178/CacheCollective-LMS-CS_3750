@@ -29,3 +29,16 @@ body {
     border: solid medium Black;
     background-image: linear-gradient(to bottom, lightblue 50%, mediumpurple );
 }
+
+.main-row {
+    height: 100vh;
+}
+
+.main-col {
+    max-width: auto;
+    min-height: 100%;
+}
+
+.todo-done {
+    text-decoration: line-through;
+}

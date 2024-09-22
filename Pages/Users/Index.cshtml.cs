@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using RazorPagesMovie.Models;
 using System.Configuration;
 
@@ -19,6 +20,8 @@ namespace RazorPagesMovie.Pages.Users
 
         [BindProperty]
         public User User { get; set; } = default!;
+        [BindProperty]
+        public string layout { get; set; } = "_Layout";
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -30,6 +33,11 @@ namespace RazorPagesMovie.Pages.Users
             if (user == null) { return NotFound(); }
 
             User = user;
+
+            //load appropriate layouts based on user data
+            if (user.IsInstructor) layout = "_Layout_Instructor";
+            else if (!user.IsInstructor) layout = "_Layout_Student";
+
             return Page();
         }
     }

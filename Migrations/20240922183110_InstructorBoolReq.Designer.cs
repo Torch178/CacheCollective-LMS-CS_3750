@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RazorPagesMovie.Data;
 
@@ -11,9 +12,11 @@ using RazorPagesMovie.Data;
 namespace RazorPagesMovie.Migrations
 {
     [DbContext(typeof(RazorPagesMovieContext))]
-    partial class RazorPagesMovieContextModelSnapshot : ModelSnapshot
+    [Migration("20240922183110_InstructorBoolReq")]
+    partial class InstructorBoolReq
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,52 +24,6 @@ namespace RazorPagesMovie.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("RazorPagesMovie.Models.Course", b =>
-                {
-                    b.Property<int>("CourseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseId"));
-
-                    b.Property<int>("Capacity")
-                        .HasColumnType("int");
-
-                    b.Property<short>("CreditHours")
-                        .HasColumnType("smallint");
-
-                    b.Property<int>("Department")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("Instructor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MeetingDays")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CourseId");
-
-                    b.ToTable("Course");
-                });
 
             modelBuilder.Entity("RazorPagesMovie.Models.Movie", b =>
                 {

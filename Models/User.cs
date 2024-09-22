@@ -37,6 +37,6 @@ namespace RazorPagesMovie.Models
 
         [Display(Name = "Are you an instructor?")]
         [Required(ErrorMessage = "Please select either Yes or No.")]
-        public bool? IsInstructor { get; set; }
+        public bool IsInstructor { get; set; }
     }
 }

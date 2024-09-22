@@ -29,9 +29,7 @@ namespace RazorPagesMovie.Models
         public short CreditHours { get; set; }
 
 
-        // Meeting days/times
-        [Required]
-        public List<DayOfWeek> MeetingDays { get; set; }  // List of meeting days
+        public string MeetingDays { get; set; }
 
         [Required]
         public TimeSpan StartTime { get; set; }  // Start time for class

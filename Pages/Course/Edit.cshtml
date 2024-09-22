@@ -1,0 +1,95 @@
+﻿@page
+@model RazorPagesMovie.Pages.Course.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Course</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <input type="hidden" asp-for="CurrentCourse.CourseId" />
+            <div class="form-group">
+                <label asp-for="CurrentCourse.Department"></label>
+                <select class="form-control" asp-for="CurrentCourse.Department">
+                    <option value="CS">Computer Science</option>
+                    <option value="MATH">Mathematics</option>
+                    <option value="MUS">Music</option>
+                    <option value="ACC">Accounting</option>
+                    <option value="ENG">English</option>
+                </select>
+                <span asp-validation-for="CurrentCourse.Department" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentCourse.Number"></label>
+                <input type="number" class="form-control" asp-for="CurrentCourse.Number" required />
+                <span asp-validation-for="CurrentCourse.Number" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentCourse.Title"></label>
+                <input type="text" class="form-control" asp-for="CurrentCourse.Title" required />
+                <span asp-validation-for="CurrentCourse.Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentCourse.Capacity"></label>
+                <input type="number" class="form-control" asp-for="CurrentCourse.Capacity" required />
+                <span asp-validation-for="CurrentCourse.Capacity" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentCourse.CreditHours"></label>
+                <input type="number" class="form-control" asp-for="CurrentCourse.CreditHours" required />
+                <span asp-validation-for="CurrentCourse.CreditHours" class="text-danger"></span>
+            </div>
+
+            <!-- Meeting Days as Checkboxes -->
+            <div class="form-group">
+                <label>Meeting Days</label><br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Monday" @(Model.SelectedMeetingDays.Contains("Monday") ? "checked" : "")> Monday<br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Tuesday" @(Model.SelectedMeetingDays.Contains("Tuesday") ? "checked" : "")> Tuesday<br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Wednesday" @(Model.SelectedMeetingDays.Contains("Wednesday") ? "checked" : "")> Wednesday<br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Thursday" @(Model.SelectedMeetingDays.Contains("Thursday") ? "checked" : "")> Thursday<br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Friday" @(Model.SelectedMeetingDays.Contains("Friday") ? "checked" : "")> Friday<br>
+                <span asp-validation-for="SelectedMeetingDays" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentCourse.StartTime"></label>
+                <input type="time" class="form-control" asp-for="CurrentCourse.StartTime" required />
+                <span asp-validation-for="CurrentCourse.StartTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentCourse.EndTime"></label>
+                <input type="time" class="form-control" asp-for="CurrentCourse.EndTime" required />
+                <span asp-validation-for="CurrentCourse.EndTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentCourse.Location"></label>
+                <input type="text" class="form-control" asp-for="CurrentCourse.Location" required />
+                <span asp-validation-for="CurrentCourse.Location" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentCourse.Instructor"></label>
+                <input type="text" class="form-control" asp-for="CurrentCourse.Instructor" required />
+                <span asp-validation-for="CurrentCourse.Instructor" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

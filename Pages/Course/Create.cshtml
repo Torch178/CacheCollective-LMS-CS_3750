@@ -1,0 +1,86 @@
+﻿@page
+@model CourseCreationModel
+@using RazorPagesMovie.Models
+
+@{
+    ViewData["Title"] = "Course Creation";
+}
+
+<h1>Course Creation</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+                <label for="Department">Department</label>
+                <select class="form-control" id="Department" name="CurrentCourse.Department" placeholder="Department" required>
+                    <option value="CS">Computer Science</option>
+                    <option value="MATH">Mathematics</option>
+                    <option value="MUS">Music</option>
+                    <option value="ACC">Accounting</option>
+                    <option value="ENG">English</option>
+                </select>
+                <span asp-validation-for="CurrentCourse.Department" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Number">Course Number</label>
+                <input type="number" class="form-control" id="Number" name="CurrentCourse.Number" placeholder="Enter course number" required>
+                <span asp-validation-for="CurrentCourse.Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Title">Title</label>
+                <input type="text" class="form-control" id="Title" name="CurrentCourse.Title" placeholder="Enter course title" required>
+                <span asp-validation-for="CurrentCourse.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Capacity">Capacity</label>
+                <input type="number" class="form-control" id="Capacity" name="CurrentCourse.Capacity" placeholder="Enter maximum capacity" min="1" required>
+                <span asp-validation-for="CurrentCourse.Capacity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="CreditHours">Credit Hours</label>
+                <input type="number" class="form-control" id="CreditHours" name="CurrentCourse.CreditHours" placeholder="Enter credit hours" min="1" required>
+                <span asp-validation-for="CurrentCourse.CreditHours" class="text-danger"></span>
+            </div>
+
+            <!-- Meeting Days as Checkboxes -->
+            <div class="form-group">
+                <label>Meeting Days</label><br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Monday"> Monday<br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Tuesday"> Tuesday<br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Wednesday"> Wednesday<br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Thursday"> Thursday<br>
+                <input type="checkbox" name="SelectedMeetingDays" value="Friday"> Friday<br>
+                <span asp-validation-for="SelectedMeetingDays" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="StartTime">Start Time</label>
+                <input type="time" class="form-control" id="StartTime" name="CurrentCourse.StartTime" required>
+                <span asp-validation-for="CurrentCourse.StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="EndTime">End Time</label>
+                <input type="time" class="form-control" id="EndTime" name="CurrentCourse.EndTime" required>
+                <span asp-validation-for="CurrentCourse.EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Location">Location</label>
+                <input type="text" class="form-control" id="Location" name="CurrentCourse.Location" placeholder="Enter location" required>
+                <span asp-validation-for="CurrentCourse.Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Instructor">Instructor</label>
+                <input type="text" class="form-control" id="Instructor" name="CurrentCourse.Instructor" placeholder="Enter instructor name" required>
+                <span asp-validation-for="CurrentCourse.Instructor" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

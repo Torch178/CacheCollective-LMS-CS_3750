@@ -1,0 +1,80 @@
+﻿@page
+@model RazorPagesMovie.Pages.CourseCreationModel
+@using RazorPagesMovie.Models
+
+@{
+    ViewData["Title"] = "CourseCreation";
+}
+
+<h1>CourseCreation</h1>
+
+<h4>Course</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Course.Department" class="control-label"></label>
+                <select asp-for="Course.Department" class="form-control" asp-items="Html.GetEnumSelectList<Department>()"></select>
+                <span asp-validation-for="Course.Department" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.Number" class="control-label"></label>
+                <input asp-for="Course.Number" class="form-control" />
+                <span asp-validation-for="Course.Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.Title" class="control-label"></label>
+                <input asp-for="Course.Title" class="form-control" />
+                <span asp-validation-for="Course.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.Capacity" class="control-label"></label>
+                <input asp-for="Course.Capacity" class="form-control" />
+                <span asp-validation-for="Course.Capacity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.CreditHours" class="control-label"></label>
+                <input asp-for="Course.CreditHours" class="form-control" />
+                <span asp-validation-for="Course.CreditHours" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.MeetingDays" class="control-label"></label>
+                <input asp-for="Course.MeetingDays" class="form-control" />
+                <span asp-validation-for="Course.MeetingDays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.StartTime" class="control-label"></label>
+                <input asp-for="Course.StartTime" class="form-control" />
+                <span asp-validation-for="Course.StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.EndTime" class="control-label"></label>
+                <input asp-for="Course.EndTime" class="form-control" />
+                <span asp-validation-for="Course.EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.Location" class="control-label"></label>
+                <input asp-for="Course.Location" class="form-control" />
+                <span asp-validation-for="Course.Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.Instructor" class="control-label"></label>
+                <input asp-for="Course.Instructor" class="form-control" />
+                <span asp-validation-for="Course.Instructor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

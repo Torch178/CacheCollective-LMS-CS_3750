@@ -16,5 +16,6 @@ namespace RazorPagesMovie.Data
 
         public DbSet<RazorPagesMovie.Models.Movie> Movie { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.User> User { get; set; } = default!;
+        public DbSet<RazorPagesMovie.Models.Course> Course { get; set; } = default!;
     }
 }

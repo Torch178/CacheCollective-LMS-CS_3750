@@ -47,8 +47,7 @@ namespace RazorPagesMovie.Pages.Users
                 _context.User.Add(User);
                 await _context.SaveChangesAsync();
 
-                return Redirect("/Users/" + User.Id);
-
+                return RedirectToPage("./Index");
             }
         }
     }

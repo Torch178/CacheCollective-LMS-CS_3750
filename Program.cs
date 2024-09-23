@@ -7,6 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddRazorPages();
+
+// For claim-based authorization
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddAuthentication("ClaimBasedSchema").AddCookie("ClaimBasedSchema", options =>
+{
+    options.LoginPath = "/Users/Login";
+    options.LogoutPath = "/Users/Logout";
+});
+
 builder.Services.AddDbContext<RazorPagesMovieContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("RazorPagesMovieContext") ?? throw new InvalidOperationException("Connection string 'RazorPagesMovieContext' not found.")));
 

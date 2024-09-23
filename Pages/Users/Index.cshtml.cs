@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using RazorPagesMovie.Models;
 using System.Configuration;
+using System.Security.Claims;
 
 namespace RazorPagesMovie.Pages.Users
 {
@@ -19,24 +20,29 @@ namespace RazorPagesMovie.Pages.Users
         }
 
         [BindProperty]
-        public User User { get; set; } = default!;
+        public User CurrentUser { get; set; } = default!;
         [BindProperty]
-        public string layout { get; set; } = "_Layout";
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        public string Layout { get; set; } = "_Layout";
+        [BindProperty]
+        public IList<Models.Course> Course { get; set; }
 
-            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            // Fetch user from claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null) { return RedirectToPage("./Login"); }
+            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("./Login"); } // invalid userId
+
+            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
             if (user == null) { return NotFound(); }
 
-            User = user;
+            CurrentUser = user;
+            Course = await _context.Enrollment.Where(e => e.UserId == user.Id).Join(_context.Course, enrollment => enrollment.CourseId, course => course.CourseId, (enrollment, course) => course).ToListAsync();
 
             //load appropriate layouts based on user data
-            if (user.IsInstructor) layout = "_Layout_Instructor";
-            else if (!user.IsInstructor) layout = "_Layout_Student";
+            if (user.IsInstructor) Layout = "_Layout_Instructor";
+            else if (!user.IsInstructor) Layout = "_Layout_Student";
 
             return Page();
         }

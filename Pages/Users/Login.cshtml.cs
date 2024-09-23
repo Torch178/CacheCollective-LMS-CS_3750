@@ -6,16 +6,20 @@ using RazorPagesMovie.Pages.Movies;
 using RazorPagesMovie.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace RazorPagesMovie.Pages.Users
 {
     public class LoginModel : PageModel
     {
         private readonly RazorPagesMovie.Data.RazorPagesMovieContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public LoginModel(RazorPagesMovieContext context)
+        public LoginModel(RazorPagesMovieContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [BindProperty]
@@ -49,7 +53,21 @@ namespace RazorPagesMovie.Pages.Users
                 return Page();
             }
 
-            return Redirect("/Users/" + userExists.Id);
+            // Sign in with claim-based authorization
+            var userClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, userExists.Id.ToString()),
+                new Claim(ClaimTypes.Email, userExists.Email),
+                new Claim("FirstName", userExists.FirstName),
+                new Claim("LastName", userExists.LastName),
+                new Claim("IsInstructor", userExists.IsInstructor.ToString())
+            };
+
+            var claimsIdentity = new ClaimsIdentity(userClaims, "User");
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
+
+            return RedirectToPage("./Index");
         }
     }
 }

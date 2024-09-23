@@ -51,10 +51,6 @@ namespace RazorPagesMovie.Pages.Course
 
             return RedirectToPage("./Index");
         }
-
-
-
-
     }
 
 }

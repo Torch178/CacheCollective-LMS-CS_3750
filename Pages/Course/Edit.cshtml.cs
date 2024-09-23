@@ -23,7 +23,7 @@ namespace RazorPagesMovie.Pages.Course
         public RazorPagesMovie.Models.Course CurrentCourse { get; set; } = default!;
 
 
-    [BindProperty]
+        [BindProperty]
         public List<string> SelectedMeetingDays { get; set; } = new List<string>();
 
         public async Task<IActionResult> OnGetAsync(int? id)

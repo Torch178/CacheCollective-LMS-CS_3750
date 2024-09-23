@@ -1,13 +1,12 @@
-﻿@page "{id:int?}"
+﻿@page
 @model RazorPagesMovie.Pages.Users.IndexModel
 @{
-    ViewData["Title"] = "Users";
     //Load layout from page model
-    Layout = Model.layout;
+    Layout = Model.Layout;
 }
 
 <h1>
-@Html.DisplayFor(model => model.User.FirstName) @Html.DisplayFor(model => model.User.LastName)
+    @Html.DisplayFor(model => model.CurrentUser.FirstName) @Html.DisplayFor(model => model.CurrentUser.LastName)
 </h1>
 <!--container start-->
 <div class="container-fluid vh-100 w-100">
@@ -18,19 +17,21 @@
             <!--row-cols-2 sets max number of columns for each row to 2-->
             <div class="row row-cols-2">
                 <!--col col creates a nested container-->
-                @for (int i = 0; i < 4; i++)
+                @foreach (var course in Model.Course)
                 {
                     <div class="col col">
                         <!--Card contents-->
-
-                        <div class="card course" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">CS 3750 - Fall 2024</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Section: 123456</h6>
-                                <p class="card-text">MW Online 9:30 AM - 11:30 AM</p>
+                            <div class="card course" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">@course.Title</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">@course.Department.ToString() - @course.Number</h6>
+                                    <p class="card-text">@course.MeetingDays @course.Location
+                                    @(course.StartTime.Hours % 12 == 0 ? 12 : course.StartTime.Hours % 12):@(course.StartTime.Minutes.ToString("D2")) @(course.StartTime.Hours >= 12 ? "PM" : "AM")
+                                    -
+                                    @(course.EndTime.Hours % 12 == 0 ? 12 : course.EndTime.Hours % 12):@(course.EndTime.Minutes.ToString("D2")) @(course.EndTime.Hours >= 12 ? "PM" : "AM")
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-
                     </div>
                 }
             </div>

@@ -69,11 +69,6 @@
                 <input type="text" class="form-control" id="Location" name="CurrentCourse.Location" placeholder="Enter location" required>
                 <span asp-validation-for="CurrentCourse.Location" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label for="Instructor">Instructor</label>
-                <input type="text" class="form-control" id="Instructor" name="CurrentCourse.Instructor" placeholder="Enter instructor name" required>
-                <span asp-validation-for="CurrentCourse.Instructor" class="text-danger"></span>
-            </div>
             <button type="submit" class="btn btn-primary">Create</button>
             <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
         </form>

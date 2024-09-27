@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -66,6 +67,30 @@ namespace RazorPagesMovie.Pages.Course
 
             CurrentCourse.MeetingDays = string.Join(", ", SelectedMeetingDays);
             _context.Attach(CurrentCourse).State = EntityState.Modified;
+
+            // Fetch user from claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null) { return RedirectToPage("./Login"); }
+            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("./Login"); } // invalid userId
+
+            var loggedInUser = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
+            if (loggedInUser == null) { return NotFound(); }
+
+            if (loggedInUser == null)
+            {
+                return Unauthorized();
+            }
+
+            if (loggedInUser.IsInstructor)
+            {
+                CurrentCourse.Instructor = $"{loggedInUser.FirstName} {loggedInUser.LastName}";
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Only instructors can create courses.");
+                return Page();
+            }
+
 
             try
             {

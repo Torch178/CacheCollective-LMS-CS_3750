@@ -1,0 +1,42 @@
+﻿@page
+@model RazorPagesMovie.Pages.Course.Assignment.IndexModel
+
+@{
+    ViewData["Title"] = "Assignments";
+}
+
+<h2>Assignments for @Model.CourseName</h2>
+
+<!-- List Assignments -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Max Points</th>
+            <th>Due Date</th>
+            <th>Submission Type</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var assignment in Model.Assignment)
+        {
+            <tr>
+                <td>@assignment.Title</td>
+                <td>@assignment.Description</td>
+                <td>@assignment.MaxPoints</td>
+                <td>@assignment.DueDate.ToShortDateString()</td>
+                <td>@assignment.SubmissionType</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Edit</a> |
+                    <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a> |
+                    <a asp-page="Delete" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Link to Create a New Assignment, passing CourseId -->
+<a asp-page="./Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Create New Assignment</a>

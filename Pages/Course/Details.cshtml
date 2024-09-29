@@ -76,3 +76,9 @@
     <a asp-page="./Edit" asp-route-id="@Model.CurrentCourse.CourseId">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>
+<hr />
+<div>
+    <p>
+        <a asp-page="Assignment/Index" asp-route-courseId="@Model.CurrentCourse.CourseId">View Assignments</a>
+    </p>
+</div>

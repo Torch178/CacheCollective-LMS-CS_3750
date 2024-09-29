@@ -18,7 +18,10 @@ namespace RazorPagesMovie.Pages
 
         public IActionResult OnGet()
         {
-
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("./Users/Index");
+            }
             return Redirect("/Users/Login");
             
         }

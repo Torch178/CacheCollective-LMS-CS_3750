@@ -46,7 +46,7 @@ namespace RazorPagesMovie.Pages.Course
             }
 
             // Retrieve courses for the current instructor
-            Course = await _context.Course.Where(c => c.Instructor == $"{user.FirstName} {user.LastName}").ToListAsync();
+            Course = await _context.Course.Where(c => c.InstructorCourseId == user.Id).ToListAsync();
 
             return Page();
 

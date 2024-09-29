@@ -38,7 +38,13 @@ namespace RazorPagesMovie.Pages.Course
 
             if (!ModelState.IsValid)
             {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+
                 return Page();
+
             }
 
             if (SelectedMeetingDays == null || !SelectedMeetingDays.Any())
@@ -55,14 +61,10 @@ namespace RazorPagesMovie.Pages.Course
             var loggedInUser = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
             if (loggedInUser == null) { return NotFound(); }
 
-            if (loggedInUser == null)
-            {
-                return Unauthorized();
-            }
-
             if (loggedInUser.IsInstructor)
             {
                 CurrentCourse.Instructor = $"{loggedInUser.FirstName} {loggedInUser.LastName}";
+                CurrentCourse.InstructorCourseId = loggedInUser.Id;
             } else
             {
                 ModelState.AddModelError(string.Empty, "Only instructors can create courses.");

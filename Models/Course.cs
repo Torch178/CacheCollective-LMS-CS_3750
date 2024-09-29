@@ -7,6 +7,9 @@ namespace RazorPagesMovie.Models
         // Course Id for primary key
         public int CourseId { get; set; }
 
+        // Logged in instructor
+        public int InstructorCourseId { get; set; }
+
         // Rows to have
         // Department - select out of options
         [Required]
@@ -42,6 +45,7 @@ namespace RazorPagesMovie.Models
         public string Location { get; set; }
 
         // Instructor teaching the course. Possibly nullable if they are uncertain of the teacher currently
+        
         public string? Instructor { get; set; }
 
     }

@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Pages\Course\Assignment Test\" />
   </ItemGroup>
 
 </Project>

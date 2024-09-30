@@ -18,15 +18,18 @@ namespace RazorPagesMovie.Pages.Users
     {
         private readonly RazorPagesMovie.Data.RazorPagesMovieContext _context;
         private readonly IWebHostEnvironment _environment;
+        
 
-        public ChangeProfilePicModel(IWebHostEnvironment environment,RazorPagesMovie.Data.RazorPagesMovieContext context)
+        public ChangeProfilePicModel( IWebHostEnvironment environment,RazorPagesMovie.Data.RazorPagesMovieContext context)
         {
             _environment = environment;
             _context = context;
+            
         }
 
         [BindProperty]
         public ImageUploadViewModel ViewModel { get; set; }
+        public User User { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -43,26 +46,27 @@ namespace RazorPagesMovie.Pages.Users
             ViewModel = new ImageUploadViewModel()
             {
                 Id = user.Id,
-                ImageFile = null
             };
 
-
+            User = user;
             return Page();
         }
 
-        [BindProperty]
-        public User User { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             //grab current user using the id value passed to the View model
             var user = await _context.User.FirstOrDefaultAsync(m => m.Id == ViewModel.Id);
+            //Store path for old profile pic to be deleted
+            string? oldProfilePic = user.ProfilePic;
 
             if (!ModelState.IsValid)
             {
                 return Page();
             }
+
+            
 
             if (user != null)
             {
@@ -72,14 +76,16 @@ namespace RazorPagesMovie.Pages.Users
                     if (user.IsInstructor) dir += "Instructors/";
                     else dir += "Students/";
                     dir += user.FirstName + "_" + user.LastName + Guid.NewGuid().ToString() + ViewModel.ImageFile.FileName;
-
                     //append directory path onto root to get full path
                     string serverFolder = Path.Combine(_environment.WebRootPath, dir);
 
+
                     //store newly uploaded file to path in serverFolder
                     await ViewModel.ImageFile.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-                    //save path and file name of image to user model
-                    user.ProfilePic = serverFolder;
+                    
+                    //save path and file name of image in local project directory to user model
+                    user.ProfilePic = dir;
+
                 }
                 //update database entity
              
@@ -88,8 +94,22 @@ namespace RazorPagesMovie.Pages.Users
 
             try
             {
+
                 //save changes to database
-                await _context.SaveChangesAsync();
+                var changes = await _context.SaveChangesAsync();
+                //delete old file after updating database with new file path
+                if (!string.IsNullOrWhiteSpace(oldProfilePic))
+                {
+                    //check to see that database has been udated before deleting old file
+                    while (!(changes > 0))
+                    {
+                        //Do Nothing
+                    }
+                    string path = Path.Combine(_environment.WebRootPath, oldProfilePic);
+                    FileInfo file = new FileInfo(path);
+                    if (file.Exists) { file.Delete(); }
+                }
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -102,6 +122,7 @@ namespace RazorPagesMovie.Pages.Users
                     throw;
                 }
             }
+            
 
             return RedirectToPage("./Profile");
         }

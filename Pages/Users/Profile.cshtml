@@ -3,108 +3,115 @@
 
 @{
     ViewData["Title"] = "Profile";
+    string src_path = "Images/Profile_Pics/default.png";
+    if(Model.currUser.ProfilePic != null)
+    {
+        src_path = Model.currUser.ProfilePic;
+    }
 
 }
 
 <h1>Profile</h1>
-<img src="@Model.currUser.ProfilePic" alt="Bootstrap" width="30" height="24">
 <div>
+    <div class="card" style="width: 18rem;">
+        <img src="~/@src_path" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.currUser.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.currUser.Email)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.currUser.FirstName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.currUser.FirstName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.currUser.LastName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.currUser.LastName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.currUser.Birthdate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.currUser.Birthdate)
+            </dd>
+            <dt class="col-sm-2">
+                Account Type
+            </dt>
+            @if (Model.currUser.IsInstructor)
+            {
+                <dd class="col-sm-10">
+                    Student
+                </dd>
+            }
+            else
+            {
+                <dd class="col-sm-10">
+                    Instructor
+                </dd>
+            }
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.currUser.StreetAddress)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.currUser.StreetAddress)
+            </dd>
+            @if (Model.currUser.ApartmentNum == null)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.currUser.ApartmentNum)
+                </dt>
+                <dd class="col-sm-10">
+                    N/A
+                </dd>
+            }
+            else
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.currUser.ApartmentNum)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.currUser.ApartmentNum)
+                </dd>
+            }
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.currUser.City)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.currUser.City)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.currUser.State)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.currUser.State)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.currUser.Zip)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.currUser.Zip)
+            </dd>
+
+        </dl>
+        <div class="card-body">
+            <a asp-page="./ChangeProfilePic" asp-route-id="@Model.currUser.Id">Change Profile Picture</a> |
+            <a asp-page="./Edit_Profile" asp-route-id="@Model.currUser.Id">Edit</a> |
+            <a asp-page="./Index">Back to Home</a>
+        </div>
+    </div>
     <h4>User</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.currUser.ProfilePic)
-        </dt>
-        <dd class="col-sm-10">
-            <img src="@Model.currUser.ProfilePic" alt="Bootstrap" width="30" height="24">
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.currUser.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.currUser.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.currUser.FirstName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.currUser.FirstName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.currUser.LastName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.currUser.LastName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.currUser.Birthdate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.currUser.Birthdate)
-        </dd>
-        <dt class="col-sm-2">
-            Account Type
-        </dt>
-        @if (Model.currUser.IsInstructor)
-        {
-            <dd class="col-sm-10">
-                Student
-            </dd>
-        }
-        else
-        {
-            <dd class="col-sm-10">
-                Instructor
-            </dd>
-        }
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.currUser.StreetAddress)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.currUser.StreetAddress)
-        </dd>
-        @if(Model.currUser.ApartmentNum == null)
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.currUser.ApartmentNum)
-            </dt>
-            <dd class="col-sm-10">
-                N/A
-            </dd>
-        }
-        else
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.currUser.ApartmentNum)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.currUser.ApartmentNum)
-            </dd>
-        }
-        
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.currUser.City)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.currUser.City)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.currUser.State)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.currUser.State)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.currUser.Zip)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.currUser.Zip)
-        </dd>
-        
-    </dl>
+    
 </div>
-<div>
-    <a asp-page="./ChangeProfilePic" asp-route-id="@Model.currUser.Id">Change Profile Picture</a> |
-    <a asp-page="./Edit_Profile" asp-route-id="@Model.currUser.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+

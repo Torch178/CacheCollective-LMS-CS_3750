@@ -3,18 +3,31 @@
 
 @{
     ViewData["Title"] = "ChangeProfilePic";
+    string src_path = "Images/Profile_Pics/default.png";
+    if (Model.User.ProfilePic != null)
+    {
+        src_path = Model.User.ProfilePic;
+    }
 }
 
 <h1>ChangeProfilePic</h1>
 
-<h4>User</h4>
+<h4>Current Profile Picture</h4>
+<div class="card" style="width: 18rem;">
+    <img src="~/@src_path" class="card-img-top" alt="...">
+    <div class="card-body">
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    </div>
+</div>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ViewModel.Id" />
             <div class="mb-3">
-                <label asp-for="ViewModel.ImageFile" class="form-label">Default file input example</label>
+                <label asp-for="ViewModel.ImageFile"  class="form-label">Select a Picture</label>
                 <input asp-for="ViewModel.ImageFile" class="form-control" id="formFile" accept=".png,.jpg,.jpeg,.gif,.tif">
                 <span asp-validation-for="ViewModel.ImageFile" class="text-danger"></span>
             </div>
@@ -26,7 +39,7 @@
 </div>
 
 <div>
-    <a asp-page="Profile">Back to Profile Page</a>
+    <a asp-page="./Profile">Back to Profile Page</a>
 </div>
 
 @section Scripts {

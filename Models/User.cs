@@ -43,7 +43,7 @@ namespace RazorPagesMovie.Models
 
         //Profile Pic----------------------
         [Display(Name = "Profile Picture")]
-        public string? ProfilePic { get; set; } = "~/Images/Profile_Pics/default.png";
+        public string? ProfilePic { get; set; }
 
         //User Address Information---------------------------------------------------------
         [Display(Name = "Street Address")]

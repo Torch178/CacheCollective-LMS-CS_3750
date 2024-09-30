@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.AspNetCore.Http;
 @model RazorPagesMovie.Pages.Course.Assignment.IndexModel
 
 @{
@@ -29,9 +30,21 @@
                 <td>@assignment.DueDate.ToShortDateString()</td>
                 <td>@assignment.SubmissionType</td>
                 <td>
-                    <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Edit</a> |
-                    <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a> |
-                    <a asp-page="Delete" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Delete</a>
+                    @{
+                        var IsInstructor = HttpContext.Session.GetString("IsInstructor");
+                    }
+                    @if (IsInstructor == "True")
+                    {
+                        <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Edit</a>
+                        <span>|</span>
+                        <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a>
+                        <span>|</span>
+                        <a asp-page="Delete" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Delete</a>
+                    }
+                    else
+                    {
+                        <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a>
+                    }
                 </td>
             </tr>
         }

@@ -1,4 +1,6 @@
-﻿
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor;
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,14 +31,27 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Users/Index">Home</a>
                         </li>
-                        <!-- Privacy Link -->
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Privacy">Privacy</a>
-                        </li>
-                        <!-- About Link -->
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/About">About</a>
-                        </li> 
+                        @{
+                            var IsInstructor = HttpContextAccessor.HttpContext.Session.GetString("IsInstructor");
+                        }
+                        @if (IsInstructor == "True")
+                        {
+                            <!-- Courses Link -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Course/Index">Courses</a>
+                            </li>
+                        }
+                        else if (IsInstructor == "False")
+                        {
+                            <!-- Registration Link -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Users/Registration">Registration</a>
+                            </li>
+                            <!-- Account Link -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Users/Account">Account</a>
+                            </li>
+                        }
                         <!-- Calendar Link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Calendar">Calendar</a>
@@ -45,7 +60,7 @@
 
                     <!-- Profile/Login Section (Right Corner) -->
                     <ul class="navbar-nav ms-auto">
-                        
+
                         @if (User.Identity.IsAuthenticated)
                         {
                             <!-- Dropdown for logged-in users -->
@@ -66,9 +81,6 @@
                                 <a class="nav-link text-dark" href="/Users/Login">Login</a>
                             </li>
                         }
-                        
-                        
-
                     </ul>
                 </div>
             </div>

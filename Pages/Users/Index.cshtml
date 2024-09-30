@@ -4,55 +4,74 @@
 
 }
 
-<h1>
-    @Html.DisplayFor(model => model.CurrentUser.FirstName) @Html.DisplayFor(model => model.CurrentUser.LastName)
-</h1>
-<!--container start-->
-<div class="container-fluid vh-100 w-100">
-    <div class="row justify-content-center align-content-start h-100 gx-3">
-        <!----------------------------------------------------------------------------------------------->
-        <!--cards-->
-        <div class="col-8">
-            <!--row-cols-2 sets max number of columns for each row to 2-->
-            <div class="row row-cols-2">
-                <!--col col creates a nested container-->
-                @foreach (var course in Model.Course)
-                {
-                    <div class="col col">
-                        <!--Card contents-->
-                            <div class="card course" style="width: 18rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">@course.Title</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">@course.Department.ToString() - @course.Number</h6>
-                                    <p class="card-text">@course.MeetingDays @course.Location
-                                    @(course.StartTime.Hours % 12 == 0 ? 12 : course.StartTime.Hours % 12):@(course.StartTime.Minutes.ToString("D2")) @(course.StartTime.Hours >= 12 ? "PM" : "AM")
-                                    -
-                                    @(course.EndTime.Hours % 12 == 0 ? 12 : course.EndTime.Hours % 12):@(course.EndTime.Minutes.ToString("D2")) @(course.EndTime.Hours >= 12 ? "PM" : "AM")
-                                    </p>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .plain-link{
+            text-decoration: none;
+            color: inherit;
+        }
+            .plain-link:hover{
+                color: inherit;
+            }
+            .plain-link:active{
+                color: inherit;
+            }
+    </style>
+</head>
+<body>
+    <h1>
+        @Html.DisplayFor(model => model.CurrentUser.FirstName) @Html.DisplayFor(model => model.CurrentUser.LastName)
+    </h1>
+    <!--container start-->
+    <div class="container-fluid vh-100 w-100">
+        <div class="row justify-content-center align-content-start h-100 gx-3">
+            <!----------------------------------------------------------------------------------------------->
+            <!--Dashboard Cards-->
+            <div class="col-8">
+                <!--row-cols-2 sets max number of columns for each row to 2-->
+                <div class="row row-cols-2">
+                    <!--col col creates a nested container-->
+                    @foreach (var course in Model.Course)
+                    {
+                        <a asp-page="/Course/Details" asp-route-id="@course.CourseId" class="plain-link" >
+                            <div class="col col">
+                                <!--Card contents-->
+                                    <div class="card course" style="width: 18rem;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@course.Title</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">@course.Department.ToString() - @course.Number</h6>
+                                            <p class="card-text">@course.MeetingDays @course.Location
+                                            @(course.StartTime.Hours % 12 == 0 ? 12 : course.StartTime.Hours % 12):@(course.StartTime.Minutes.ToString("D2")) @(course.StartTime.Hours >= 12 ? "PM" : "AM")
+                                            -
+                                            @(course.EndTime.Hours % 12 == 0 ? 12 : course.EndTime.Hours % 12):@(course.EndTime.Minutes.ToString("D2")) @(course.EndTime.Hours >= 12 ? "PM" : "AM")
+                                            </p>
+                                        </div>
+                                    </div>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+            <!----------------------------------------------------------------------------------------------->
+            <!--To-Do List-->
+            <div class="col-4 h-100 justify-content-start">
+                    <div class="row justify-content-center align-items-center main-row">
+                        <div class="col  shadow main-col bg-white">
+                            <div class="row bg-primary text-white">
+                                <div class="col  p-2">
+                                    <h4>To-Do</h4>
                                 </div>
                             </div>
-                    </div>
-                }
-            </div>
-        </div>
-        <!----------------------------------------------------------------------------------------------->
-        <!--To-Do List-->
-        <div class="col-4 h-100 justify-content-start">
-                <div class="row justify-content-center align-items-center main-row">
-                    <div class="col  shadow main-col bg-white">
-                        <div class="row bg-primary text-white">
-                            <div class="col  p-2">
-                                <h4>To-Do</h4>
-                            </div>
-                        </div>
-                        <div class="row" id="todo-container">
-                            <div>
+                            <div class="row" id="todo-container">
+                                <div>
 
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+            </div>
+            <!----------------------------------------------------------------------------------------------->
         </div>
-        <!----------------------------------------------------------------------------------------------->
     </div>
-</div>
+</body>

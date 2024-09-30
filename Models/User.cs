@@ -38,28 +38,5 @@ namespace RazorPagesMovie.Models
         [Display(Name = "Are you an instructor?")]
         [Required(ErrorMessage = "Please select either Yes or No.")]
         public bool IsInstructor { get; set; }
-
-        //User Address Information
-        [Display(Name = "Last Name")]
-        [StringLength(30, MinimumLength = 1)]
-        [RegularExpression(@"^[a-zA-Z]*")]
-        [Required]
-        public string StreetAddress {  get; set; }
-        [Display(Name = "Last Name")]
-        [StringLength(30, MinimumLength = 1)]
-        [RegularExpression(@"^[a-zA-Z]*")]
-        [Required]
-        public string City { get; set; }
-        [Display(Name = "Last Name")]
-        [StringLength(30, MinimumLength = 1)]
-        [RegularExpression(@"^[a-zA-Z]*")]
-        [Required]
-        public string State {  get; set; }
-        [Display(Name = "Last Name")]
-        [StringLength(30, MinimumLength = 1)]
-        [RegularExpression(@"^[a-zA-Z]*")]
-        [Required]
-        public string Zip { get; set; }
-
     }
 }

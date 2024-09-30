@@ -21,7 +21,8 @@ namespace RazorPagesMovie.Pages.Users
 
         [BindProperty]
         public User CurrentUser { get; set; } = default!;
-
+        [BindProperty]
+        public string Layout { get; set; } = "_Layout";
         [BindProperty]
         public IList<Models.Course> Course { get; set; }
 
@@ -38,6 +39,10 @@ namespace RazorPagesMovie.Pages.Users
 
             CurrentUser = user;
             Course = await _context.Enrollment.Where(e => e.UserId == user.Id).Join(_context.Course, enrollment => enrollment.CourseId, course => course.CourseId, (enrollment, course) => course).ToListAsync();
+
+            //load appropriate layouts based on user data
+            if (user.IsInstructor) Layout = "_Layout_Instructor";
+            else if (!user.IsInstructor) Layout = "_Layout_Student";
 
             return Page();
         }

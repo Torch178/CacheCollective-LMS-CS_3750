@@ -54,7 +54,6 @@ namespace RazorPagesMovie.Pages.Users
                 State = user.State,
                 Zip = user.Zip,
             };
-            
 
             return Page();
         }

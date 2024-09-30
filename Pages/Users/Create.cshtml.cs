@@ -3,16 +3,20 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity; // New directive for hashing password
 using RazorPagesMovie.Models;
 using RazorPagesMovie.Data;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace RazorPagesMovie.Pages.Users
 {
     public class CreateModel : PageModel
     {
         private readonly RazorPagesMovie.Data.RazorPagesMovieContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CreateModel(RazorPagesMovieContext context)
+        public CreateModel(RazorPagesMovieContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult OnGet()
@@ -46,6 +50,22 @@ namespace RazorPagesMovie.Pages.Users
 
                 _context.User.Add(User);
                 await _context.SaveChangesAsync();
+
+                // Sign in with claim-based authorization
+                var userClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, User.Id.ToString()),
+                    new Claim(ClaimTypes.Email, User.Email),
+                    new Claim("FirstName", User.FirstName),
+                    new Claim("LastName", User.LastName),
+                    new Claim("IsInstructor", User.IsInstructor.ToString())
+                };
+
+                var claimsIdentity = new ClaimsIdentity(userClaims, "User");
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
+
+                HttpContext.Session.SetString("IsInstructor", User.IsInstructor.ToString());
 
                 return RedirectToPage("./Index");
             }

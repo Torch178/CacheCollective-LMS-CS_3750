@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +13,14 @@ builder.Services.AddAuthentication("ClaimBasedSchema").AddCookie("ClaimBasedSche
 {
     options.LoginPath = "/Users/Login";
     options.LogoutPath = "/Users/Logout";
+});
+
+// Add session services for the IsInstructor session field
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Make the cookie accessible only via HTTP
+    options.Cookie.IsEssential = true; // Required for session to work
 });
 
 builder.Services.AddDbContext<RazorPagesMovieContext>(options =>
@@ -41,6 +48,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 

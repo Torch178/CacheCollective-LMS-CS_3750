@@ -67,6 +67,8 @@ namespace RazorPagesMovie.Pages.Users
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
 
+            HttpContext.Session.SetString("IsInstructor", userExists.IsInstructor.ToString());
+
             return RedirectToPage("./Index");
         }
     }

@@ -1,11 +1,4 @@
-﻿@using System.Security.Claims;
-@using Microsoft.AspNetCore.Identity
-@inject IHttpContextAccessor _httpContext
-@using RazorPagesMovie.Models;
-@{
 
-    
-}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,32 +29,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Index">Home</a>
                         </li>
-                        <!-- Privacy Link -->
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Privacy">Privacy</a>
-                        </li>
-                        <!-- About Link -->
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/About">About</a>
-                        </li> 
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            if (true)
-                            {
-                                <!-- Courses Link -->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Course/Index">Courses</a>
-                            </li> 
-                            }
-                            else
-                            {
-                                <!-- Registration Link -->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Users/Registration">Registration</a>
-                            </li> 
-                            }
-                        }
-                        
+
                         <!-- Calendar Link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Calendar">Calendar</a>
@@ -70,7 +38,7 @@
 
                     <!-- Profile/Login Section (Right Corner) -->
                     <ul class="navbar-nav ms-auto">
-                        
+
                         @if (User.Identity.IsAuthenticated)
                         {
                             <img src="~/Images/Profile_Pics/default.png" alt="Bootstrap" width="30" height="24">
@@ -92,9 +60,6 @@
                                 <a class="nav-link text-dark" href="/Users/Login">Login</a>
                             </li>
                         }
-                        
-                        
-
                     </ul>
                 </div>
             </div>

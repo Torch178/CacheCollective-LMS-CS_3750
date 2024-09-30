@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.AspNetCore.Http;
 @model RazorPagesMovie.Pages.Course.DetailsModel
 
 @{
@@ -73,8 +74,19 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.CurrentCourse.CourseId">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    @{
+        var IsInstructor = HttpContext.Session.GetString("IsInstructor");
+    }
+    @if (IsInstructor == "True")
+    {
+        <a asp-page="./Edit" asp-route-id="@Model.CurrentCourse.CourseId">Edit</a>
+        <span>|</span>
+        <a asp-page="./Index">Back to List</a>
+    }
+    else
+    {
+        <a asp-page="/Users/Index">Back to Dashboard</a>
+    }
 </div>
 <hr />
 <div>

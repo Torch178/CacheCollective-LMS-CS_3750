@@ -20,8 +20,6 @@ namespace RazorPagesMovie.Pages.Users
         public User CurrentUser { get; set; }
         [BindProperty]
         public IList<Models.Course> Course { get; set; }
-        [BindProperty]
-        public string Layout { get; set; } = "_Layout";
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -30,10 +28,6 @@ namespace RazorPagesMovie.Pages.Users
                 CurrentUser = await _context.User.FirstOrDefaultAsync(u => u.Id == userId);
             }
             Course = await _context.Course.ToListAsync();
-
-            //load appropriate layouts based on user data
-            if (CurrentUser.IsInstructor) Layout = "_Layout_Instructor";
-            else if (!CurrentUser.IsInstructor) Layout = "_Layout_Student";
 
             return Page();
         }

@@ -39,6 +39,10 @@ namespace RazorPagesMovie.Models
         [Required(ErrorMessage = "Please select either Yes or No.")]
         public bool IsInstructor { get; set; }
 
+        //Profile Pic----------------------
+        [Display(Name = "Profile Picture")]
+        public string? ProfilePic { get; set; }
+
         //User Address Information
         [Display(Name = "Street Address")]
         [StringLength(256, MinimumLength = 1)]

@@ -23,7 +23,6 @@ namespace RazorPagesMovie.Pages
         [BindProperty]
         public User CurrentUser { get; set; } = default!;
 
-
         public async Task<IActionResult> OnGetAsync()
         {
             // Fetch user from claims
@@ -34,32 +33,83 @@ namespace RazorPagesMovie.Pages
             var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
             if (user == null) { return NotFound(); }
 
+            // Set the start date for the current week
+            var today = DateTime.Today;
+            var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
 
-
-            // If the user is not found, handle accordingly
-            if (user == null)
+            if (user.IsInstructor)
             {
-                Events.Add(new { title = "User not found", start = "2024-09-24", end = "2024-09-24" });
-                return Page();
-            }
+                // Fetch courses taught by this specific instructor
+                var courses = await _context.Course
+                    .Where(c => c.InstructorCourseId == user.Id)  // Match the instructor by their ID
+                    .ToListAsync();
 
-            // Check if the user is an instructor and add events accordingly
-            if (user.IsInstructor == true)
-            {
-                // Add events for instructors
-                Events.Add(new { title = "Instructor Meeting", start = "2024-09-25", end = "2024-09-25" });
-                Events.Add(new { title = "Course Planning", start = "2024-09-28", end = "2024-09-28" });
-                Events.Add(new { title = "Grading Session", start = "2024-09-29", end = "2024-09-29" });
+                foreach (var course in courses)
+                {
+                    foreach (var meetingDay in course.MeetingDays.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (Enum.TryParse(meetingDay.Trim(), out DayOfWeek dayOfWeek))
+                        {
+                            for (int weekOffset = 0; weekOffset < 15; weekOffset++)
+                            {
+                                var eventDate = startOfWeek.AddDays((int)dayOfWeek + (weekOffset * 7));
+                                Events.Add(new
+                                {
+                                    title = $"{course.Title} {course.Number} {course.Location}",
+                                    start = eventDate.Add(course.StartTime),
+                                    // following information can also be added to the title
+                                    //end = eventDate.Add(course.EndTime),
+                                    //location = course.Location,
+                                    //description = $"Teaching this course by {user.FirstName} {user.LastName}"
+                                });
+                            }
+                        }
+                    }
+                }
             }
             else
             {
-                // Add events for students
-                Events.Add(new { title = "Class Lecture", start = "2024-09-25", end = "2024-09-25" });
-                Events.Add(new { title = "Study Group", start = "2024-09-28", end = "2024-09-28" });
-                Events.Add(new { title = "Exam Review", start = "2024-09-29", end = "2024-09-29" });
+                // Fetch enrollments for the current user
+                var enrollments = await _context.Enrollment
+                    .Where(e => e.UserId == userId)
+                    .ToListAsync();
+
+                foreach (var enrollment in enrollments)
+                {
+                    var course = await _context.Course.FindAsync(enrollment.CourseId);
+                    if (course != null)
+                    {
+                        foreach (var meetingDay in course.MeetingDays.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            if (Enum.TryParse(meetingDay.Trim(), out DayOfWeek dayOfWeek))
+                            {
+                                for (int weekOffset = 0; weekOffset < 15; weekOffset++)
+                                {
+                                    var eventDate = startOfWeek.AddDays((int)dayOfWeek + (weekOffset * 7));
+                                    Events.Add(new
+                                    {
+                                        title = $"{course.Title} {course.Number} {course.Location}",
+                                        start = eventDate.Add(course.StartTime),
+                                        // following information can also be added to the title
+                                            //end = eventDate.Add(course.EndTime),
+                                            //location = course.Location,
+                                            //description = "Enrolled in this course"
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             return Page();
         }
+
+
+
+
+
+
+
     }
 }

@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace RazorPagesMovie.Pages.Users
 {
-
+    
     public class IndexModel : PageModel
     {
         private readonly RazorPagesMovie.Data.RazorPagesMovieContext _context;

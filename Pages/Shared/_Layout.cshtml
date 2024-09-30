@@ -45,20 +45,29 @@
 
                     <!-- Profile/Login Section (Right Corner) -->
                     <ul class="navbar-nav ms-auto">
-                        <!-- Login link if user is not logged in -->
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Users/Login">Login</a>
-                        </li>
-                        <!-- Dropdown for logged-in users -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Profile
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                                <li><a class="dropdown-item" href="/Account/Profile">View Profile</a></li>
-                                <li><a class="dropdown-item" href="/Account/Logout">Logout</a></li>
-                            </ul>
-                        </li>
+                        
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <!-- Dropdown for logged-in users -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Profile
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                    <li><a class="dropdown-item" href="/Users/Profile">View Profile</a></li>
+                                    <li><a class="dropdown-item" href="/Users/Logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Login link if user is not logged in -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Users/Login">Login</a>
+                            </li>
+                        }
+                        
+                        
 
                     </ul>
                 </div>

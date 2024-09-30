@@ -1,0 +1,85 @@
+﻿@page
+@model RazorPagesMovie.Pages.Users.Edit_ProfileModel
+
+@{
+    ViewData["Title"] = "Edit_Profile";
+    string[] states = { "Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+    "Delaware", "District of Columbia", "Federated States of Micronesia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho",
+    "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Marshall Islands", "Maryland", "Massachusetts",
+    "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
+    "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Palau", "Pennsylvania",
+    "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virgin Island", "Virginia",
+    "Washington", "West Virginia", "Wisconsin", "Wyoming" };
+}
+
+<h1>Edit_Profile</h1>
+
+<h4>User</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ViewModel.Id" />
+            <div class="form-group">
+                <label asp-for="ViewModel.FirstName" class="control-label"></label>
+                <input asp-for="ViewModel.FirstName" class="form-control" />
+                <span asp-validation-for="ViewModel.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ViewModel.LastName" class="control-label"></label>
+                <input asp-for="ViewModel.LastName" class="form-control" />
+                <span asp-validation-for="ViewModel.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ViewModel.Birthdate" class="control-label"></label>
+                <input asp-for="ViewModel.Birthdate" class="form-control" />
+                <span asp-validation-for="ViewModel.Birthdate" class="text-danger"></span>
+            </div>
+
+            <!--ViewModel Address fields-->
+            <div class="form-group">
+                <label asp-for="ViewModel.StreetAddress" class="control-label"></label>
+                <input asp-for="ViewModel.StreetAddress" class="form-control" />
+                <span asp-validation-for="ViewModel.StreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ViewModel.ApartmentNum" class="control-label"></label>
+                <input asp-for="ViewModel.ApartmentNum" class="form-control" />
+                <span asp-validation-for="ViewModel.ApartmentNum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ViewModel.City" class="control-label"></label>
+                <input asp-for="ViewModel.City" class="form-control" />
+                <span asp-validation-for="ViewModel.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ViewModel.State" class="control-label"></label>
+                <select asp-for="ViewModel.State" class="form-control">
+                    <option value="">Select an option</option>
+                    @foreach (string state in states)
+                    {
+                        <option value=@state>@state</option>
+                    }
+                </select>
+                <span asp-validation-for="ViewModel.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ViewModel.Zip" class="control-label"></label>
+                <input asp-for="ViewModel.Zip" class="form-control" />
+                <span asp-validation-for="ViewModel.Zip" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Profile">Back to Profile Page</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

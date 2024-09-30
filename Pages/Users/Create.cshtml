@@ -1,6 +1,14 @@
 ﻿@page
 @model RazorPagesMovie.Pages.Users.CreateModel
 @{
+    string[] states = { "Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+    "Delaware", "District of Columbia", "Federated States of Micronesia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho",
+    "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Marshall Islands", "Maryland", "Massachusetts",
+    "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
+    "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Palau", "Pennsylvania",
+    "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virgin Island", "Virginia",
+    "Washington", "West Virginia", "Wisconsin", "Wyoming" };
+
 }
 
 <h1> Create Account </h1>
@@ -46,6 +54,39 @@
                 </div>
                 <span asp-validation-for="User.IsInstructor" class="text-danger"></span>
             </div>
+            <!--User Address fields-->
+            <div class="form-group">
+                <label asp-for="User.StreetAddress" class="control-label"></label>
+                <input asp-for="User.StreetAddress" class="form-control" />
+                <span asp-validation-for="User.StreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.ApartmentNum" class="control-label"></label>
+                <input asp-for="User.ApartmentNum" class="form-control" />
+                <span asp-validation-for="User.ApartmentNum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.City" class="control-label"></label>
+                <input asp-for="User.City" class="form-control" />
+                <span asp-validation-for="User.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.State" class="control-label"></label>
+                <select asp-for="User.State" class="form-control" >
+                    <option value="">Select an option</option>
+                    @foreach (string state in states)
+                    {
+                        <option value=@state>@state</option>
+                    }
+                </select>
+                <span asp-validation-for="User.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Zip" class="control-label"></label>
+                <input asp-for="User.Zip" class="form-control" />
+                <span asp-validation-for="User.Zip" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary mt-5 px-5" />
                 <div asp-validation-summary="All" class="text-danger"></div>

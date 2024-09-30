@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using RazorPagesMovie.Attributes;
 
 namespace RazorPagesMovie.Models
 {
     public class User
     {
+        //Personal Information---------------------------------------------------------
         public int Id { get; set; }
 
         [RegularExpression(@"^[a-zA-Z0-9]+@+[a-z]+.+[a-z]")]
@@ -39,7 +41,11 @@ namespace RazorPagesMovie.Models
         [Required(ErrorMessage = "Please select either Yes or No.")]
         public bool IsInstructor { get; set; }
 
-        //User Address Information
+        //Profile Pic----------------------
+        [Display(Name = "Profile Picture")]
+        public string? ProfilePic { get; set; } = "~/Images/Profile_Pics/default.png";
+
+        //User Address Information---------------------------------------------------------
         [Display(Name = "Street Address")]
         [StringLength(256, MinimumLength = 1)]
         [RegularExpression(@"^[a-zA-Z0-9\s._'-]*")]
@@ -68,6 +74,8 @@ namespace RazorPagesMovie.Models
         [RegularExpression(@"^(([0-9][0-9][0-9][0-9][0-9][-][0-9][0-9][0-9][0-9])|[0-9][0-9][0-9][0-9][0-9])")]
         [Required]
         public string Zip { get; set; }
+
+      
 
     }
 }

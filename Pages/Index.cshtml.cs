@@ -1,7 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
+using System.Configuration;
+using System.Security.Claims;
 
 namespace RazorPagesMovie.Pages
 {
@@ -19,8 +24,8 @@ namespace RazorPagesMovie.Pages
         public IActionResult OnGet()
         {
 
-            return Redirect("/Users/Login");
-            
+            return Redirect("./Users/Login");
+
         }
     }
 }

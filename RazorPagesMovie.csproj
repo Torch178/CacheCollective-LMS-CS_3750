@@ -25,6 +25,8 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="Pages\Course\Assignment Test\" />
+    <Folder Include="wwwroot\Images\Profile_Pics\Instructors\" />
+    <Folder Include="wwwroot\Images\Profile_Pics\Students\" />
   </ItemGroup>
 
 </Project>

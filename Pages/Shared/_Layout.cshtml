@@ -1,5 +1,3 @@
-﻿@using Microsoft.AspNetCore.Http;
-@inject IHttpContextAccessor HttpContextAccessor;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,29 +27,9 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <!-- Home Link -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Users/Index">Home</a>
+                            <a class="nav-link text-dark" href="/Index">Home</a>
                         </li>
-                        @{
-                            var IsInstructor = HttpContextAccessor.HttpContext.Session.GetString("IsInstructor");
-                        }
-                        @if (IsInstructor == "True")
-                        {
-                            <!-- Courses Link -->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Course/Index">Courses</a>
-                            </li>
-                        }
-                        else if (IsInstructor == "False")
-                        {
-                            <!-- Registration Link -->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Users/Registration">Registration</a>
-                            </li>
-                            <!-- Account Link -->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Users/Account">Account</a>
-                            </li>
-                        }
+
                         <!-- Calendar Link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Calendar">Calendar</a>
@@ -63,6 +41,7 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <img src="~/Images/Profile_Pics/default.png" alt="Bootstrap" width="30" height="24">
                             <!-- Dropdown for logged-in users -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

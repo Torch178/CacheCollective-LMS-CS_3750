@@ -1,5 +1,7 @@
 ﻿using RazorPagesMovie.Attributes;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RazorPagesMovie.ViewModels
 {
@@ -53,5 +55,6 @@ namespace RazorPagesMovie.ViewModels
         [RegularExpression(@"^(([0-9][0-9][0-9][0-9][0-9][-][0-9][0-9][0-9][0-9])|[0-9][0-9][0-9][0-9][0-9])")]
         [Required]
         public string Zip { get; set; }
+
     }
 }

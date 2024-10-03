@@ -23,6 +23,8 @@ namespace RazorPagesMovie.Pages.Users
         public User CurrentUser { get; set; } = default!;
         [BindProperty]
         public IList<Models.Course> Course { get; set; }
+        [BindProperty]
+        public IList<Models.Assignment> ToDoList { get; set; } = new List<Models.Assignment>();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -44,7 +46,20 @@ namespace RazorPagesMovie.Pages.Users
                 Course = await _context.Course.Where(c => c.InstructorCourseId == user.Id).ToListAsync();
             }
 
+            foreach (var course in Course)
+            {
+                IList<Assignment> Assignments = await _context.Assignment.Where(e => e.CourseId == course.CourseId).ToListAsync();
+                foreach (var assignment in Assignments)
+                {
+                    ToDoList.Add(assignment);
+                }
+            }
+
             return Page();
+
+            
         }
+
+       
     }
 }

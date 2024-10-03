@@ -64,10 +64,24 @@
                                 </div>
                             </div>
                             <div class="row" id="todo-container">
-                                <div>
-
+                                @foreach (var assignment in Model.ToDoList)
+                            {
+                                <div class="col col-12 p-2 todo-item" todo-id="@assignment.Id">
+                                <div class="input-group border border-primary object-fit-contain m-1">
+                                <div class="container w-75 ">
+                                    <h6 class="text-wrap">Course = @assignment.CourseId</h6>
+                                    <div class="text-wrap">@assignment.Title</div> 
+                                    <div class="text-wrap">@assignment.Description</div>  
+                                    <div class="text-wrap font-weight-bold">@assignment.DueDate</div>
                                 </div>
-                            </div>
+                                <div class="input-group-append">
+                                <button todo-id="@assignment.Id" class="btn btn-outline-secondary bg-danger text-white float-right align-end" type="button" onclick="DeleteTodo(this);"
+                                    id="button-addon2 ">X</button>
+                                </div>
+                                </div>
+                                </div>
+                            }
+                        </div>
                         </div>
                     </div>
             </div>

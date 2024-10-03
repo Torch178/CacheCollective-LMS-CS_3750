@@ -4,28 +4,6 @@
 // Write your JavaScript code.
 
 //Code for Dashboard To-Do List
-//Hard-coded To-Do List Items for testing purposes only
-var todos = [
-    {
-        course: "CS 3750",
-        assignment: "Assignment 1",
-        due_date: 'Sept 25th, 11:59 PM',
-        done: false,
-        id: 0
-    },
-    {
-        course: "CS 3750",
-        assignment: "Assignment 2",
-        due_date: 'Oct 3rd, 11:59 PM',
-        done: false,
-        id: 0
-    }
-];
-
-//archived / deleted items
-var archive = [
-
-];
 
 /*
 //jQuery Version
@@ -33,6 +11,8 @@ $('#todo-input').on('input',function(e){
     currentTodo.text = e.target.value;
    });
 */
+ 
+
 
 //Creates Individual To-Do List Items with Delete Button
 function DrawTodo(todo) {

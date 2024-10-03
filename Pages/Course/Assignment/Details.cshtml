@@ -2,7 +2,8 @@
 @model RazorPagesMovie.Pages.Course.Assignment.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = $"Details {Model.Assignment.Title}";
+    var IsInstructor = HttpContext.Session.GetString("IsInstructor");
 }
 
 <h1>Details</h1>
@@ -44,6 +45,10 @@
     </dl>
 </div>
 <div>
-    <a asp-page="Edit" asp-route-id="@Model.Assignment.Id" asp-route-courseId="@Model.Assignment.CourseId">Edit</a> |
+    @if (IsInstructor == "True")
+    {
+        <a asp-page="Edit" asp-route-id="@Model.Assignment.Id" asp-route-courseId="@Model.Assignment.CourseId">Edit</a>
+        <span>|</span>
+    }
     <a asp-page="Index" asp-route-courseId="@Model.Assignment.CourseId">Back to List</a>
 </div>

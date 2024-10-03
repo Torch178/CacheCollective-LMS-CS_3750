@@ -1,8 +1,10 @@
 ﻿@page
+@using Microsoft.AspNetCore.Http;
 @model RazorPagesMovie.Pages.Course.CourseListModel
 
 @{
     ViewData["Title"] = "Course List";
+    var IsInstructor = HttpContext.Session.GetString("IsInstructor");
 }
 
 <h1>Courses</h1>
@@ -80,9 +82,14 @@
                 @Html.DisplayFor(modelItem => item.Instructor)
             </td>
             <td>
-                <a asp-page="Details" asp-route-id="@item.CourseId">Details</a> |
-                <a asp-page="Edit" asp-route-id="@item.CourseId">Edit</a> |
-                <a asp-page="Delete" asp-route-id="@item.CourseId">Delete</a>
+                    <a asp-page="Details" asp-route-id="@item.CourseId">Details</a>
+                    <span>|</span>
+                    @if (IsInstructor == "True")
+                    {
+                        <a asp-page="Edit" asp-route-id="@item.CourseId">Edit</a>
+                        <span>|</span>
+                    }
+                    <a asp-page="Delete" asp-route-id="@item.CourseId">Delete</a>
             </td>
         </tr>
 }

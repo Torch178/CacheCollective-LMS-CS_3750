@@ -1,6 +1,7 @@
-﻿@page "{id:int?}"
+﻿@page ""
 @model calendarModel
 @{
+    ViewData["Title"] = "Calendar";
     var eventsJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Events);
 }
 <!DOCTYPE html>

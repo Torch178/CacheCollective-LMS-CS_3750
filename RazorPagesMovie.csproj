@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Course\Assignment Test\**" />
+    <Content Remove="Pages\Course\Assignment Test\**" />
+    <EmbeddedResource Remove="Pages\Course\Assignment Test\**" />
+    <None Remove="Pages\Course\Assignment Test\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="appsettings.Development.json" />
   </ItemGroup>
 
@@ -24,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Pages\Course\Assignment Test\" />
     <Folder Include="wwwroot\Images\Profile_Pics\Instructors\" />
     <Folder Include="wwwroot\Images\Profile_Pics\Students\" />
   </ItemGroup>

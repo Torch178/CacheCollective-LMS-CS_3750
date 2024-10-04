@@ -1,25 +1,16 @@
 ﻿@page
 @model RazorPagesMovie.Pages.Users.IndexModel
 @{
-
+    
 }
 
 <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .plain-link{
-            text-decoration: none;
-            color: inherit;
-        }
-            .plain-link:hover{
-                color: inherit;
-            }
-            .plain-link:active{
-                color: inherit;
-            }
+        
     </style>
+    
 </head>
-<body>
+<body >
     <h1>
         @Html.DisplayFor(model => model.CurrentUser.FirstName) @Html.DisplayFor(model => model.CurrentUser.LastName)
     </h1>
@@ -55,52 +46,58 @@
             </div>
             <!----------------------------------------------------------------------------------------------->
             <!--To-Do List-->
-            <div class="col-4 h-100 justify-content-start">
-                    <div class="row justify-content-center align-items-center main-row">
-                        <div class="col  shadow main-col bg-white">
+            <div class="col-4  justify-content-start" id="todo-area">
+                <div class="row justify-content-center align-items-center main-row" data-bs-spy="scroll" data-bs-target="#todo-container">
+                    <div class="col shadow main-col bg-white">
                             <div class="row bg-primary text-white">
                                 <div class="col  p-2">
                                     <h4>To-Do</h4>
                                 </div>
                             </div>
-                            <div class="row" id="todo-container">
+                        <!--To-Do Items--->
+                        <div class="row" id="todo-container" tabindex="0">
                             @{
                                 var courses = Model.Course;
                             }
                             @foreach (var assignment in Model.ToDoList)
                             {
+                                //Get course matching Assignment to populate course name into todo item
                                 var course = Model.Course.First(e => e.CourseId == assignment.CourseId);
-                                var dateDiff = assignment.DueDate.Subtract(DateTime.Now);
-                                string border;
-                                switch(dateDiff)
-                                {
-                                    case dateDiff.TotalDays:
 
-                                    default:
-                                      border = "border-default";
+                                //Determine how soon Assignments are coming due by caluclating difference in DateTime
+                                var dateDiff = (assignment.DueDate - DateTime.Now).Days ;
 
-                                }
+                                //assign a border color based on assignment being past-due, due soon, or due later (>7days)
+                                string border = "border-default";
+                                if (dateDiff < 7 && dateDiff > 0) border = "border-warning";
+                                else if (dateDiff <= 0) border = "border-danger";
+                                else border = "border-success";
 
-                                    <div class="col col-12 p-2 todo-item border-secondary" id="@assignment.Id">
-                                <div class="input-group border border-primary object-fit-contain m-1">
+                                //Individual To-Do Item Content
+                                <div class="col col-12 p-2 mt-1 mb-1 todo-item " id="@assignment.Id">
                                 <a asp-page="/Course/Assignment/Details" asp-route-id="@assignment.Id" class="plain-link">
+                                        <div class="input-group object-fit-none m-1 border  @border border-3 rounded">
+                                
                                 <div class="container w-100 ">
                                                 <h6 class="text-wrap">@course.Department @course.Number @course.Title</h6>
                                     <div class="text-wrap">@assignment.Title</div>   
                                     
                                 </div>
-                                </a>
-                                @* <div class="input-group-append">
-                                <button todo-id="@assignment.Id" class="btn btn-outline-secondary bg-danger text-white float-right align-end" type="button" onclick="DeleteTodo(this);"
-                                    id="button-addon2 ">X</button>
-                                </div> *@
+                                
                                 </div>
-                                    <div class="text-wrap float-left align-start"><span class="font-weight-bold">Due Date:</span> @assignment.DueDate</div>
-                                    <button todo-id="@assignment.Id" class="btn btn-outline-secondary bg-danger text-white float-right align-end" type="button" onclick="DeleteTodo(this);"
+                                </a>
+                                <div class="container w-100">
+                                    <div class="text-wrap d-grid float-start align-content-start"><span class="fw-bold text-wrap">Due Date:</span> @assignment.DueDate</div>
+                                        <button todo-id="@assignment.Id" class="btn d-flex btn-outline-secondary bg-danger text-white float-end align-content-end" type="button" onclick="DeleteTodo(this);"
                                             id="button-addon2 ">
                                         X
                                     </button>
+                                        <hr />
                                 </div>
+                                    
+                                </div>
+
+                                
                                 
                             }
                         </div>

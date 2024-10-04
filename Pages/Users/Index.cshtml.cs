@@ -25,6 +25,7 @@ namespace RazorPagesMovie.Pages.Users
         public IList<Models.Course> Course { get; set; }
         [BindProperty]
         public IList<Models.Assignment> ToDoList { get; set; } = new List<Models.Assignment>();
+        IEnumerable<Models.Assignment> SortedToDo { get; set; } = new List<Models.Assignment>();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -36,6 +37,7 @@ namespace RazorPagesMovie.Pages.Users
             var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
             if (user == null) { return NotFound(); }
 
+            //Get Course Content for user
             CurrentUser = user;
             if (CurrentUser.IsInstructor == false)
             {
@@ -46,6 +48,7 @@ namespace RazorPagesMovie.Pages.Users
                 Course = await _context.Course.Where(c => c.InstructorCourseId == user.Id).ToListAsync();
             }
 
+            //Collect assignments from courses
             foreach (var course in Course)
             {
                 IList<Assignment> Assignments = await _context.Assignment.Where(e => e.CourseId == course.CourseId).ToListAsync();
@@ -54,6 +57,10 @@ namespace RazorPagesMovie.Pages.Users
                     ToDoList.Add(assignment);
                 }
             }
+
+            //Sort To-Do List by Due Date
+            SortedToDo = ToDoList.OrderBy(q=>q.DueDate);
+            ToDoList = SortedToDo.ToList();
 
             return Page();
 

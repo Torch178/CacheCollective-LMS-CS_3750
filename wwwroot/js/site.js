@@ -28,7 +28,8 @@ function DeleteTodo(button) {
     */
     var deleteID = button.getAttribute("todo-id");
     var eDiv = document.getElementById(deleteID)
-   eDiv.parentNode.removeChild(eDiv)
+    eDiv.parentNode.removeChild(eDiv)
+
 
     //for (let i = 0; i < todos.length; i++) {
     //    if (todos[i].id === deleteID) {
@@ -40,6 +41,13 @@ function DeleteTodo(button) {
     //    }
     //}
 }
+
+//To-do List Scroll Bar Function, Updates Scroll as items are added and removed from the list
+var dataSpyList = [].slice.call(document.querySelectorAll('[data-bs-spy="scroll"]'))
+dataSpyList.forEach(function (dataSpyEl) {
+    bootstrap.ScrollSpy.getInstance(dataSpyEl)
+        .refresh()
+})
 
 function TodoChecked(id) {
     todos[id].done = !todos[id].done;

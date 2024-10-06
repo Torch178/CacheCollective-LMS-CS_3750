@@ -99,17 +99,17 @@ namespace RazorPagesMovie.Pages.Users
                 //save changes to database
                 var changes = await _context.SaveChangesAsync();
                 //delete old file after updating database with new file path
-                if (!string.IsNullOrWhiteSpace(oldProfilePic))
-                {
-                    //check to see that database has been udated before deleting old file
-                    while (!(changes > 0))
-                    {
-                        //Do Nothing
-                    }
-                    string path = Path.Combine(_environment.WebRootPath, oldProfilePic);
-                    FileInfo file = new FileInfo(path);
-                    if (file.Exists) { file.Delete(); }
-                }
+                //if (!string.IsNullOrWhiteSpace(oldProfilePic))
+                //{
+                //    //check to see that database has been udated before deleting old file
+                //    while (!(changes > 0))
+                //    {
+                //        //Do Nothing
+                //    }
+                //    string path = Path.Combine(_environment.WebRootPath, oldProfilePic);
+                //    FileInfo file = new FileInfo(path);
+                //    if (file.Exists) { file.Delete(); }
+                //}
 
             }
             catch (DbUpdateConcurrencyException)

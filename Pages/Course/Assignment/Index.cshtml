@@ -1,9 +1,13 @@
 ﻿@page
 @using Microsoft.AspNetCore.Http;
 @model RazorPagesMovie.Pages.Course.Assignment.IndexModel
+@inject IHttpContextAccessor HttpContextAccessor;
 
 @{
     ViewData["Title"] = "Assignments";
+}
+@{
+    var IsInstructor = HttpContext.Session.GetString("IsInstructor");
 }
 
 <h2>Assignments for @Model.CourseName</h2>
@@ -30,9 +34,7 @@
                 <td>@assignment.DueDate.ToShortDateString()</td>
                 <td>@assignment.SubmissionType</td>
                 <td>
-                    @{
-                        var IsInstructor = HttpContext.Session.GetString("IsInstructor");
-                    }
+                    
                     @if (IsInstructor == "True")
                     {
                         <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Edit</a>
@@ -52,4 +54,8 @@
 </table>
 
 <!-- Link to Create a New Assignment, passing CourseId -->
-<a asp-page="./Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Create New Assignment</a>
+
+@if (IsInstructor == "True")
+{
+    <a asp-page="./Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Create New Assignment</a>
+}

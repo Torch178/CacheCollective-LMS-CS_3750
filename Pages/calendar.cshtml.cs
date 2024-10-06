@@ -105,7 +105,8 @@ namespace RazorPagesMovie.Pages
                             {
                                 title = $"Assignment: {assignment.Title}",
                                 start = assignment.DueDate,
-                                end = assignment.DueDate.AddSeconds(1) // Added one second to ensure the event remains on the intended due date
+                                end = assignment.DueDate.AddSeconds(1), // Added one second to ensure the event remains on the intended due date
+                                url = Url.Page("/Course/Assignment/Details", new { id = assignment.Id })
                                 //location = course.Location, // Optional: Use course location for context
                                 //description = assignment.Description // Ensure this is consistently provided
                             });

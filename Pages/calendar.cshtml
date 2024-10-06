@@ -10,16 +10,22 @@
     <meta charset='utf-8' />
     <script src='~/lib/fullcalendar/dist/index.global.min.js'></script>
     <script>
-
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
+
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: @Html.Raw(eventsJson)
-                          });
+                events: @Html.Raw(eventsJson),
+                eventClick: function (info) {
+                    if (info.event.url) {
+                        window.location.href = info.event.url; // Redirect to the assignment detail page
+                    }
+                    info.jsEvent.preventDefault(); // Prevent the default behavior
+                }
+            });
+
             calendar.render();
         });
-
     </script>
 </head>
 <body>

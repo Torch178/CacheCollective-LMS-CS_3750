@@ -1,0 +1,53 @@
+﻿@page
+@model RazorPagesMovie.Pages.Course.Assignment.SubmitModel
+@using RazorPagesMovie.Models
+
+
+@{
+    ViewData["Title"] = "Submit Assignment";
+}
+
+<h1>Submit Assignment</h1>
+
+<h4>@Model.Assignment.Title</h4>
+<p>@Model.Assignment.Description</p>
+<p>Max Points: @Model.Assignment.MaxPoints</p>
+<p>Due Date: @Model.Assignment.DueDate.ToString("f")</p>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @if (Model.Assignment.SubmissionType == SubmissionType.TextEntry)
+            {
+                <div class="form-group">
+                    <label asp-for="SubmittedText" class="control-label"></label>
+                    <textarea asp-for="SubmittedText" class="form-control"></textarea>
+                    <span asp-validation-for="SubmittedText" class="text-danger"></span>
+                </div>
+            }
+            else if (Model.Assignment.SubmissionType == SubmissionType.FileUpload)
+            {
+                <div class="form-group">
+                    <label asp-for="SubmissionFile" class="control-label"></label>
+                    <input asp-for="SubmissionFile" type="file" class="form-control" />
+                    <span asp-validation-for="SubmissionFile" class="text-danger"></span>
+                </div>
+            }
+
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index" asp-route-courseId="@Model.CourseId">Back to List</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

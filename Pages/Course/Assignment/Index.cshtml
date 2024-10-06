@@ -46,6 +46,9 @@
                     else
                     {
                         <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a>
+                        <a asp-page="Submit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Submit</a>
+                        <a asp-page="./Submit" asp-route-AssignmentId="@assignment.Id" asp-route-CourseId="@Model.CourseId">Submit</a>
+
                     }
                 </td>
             </tr>

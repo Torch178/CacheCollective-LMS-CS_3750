@@ -1,10 +1,13 @@
-using System;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace RazorPagesMovie.Pages.Course.Assignment
 {
@@ -23,6 +26,8 @@ namespace RazorPagesMovie.Pages.Course.Assignment
         [BindProperty(SupportsGet = true)]
         public int CourseId { get; set; }
 
+        [BindProperty]
+        public Submission Submission { get; set; } = default!;
 
         [BindProperty]
         public string SubmittedText { get; set; } = string.Empty;
@@ -39,14 +44,22 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                 return NotFound();
             }
 
+            // Fetch the assignment to ensure Model.Assignment is not null
             Assignment = await _context.Assignment.FirstOrDefaultAsync(a => a.Id == AssignmentId);
             if (Assignment == null)
             {
                 return NotFound();
             }
 
+            // Ensure the Submission property is also initialized
+            Submission = new Submission
+            {
+                AssignmentId = AssignmentId
+            };
+
             return Page();
         }
+
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -55,51 +68,62 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                 return Page();
             }
 
-            var assignment = await _context.Assignment.FirstOrDefaultAsync(a => a.Id == AssignmentId);
-            if (assignment == null)
+            // Fetch the assignment to determine submission type
+            Assignment = await _context.Assignment.FindAsync(Submission.AssignmentId);
+            if (Assignment == null)
             {
                 return NotFound();
             }
 
-            Assignment = assignment; // Assign fetched assignment to the Assignment property
-
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !int.TryParse(userIdClaim, out var userId))
+            // Validate based on the SubmissionType
+            if (Assignment.SubmissionType == SubmissionType.TextEntry)
             {
-                return RedirectToPage("/Login");
+                if (string.IsNullOrWhiteSpace(SubmittedText))
+                {
+                    ModelState.AddModelError(string.Empty, "Text submission cannot be empty.");
+                    return Page();
+                }
+
+                Submission.SubmittedText = SubmittedText;
             }
+            else if (Assignment.SubmissionType == SubmissionType.FileUpload)
+            {
+                if (SubmissionFile == null)
+                {
+                    ModelState.AddModelError(string.Empty, "A file must be uploaded for this submission.");
+                    return Page();
+                }
 
-            var submission = new Submission
-            {
-                AssignmentId = AssignmentId,
-                UserId = userId,
-                SubmissionDate = DateTime.Now
-            };
+                // Set up the directory to save the file
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Submissions");
 
-            if (assignment.SubmissionType == SubmissionType.TextEntry && !string.IsNullOrWhiteSpace(SubmittedText))
-            {
-                submission.SubmittedText = SubmittedText;
-            }
-            else if (assignment.SubmissionType == SubmissionType.FileUpload && SubmissionFile != null)
-            {
-                var filePath = $"Submissions/{Guid.NewGuid()}_{SubmissionFile.FileName}";
-                using (var stream = System.IO.File.Create(filePath))
+                // Ensure the directory exists
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                // Generate a unique file path
+                var uniqueFileName = $"{Guid.NewGuid()}_{SubmissionFile.FileName}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                // Save the file
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await SubmissionFile.CopyToAsync(stream);
                 }
-                submission.FilePath = filePath;
-                submission.FileName = SubmissionFile.FileName;
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Please provide a valid submission based on the assignment type.");
-                return Page();
+
+                // Set file properties in Submission model
+                Submission.FilePath = Path.Combine("Submissions", uniqueFileName); // relative path for serving the file
+                Submission.FileName = SubmissionFile.FileName;
             }
 
-            _context.Submission.Add(submission);
+            Submission.SubmissionDate = DateTime.Now;
+            _context.Submission.Add(Submission);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("Index", new { courseId = Assignment.CourseId });
+            // Redirect to the index page for the course's assignments
+            return RedirectToPage("./Index", new { CourseId = this.CourseId });
         }
 
     }

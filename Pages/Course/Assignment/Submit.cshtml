@@ -1,53 +1,25 @@
 ﻿@page
 @model RazorPagesMovie.Pages.Course.Assignment.SubmitModel
-@using RazorPagesMovie.Models
 
+<h2>Submit Assignment</h2>
 
-@{
-    ViewData["Title"] = "Submit Assignment";
-}
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="AssignmentId" />
 
-<h1>Submit Assignment</h1>
+    @if (Model.Assignment != null && Model.Assignment.SubmissionType == RazorPagesMovie.Models.SubmissionType.TextEntry)
+    {
+        <div>
+            <label for="SubmittedText">Text Submission:</label>
+            <textarea id="SubmittedText" name="SubmittedText" rows="10" cols="50"></textarea>
+        </div>
+    }
+    else if (Model.Assignment != null && Model.Assignment.SubmissionType == RazorPagesMovie.Models.SubmissionType.FileUpload)
+    {
+        <div>
+            <label for="SubmissionFile">File Upload:</label>
+            <input type="file" id="SubmissionFile" name="SubmissionFile" />
+        </div>
+    }
+    <button type="submit">Submit</button>
+</form>
 
-<h4>@Model.Assignment.Title</h4>
-<p>@Model.Assignment.Description</p>
-<p>Max Points: @Model.Assignment.MaxPoints</p>
-<p>Due Date: @Model.Assignment.DueDate.ToString("f")</p>
-<hr />
-
-<div class="row">
-    <div class="col-md-6">
-        <form method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            @if (Model.Assignment.SubmissionType == SubmissionType.TextEntry)
-            {
-                <div class="form-group">
-                    <label asp-for="SubmittedText" class="control-label"></label>
-                    <textarea asp-for="SubmittedText" class="form-control"></textarea>
-                    <span asp-validation-for="SubmittedText" class="text-danger"></span>
-                </div>
-            }
-            else if (Model.Assignment.SubmissionType == SubmissionType.FileUpload)
-            {
-                <div class="form-group">
-                    <label asp-for="SubmissionFile" class="control-label"></label>
-                    <input asp-for="SubmissionFile" type="file" class="form-control" />
-                    <span asp-validation-for="SubmissionFile" class="text-danger"></span>
-                </div>
-            }
-
-            <div class="form-group">
-                <input type="submit" value="Submit" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-page="Index" asp-route-courseId="@Model.CourseId">Back to List</a>
-</div>
-
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}

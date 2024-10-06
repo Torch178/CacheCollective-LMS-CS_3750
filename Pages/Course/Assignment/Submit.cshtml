@@ -8,9 +8,10 @@
 
     @if (Model.Assignment != null && Model.Assignment.SubmissionType == RazorPagesMovie.Models.SubmissionType.TextEntry)
     {
-        <div>
-            <label for="SubmittedText">Text Submission:</label>
-            <textarea id="SubmittedText" name="SubmittedText" rows="10" cols="50"></textarea>
+        <div class="form-group">
+            <label asp-for="SubmittedText" class="control-label"></label>
+            <textarea asp-for="SubmittedText" class="form-control"></textarea>
+            <span asp-validation-for="SubmittedText" class="text-danger"></span>
         </div>
     }
     else if (Model.Assignment != null && Model.Assignment.SubmissionType == RazorPagesMovie.Models.SubmissionType.FileUpload)

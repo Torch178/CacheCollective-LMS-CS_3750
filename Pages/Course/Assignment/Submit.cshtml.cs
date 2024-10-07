@@ -36,6 +36,17 @@ namespace RazorPagesMovie.Pages.Course.Assignment
         public IFormFile? SubmissionFile { get; set; }
 
         public RazorPagesMovie.Models.Assignment Assignment { get; set; } = default!;
+        private void PrintModelStateErrors()
+        {
+            foreach (var state in ModelState)
+            {
+                foreach (var error in state.Value.Errors)
+                {
+                    Console.WriteLine($"ModelState Error in {state.Key}: {error.ErrorMessage}");
+                }
+            }
+        }
+
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -63,16 +74,24 @@ namespace RazorPagesMovie.Pages.Course.Assignment
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             // Fetch the assignment to determine submission type
             Assignment = await _context.Assignment.FindAsync(Submission.AssignmentId);
             if (Assignment == null)
             {
                 return NotFound();
+            }
+
+            // Conditionally remove the validation for SubmittedText if the submission type is file upload
+            if (Assignment.SubmissionType == SubmissionType.FileUpload)
+            {
+                ModelState.Remove("SubmittedText");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Print model state errors to debug
+                PrintModelStateErrors();
+                return Page();
             }
 
             // Validate based on the SubmissionType
@@ -125,6 +144,7 @@ namespace RazorPagesMovie.Pages.Course.Assignment
             // Redirect to the index page for the course's assignments
             return RedirectToPage("./Index", new { CourseId = this.CourseId });
         }
+
 
     }
 }

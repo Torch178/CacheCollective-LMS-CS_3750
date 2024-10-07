@@ -7,9 +7,6 @@
     ViewData["Title"] = "Assignments";
     var IsInstructor = HttpContext.Session.GetString("IsInstructor");
 }
-@{
-    var IsInstructor = HttpContext.Session.GetString("IsInstructor");
-}
 
 <h2>Assignments for @Model.CourseName</h2>
 

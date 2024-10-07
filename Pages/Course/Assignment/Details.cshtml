@@ -42,6 +42,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Assignment.SubmissionType)
         </dd>
+        <a asp-page="./Submit" asp-route-AssignmentId="@Model.Assignment.Id" asp-route-CourseId="@Model.Assignment.CourseId">Submit</a>
     </dl>
 </div>
 <div>

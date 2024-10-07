@@ -52,9 +52,16 @@
                                 <a class="nav-link text-dark" href="/Users/Account">Account</a>
                             </li>
                         }
-                        <!-- Calendar Link -->
+                        @if (User.Identity.IsAuthenticated) // Make sure that the user is logged in
+                        {
+                            <!-- Calendar Link -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Calendar">Calendar</a>
+                            </li>
+                        }
+                        <!-- Chart Link -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Calendar">Calendar</a>
+                            <a class="nav-link text-dark" href="/Chart">Chart</a>
                         </li>
                     </ul>
 
@@ -93,7 +100,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted position-relative">
         <div class="container">
             &copy; 2024 - RazorPagesMovie - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>

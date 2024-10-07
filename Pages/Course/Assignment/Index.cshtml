@@ -5,6 +5,7 @@
 
 @{
     ViewData["Title"] = "Assignments";
+    var IsInstructor = HttpContext.Session.GetString("IsInstructor");
 }
 @{
     var IsInstructor = HttpContext.Session.GetString("IsInstructor");
@@ -34,7 +35,10 @@
                 <td>@assignment.DueDate.ToShortDateString()</td>
                 <td>@assignment.SubmissionType</td>
                 <td>
+<<<<<<< HEAD
                     
+=======
+>>>>>>> 2f87f9d276ddf3dedf478c1b9a1cdbc74fbc8115
                     @if (IsInstructor == "True")
                     {
                         <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Edit</a>
@@ -56,7 +60,10 @@
 </table>
 
 <!-- Link to Create a New Assignment, passing CourseId -->
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2f87f9d276ddf3dedf478c1b9a1cdbc74fbc8115
 @if (IsInstructor == "True")
 {
     <a asp-page="./Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Create New Assignment</a>

@@ -31,7 +31,10 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+<<<<<<< HEAD
     <Folder Include="AssignmentTurnIn\" />
+=======
+>>>>>>> 2f87f9d276ddf3dedf478c1b9a1cdbc74fbc8115
     <Folder Include="wwwroot\Images\Profile_Pics\Instructors\" />
     <Folder Include="wwwroot\Images\Profile_Pics\Students\" />
     <Folder Include="wwwroot\Submissions\" />

@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = $"{Model.CurrentCourse.Department} {Model.CurrentCourse.Number} {Model.CurrentCourse.Title}";
+    var IsInstructor = HttpContext.Session.GetString("IsInstructor");
 }
 
 <h1>@Html.DisplayFor(model => model.CurrentCourse.Title)</h1>
@@ -74,9 +75,6 @@
     </dl>
 </div>
 <div>
-    @{
-        var IsInstructor = HttpContext.Session.GetString("IsInstructor");
-    }
     @if (IsInstructor == "True")
     {
         <a asp-page="./Edit" asp-route-id="@Model.CurrentCourse.CourseId">Edit</a>

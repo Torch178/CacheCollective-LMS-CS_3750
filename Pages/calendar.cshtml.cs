@@ -27,21 +27,20 @@ namespace RazorPagesMovie.Pages
         {
             // Fetch user from claims
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null) { return RedirectToPage("/Users/Login"); }
-            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("/Users/Login"); } // invalid userId
+            if (userIdClaim == null) { return RedirectToPage("./Login"); }
+            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("./Login"); }
 
             var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
             if (user == null) { return NotFound(); }
 
-            // Set the start date for the current week
             var today = DateTime.Today;
             var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
 
             if (user.IsInstructor)
             {
-                // Fetch courses taught by this specific instructor
+                // Fetch courses taught by the instructor
                 var courses = await _context.Course
-                    .Where(c => c.InstructorCourseId == user.Id)  // Match the instructor by their ID
+                    .Where(c => c.InstructorCourseId == user.Id)
                     .ToListAsync();
 
                 foreach (var course in courses)
@@ -56,11 +55,9 @@ namespace RazorPagesMovie.Pages
                                 Events.Add(new
                                 {
                                     title = $"{course.Title} {course.Number} {course.Location}",
-                                    start = eventDate.Add(course.StartTime),
-                                    // following information can also be added to the title
-                                    //end = eventDate.Add(course.EndTime),
+                                    start = eventDate.Add(course.StartTime)
                                     //location = course.Location,
-                                    //description = $"Teaching this course by {user.FirstName} {user.LastName}"
+                                    //description = $"Taught by {user.FirstName} {user.LastName}"
                                 });
                             }
                         }
@@ -69,7 +66,7 @@ namespace RazorPagesMovie.Pages
             }
             else
             {
-                // Fetch enrollments for the current user
+                // Fetch enrollments for the user
                 var enrollments = await _context.Enrollment
                     .Where(e => e.UserId == userId)
                     .ToListAsync();
@@ -89,14 +86,30 @@ namespace RazorPagesMovie.Pages
                                     Events.Add(new
                                     {
                                         title = $"{course.Title} {course.Number} {course.Location}",
-                                        start = eventDate.Add(course.StartTime),
-                                        // following information can also be added to the title
-                                            //end = eventDate.Add(course.EndTime),
-                                            //location = course.Location,
-                                            //description = "Enrolled in this course"
+                                        start = eventDate.Add(course.StartTime)
+                                        //location = course.Location,
+                                        //description = "Enrolled in this course"
                                     });
                                 }
                             }
+                        }
+
+                        // Fetch assignments for the course
+                        var assignments = await _context.Assignment
+                            .Where(a => a.CourseId == course.CourseId)
+                            .ToListAsync();
+
+                        foreach (var assignment in assignments)
+                        {
+                            Events.Add(new
+                            {
+                                title = $"Assignment: {assignment.Title}",
+                                start = assignment.DueDate,
+                                end = assignment.DueDate.AddSeconds(1), // Added one second to ensure the event remains on the intended due date
+                                url = Url.Page("/Course/Assignment/Details", new { id = assignment.Id })
+                                //location = course.Location, // Optional: Use course location for context
+                                //description = assignment.Description // Ensure this is consistently provided
+                            });
                         }
                     }
                 }
@@ -104,10 +117,6 @@ namespace RazorPagesMovie.Pages
 
             return Page();
         }
-
-
-
-
 
 
 

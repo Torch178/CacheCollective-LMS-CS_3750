@@ -5,6 +5,7 @@
 
 @{
     ViewData["Title"] = "Assignments";
+    var IsInstructor = HttpContext.Session.GetString("IsInstructor");
 }
 @{
     var IsInstructor = HttpContext.Session.GetString("IsInstructor");
@@ -34,7 +35,7 @@
                 <td>@assignment.DueDate.ToShortDateString()</td>
                 <td>@assignment.SubmissionType</td>
                 <td>
-                    
+
                     @if (IsInstructor == "True")
                     {
                         <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Edit</a>

@@ -3,6 +3,6 @@
     public enum SubmissionType
     {
         TextEntry,
-        FileSubmission
+        FileUpload
     }
 }

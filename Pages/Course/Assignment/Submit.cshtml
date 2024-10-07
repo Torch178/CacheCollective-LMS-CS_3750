@@ -1,0 +1,32 @@
+﻿@page
+@model RazorPagesMovie.Pages.Course.Assignment.SubmitModel
+
+<h2>@Model.Assignment.Title</h2>
+
+<div>
+    <p><strong>Description:</strong> @Model.Assignment.Description</p>
+    <p><strong>Max Points:</strong> @Model.Assignment.MaxPoints</p>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="AssignmentId" />
+
+    @if (Model.Assignment != null && Model.Assignment.SubmissionType == RazorPagesMovie.Models.SubmissionType.TextEntry)
+    {
+        <div class="form-group">
+            <label asp-for="SubmittedText" class="control-label"></label>
+            <textarea asp-for="SubmittedText" class="form-control"></textarea>
+            <span asp-validation-for="SubmittedText" class="text-danger"></span>
+        </div>
+    }
+    else if (Model.Assignment != null && Model.Assignment.SubmissionType == RazorPagesMovie.Models.SubmissionType.FileUpload)
+    {
+        <div>
+            <label for="SubmissionFile">File Upload:</label>
+            <input type="file" id="SubmissionFile" name="SubmissionFile" />
+        </div>
+    }
+    <button type="submit">Submit</button>
+    <a asp-page="Index" asp-route-courseId="@Model.Assignment.CourseId">Back to List</a>
+</form>
+

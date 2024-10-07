@@ -19,6 +19,8 @@ namespace RazorPagesMovie.Data
         public DbSet<RazorPagesMovie.Models.Course> Course { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.Enrollment> Enrollment { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.Assignment> Assignment { get; set; } = default!;
+        public DbSet<RazorPagesMovie.Models.Submission> Submission { get; set; } = default!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +34,15 @@ namespace RazorPagesMovie.Data
                 entity.HasKey(a => a.Id);
                 entity.Property(a => a.CourseId).IsRequired();
             });
+
+            modelBuilder.Entity<Submission>(entity =>
+            {
+                entity.HasKey(s => s.SubmissionId);
+                entity.Property(s => s.AssignmentId).IsRequired();
+                entity.Property(s => s.UserId).IsRequired();
+                entity.Property(s => s.SubmissionDate).IsRequired();
+            });
+
         }
     }
 }

@@ -31,8 +31,10 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+
     <Folder Include="wwwroot\Images\Profile_Pics\Instructors\" />
     <Folder Include="wwwroot\Images\Profile_Pics\Students\" />
+    <Folder Include="wwwroot\Submissions\" />
   </ItemGroup>
 
 </Project>

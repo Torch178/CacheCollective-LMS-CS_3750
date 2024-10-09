@@ -40,12 +40,14 @@
                         <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a>
                         <span>|</span>
                         <a asp-page="Delete" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Delete</a>
+                        <span>|</span>
+                        <a asp-page="Submissions/Submissions" asp-route-AssignmentId="@assignment.Id">Submissions</a>
                     }
                     else
                     {
                         <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a>
                         <a asp-page="./Submit" asp-route-AssignmentId="@assignment.Id" asp-route-CourseId="@Model.CourseId">Submit</a>
-
+                        
                     }
                 </td>
             </tr>

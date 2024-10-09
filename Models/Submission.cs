@@ -1,4 +1,6 @@
-﻿namespace RazorPagesMovie.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RazorPagesMovie.Models
 {
     public class Submission
     {
@@ -14,5 +16,10 @@
         public string? FilePath { get; set; }
         public string? FileName { get; set; } // For storing original file name
         public DateTime SubmissionDate { get; set; } // Date and time of submission
+
+        public double? GradedPoints { get; set; } = null;
+        [NotMapped]
+        public Assignment? Assignment { get; set; }
+
     }
 }

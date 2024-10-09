@@ -1,0 +1,60 @@
+﻿@page
+@model RazorPagesMovie.Pages.Course.Assignment.Submissions.SubmissionsModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>Submissions for Assignment: @Model.Submission.FirstOrDefault()?.AssignmentId</h2>
+
+@if (ViewData["Message"] != null)
+{
+    <p>@ViewData["Message"]</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Submission Type</th>
+                <th>Graded Points</th>
+                <th>Max Points</th>
+                <th>Submitted Content</th>
+                <th>Submission Date</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var submission in Model.Submission)
+            {
+                <tr>
+                    <td>@submission.UserId</td>
+                    <td>@submission.SubmissionType</td>
+                    <td>
+                        @if (submission.GradedPoints.HasValue)
+                        {
+                            @submission.GradedPoints
+                        }
+                        else
+                        {
+                            <span>Not Graded</span>
+                        }
+                    </td>
+                    <td>@ViewData["MaxPoints"]</td> <!-- Display MaxPoints from ViewData -->
+                    <td>
+                        @if (submission.SubmissionType == RazorPagesMovie.Models.SubmissionType.TextEntry)
+                        {
+                            <pre>@submission.SubmittedText</pre>
+                        }
+                        else if (submission.SubmissionType == RazorPagesMovie.Models.SubmissionType.FileUpload)
+                        {
+                            <a href="@Url.Content($"~/{submission.FilePath}")">@submission.FileName</a>
+                        }
+                    </td>
+                    <td>@submission.SubmissionDate.ToString("g")</td>
+                    <td>
+                        <a asp-page="Grading" asp-route-submissionId="@submission.SubmissionId">Grade</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

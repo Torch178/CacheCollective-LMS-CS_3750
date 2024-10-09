@@ -35,7 +35,9 @@ namespace RazorPagesMovie.Pages.Course.Assignment
         [BindProperty]
         public IFormFile? SubmissionFile { get; set; }
 
-        public RazorPagesMovie.Models.Assignment Assignment { get; set; } = default!;
+        // Assignment property is not bound, it will be fetched manually.
+        public RazorPagesMovie.Models.Assignment? Assignment { get; set; }
+
         private void PrintModelStateErrors()
         {
             foreach (var state in ModelState)
@@ -47,7 +49,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment
             }
         }
 
-
         public async Task<IActionResult> OnGetAsync()
         {
             if (AssignmentId == 0)
@@ -55,14 +56,14 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                 return NotFound();
             }
 
-            // Fetch the assignment to ensure Model.Assignment is not null
+            // Fetch the assignment to ensure Assignment is not null
             Assignment = await _context.Assignment.FirstOrDefaultAsync(a => a.Id == AssignmentId);
             if (Assignment == null)
             {
                 return NotFound();
             }
 
-            // Ensure the Submission property is also initialized
+            // Initialize the Submission object
             Submission = new Submission
             {
                 AssignmentId = AssignmentId
@@ -71,11 +72,10 @@ namespace RazorPagesMovie.Pages.Course.Assignment
             return Page();
         }
 
-
         public async Task<IActionResult> OnPostAsync()
         {
-            // Fetch the assignment to determine submission type
-            Assignment = await _context.Assignment.FindAsync(Submission.AssignmentId);
+            // Fetch the assignment manually based on AssignmentId
+            Assignment = await _context.Assignment.FirstOrDefaultAsync(a => a.Id == AssignmentId);
             if (Assignment == null)
             {
                 return NotFound();
@@ -87,6 +87,7 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                 ModelState.Remove("SubmittedText");
             }
 
+            // Validate only Submission and necessary fields, not the Assignment property
             if (!ModelState.IsValid)
             {
                 // Print model state errors to debug
@@ -94,7 +95,10 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                 return Page();
             }
 
-            // Validate based on the SubmissionType
+            // Fetch or initialize the existing submission for this student
+            var existingSubmission = await _context.Submission
+                .FirstOrDefaultAsync(s => s.AssignmentId == AssignmentId && s.UserId == Submission.UserId);
+
             if (Assignment.SubmissionType == SubmissionType.TextEntry)
             {
                 if (string.IsNullOrWhiteSpace(SubmittedText))
@@ -103,7 +107,22 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                     return Page();
                 }
 
-                Submission.SubmittedText = SubmittedText;
+                if (existingSubmission != null)
+                {
+                    // Update the existing text submission
+                    existingSubmission.SubmittedText = SubmittedText;
+                    existingSubmission.SubmissionDate = DateTime.Now;
+                }
+                else
+                {
+                    // Create a new text submission
+                    Submission.SubmittedText = SubmittedText;
+                    Submission.SubmissionType = SubmissionType.TextEntry;
+                    Submission.SubmissionDate = DateTime.Now;
+                    Submission.GradedPoints = null;
+
+                    _context.Submission.Add(Submission);
+                }
             }
             else if (Assignment.SubmissionType == SubmissionType.FileUpload)
             {
@@ -126,25 +145,55 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                 var uniqueFileName = $"{Guid.NewGuid()}_{SubmissionFile.FileName}";
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                // Save the file
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                try
                 {
-                    await SubmissionFile.CopyToAsync(stream);
-                }
+                    // Delete old file if this is an update
+                    if (existingSubmission != null && !string.IsNullOrEmpty(existingSubmission.FilePath))
+                    {
+                        var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", existingSubmission.FilePath);
+                        if (System.IO.File.Exists(oldFilePath))
+                        {
+                            System.IO.File.Delete(oldFilePath);
+                        }
+                    }
 
-                // Set file properties in Submission model
-                Submission.FilePath = Path.Combine("Submissions", uniqueFileName); // relative path for serving the file
-                Submission.FileName = SubmissionFile.FileName;
+                    // Save the new file
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await SubmissionFile.CopyToAsync(stream);
+                    }
+
+                    if (existingSubmission != null)
+                    {
+                        // Update the existing submission with new file details
+                        existingSubmission.FilePath = $"Submissions/{uniqueFileName}";
+                        existingSubmission.FileName = SubmissionFile.FileName;
+                        existingSubmission.SubmissionDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        // Create a new file submission
+                        Submission.FilePath = $"Submissions/{uniqueFileName}";
+                        Submission.FileName = SubmissionFile.FileName;
+                        Submission.SubmissionType = SubmissionType.FileUpload;
+                        Submission.SubmissionDate = DateTime.Now;
+                        Submission.GradedPoints = null;
+
+                        _context.Submission.Add(Submission);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, $"An error occurred while uploading the file: {ex.Message}");
+                    return Page();
+                }
             }
 
-            Submission.SubmissionDate = DateTime.Now;
-            _context.Submission.Add(Submission);
+            // Save changes to the database
             await _context.SaveChangesAsync();
 
             // Redirect to the index page for the course's assignments
             return RedirectToPage("./Index", new { CourseId = this.CourseId });
         }
-
-
     }
 }

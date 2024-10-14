@@ -21,5 +21,7 @@ namespace RazorPagesMovie.Models
         [NotMapped]
         public Assignment? Assignment { get; set; }
 
+        public string? InstructorComments { get; set; } // For storing instructor comments
+
     }
 }

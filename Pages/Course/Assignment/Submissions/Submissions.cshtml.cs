@@ -19,6 +19,14 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
             _context = context;
         }
 
+        [BindProperty]
+        public int AGrades { get; set; }
+        public int BGrades { get; set; }
+        public int CGrades { get; set; }
+        public int DGrades { get; set; }
+        public int FGrades { get; set; }
+
+
         public IList<Submission> Submission { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? assignmentId)
@@ -41,6 +49,31 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
             Submission = await _context.Submission
                 .Where(s => s.AssignmentId == assignmentId)
                 .ToListAsync();
+
+            foreach (var submission in Submission)
+            {
+                double gradePercentage = (submission.GradedPoints ?? 0) / assignment.MaxPoints;
+                if (gradePercentage >= 90)
+                {
+                    AGrades++;
+                }
+                else if (gradePercentage >= 80)
+                {
+                    BGrades++;
+                }
+                else if (gradePercentage >= 70)
+                {
+                    CGrades++;
+                }
+                else if (gradePercentage >= 60)
+                {
+                    DGrades++;
+                }
+                else
+                {
+                    FGrades++;
+                }
+            }
 
             if (Submission == null || Submission.Count == 0)
             {

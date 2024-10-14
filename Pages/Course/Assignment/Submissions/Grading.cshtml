@@ -1,0 +1,109 @@
+﻿@page
+@model RazorPagesMovie.Pages.Course.Assignment.Submissions.GradingModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Grade Submission";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Grade Submission</h2>
+
+    @if (Model.Submission == null)
+    {
+        <div class="alert alert-warning" role="alert">
+            No submission found for the selected student.
+        </div>
+    }
+    else
+    {
+        <!-- Submission Information Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Student & Submission Details</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Student:</strong> @Model.Submission.UserId</p>
+                <p><strong>Submission Type:</strong> @Model.Submission.SubmissionType</p>
+                <p><strong>Submission Date:</strong> @Model.Submission.SubmissionDate.ToString("g")</p>
+                <p><strong>Max Points:</strong> @ViewData["MaxPoints"]</p>
+            </div>
+        </div>
+
+        <!-- New Row for Success Message -->
+        @if (TempData["Message"] != null)
+        {
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="alert alert-success">
+                        <strong>Success:</strong> @TempData["Message"]
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Row for Submitted Content and Grading Form -->
+        <div class="row mb-4">
+            <!-- Submitted Content Column -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Submitted Content</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Submission.SubmissionType == RazorPagesMovie.Models.SubmissionType.TextEntry)
+                        {
+                            <div class="border p-3 bg-light">
+                                <h6 class="mb-3">Text Submission:</h6>
+                                <pre>@Model.Submission.SubmittedText</pre>
+                            </div>
+                        }
+                        else if (Model.Submission.SubmissionType == RazorPagesMovie.Models.SubmissionType.FileUpload)
+                        {
+                            <div class="border p-3 bg-light">
+                                <h6 class="mb-3">File Submission:</h6>
+                                <a class="btn btn-link" href="@Url.Content($"~/{Model.Submission.FilePath}")" target="_blank">
+                                    @Model.Submission.FileName
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grading Form and Comments Column -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Enter Grade</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="mb-3">
+                                <label for="GradedPoints" class="form-label">Grade (out of @ViewData["MaxPoints"]):</label>
+                                <input type="number" id="GradedPoints" name="GradedPoints" class="form-control"
+                                       value="@Model.Submission.GradedPoints" min="0" max="@ViewData["MaxPoints"]" required />
+                            </div>
+
+                            <!-- Comments Section (Instructor Comments) -->
+                            <div class="mb-3">
+                                <label for="InstructorComments" class="form-label">Instructor Comments:</label>
+                                <textarea id="InstructorComments" name="InstructorComments" class="form-control" rows="3">@Model.Submission.InstructorComments</textarea>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Optional: Add custom JavaScript validation or actions here
+    </script>
+}

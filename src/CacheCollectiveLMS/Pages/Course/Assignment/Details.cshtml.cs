@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +11,15 @@ namespace RazorPagesMovie.Pages.Course.Assignment
 {
     public class DetailsModel : PageModel
     {
-        private readonly RazorPagesMovie.Data.RazorPagesMovieContext _context;
+        private readonly RazorPagesMovieContext _context;
 
-        public DetailsModel(RazorPagesMovie.Data.RazorPagesMovieContext context)
+        public DetailsModel(RazorPagesMovieContext context)
         {
             _context = context;
         }
 
         public RazorPagesMovie.Models.Assignment Assignment { get; set; } = default!;
+        public List<Submission> Submissions { get; set; } = new List<Submission>();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -33,10 +33,14 @@ namespace RazorPagesMovie.Pages.Course.Assignment
             {
                 return NotFound();
             }
-            else
-            {
-                Assignment = assignment;
-            }
+
+            Assignment = assignment;
+
+            // Fetch submissions related to the assignment
+            Submissions = await _context.Submission
+                .Where(s => s.AssignmentId == Assignment.Id)
+                .ToListAsync();
+
             return Page();
         }
     }

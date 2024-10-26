@@ -28,7 +28,21 @@
             @Html.DisplayNameFor(model => model.Assignment.MaxPoints)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Assignment.MaxPoints)
+            @if (Model.Submissions.Any(s => s.GradedPoints.HasValue))
+            {
+                foreach (var submission in Model.Submissions)
+                {
+                    if (submission.GradedPoints.HasValue)
+                    {
+                        @submission.GradedPoints @: out of @Model.Assignment.MaxPoints
+                        <br />
+                    }
+                }
+            }
+            else
+            {
+                @Model.Assignment.MaxPoints
+            }
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Assignment.DueDate)

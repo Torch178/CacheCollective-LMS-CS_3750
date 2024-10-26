@@ -8,7 +8,7 @@
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-        // Data structure: ['Grade Category', 'Number of Students']
+
         var data = google.visualization.arrayToDataTable([
             ['Grade Category', 'Number of Students'],
             ['A (90-100)', @Model.AGrades],
@@ -29,60 +29,71 @@
 
 <h2>Submissions for Assignment: @Model.Submission.FirstOrDefault()?.AssignmentId</h2>
 
-@if (ViewData["Message"] != null)
+@if (TempData["Message"] != null)
 {
-    <p>@ViewData["Message"]</p>
+    <div id="success-message" class="alert alert-success">
+        @TempData["Message"]
+    </div>
 }
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Submission Type</th>
-                <th>Graded Points</th>
-                <th>Max Points</th>
-                <th>Submitted Content</th>
-                <th>Submission Date</th>
-                <th>Options</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var submission in Model.Submission)
-            {
-                <tr>
-                    <td>@submission.UserId</td>
-                    <td>@submission.SubmissionType</td>
-                    <td>
-                        @if (submission.GradedPoints.HasValue)
-                        {
-                            @submission.GradedPoints
-                        }
-                        else
-                        {
-                            <span>Not Graded</span>
-                        }
-                    </td>
-                    <td>@ViewData["MaxPoints"]</td> <!-- Display MaxPoints from ViewData -->
-                    <td>
-                        @if (submission.SubmissionType == RazorPagesMovie.Models.SubmissionType.TextEntry)
-                        {
-                            <pre>@submission.SubmittedText</pre>
-                        }
-                        else if (submission.SubmissionType == RazorPagesMovie.Models.SubmissionType.FileUpload)
-                        {
-                            <a href="@Url.Content($"~/{submission.FilePath}")">@submission.FileName</a>
-                        }
-                    </td>
-                    <td>@submission.SubmissionDate.ToString("g")</td>
-                    <td>
-                        <a asp-page="Grading" asp-route-submissionId="@submission.SubmissionId">Grade</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 
-    <h2>Grade Distribution</h2>
-    <div id="piechart_div"></div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>Submission Type</th>
+            <th>Graded Points</th>
+            <th>Max Points</th>
+            <th>Submitted Content</th>
+            <th>Submission Date</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var submission in Model.Submission)
+        {
+            <tr>
+                <td>@submission.UserId</td>
+                <td>@submission.SubmissionType</td>
+                <td>
+                    @if (submission.GradedPoints.HasValue)
+                    {
+                        @submission.GradedPoints
+                    }
+                    else
+                    {
+                        <span>Not Graded</span>
+                    }
+                </td>
+                <td>@ViewData["MaxPoints"]</td>
+                <td>
+                    @if (submission.SubmissionType == RazorPagesMovie.Models.SubmissionType.TextEntry)
+                    {
+                        <pre>@submission.SubmittedText</pre>
+                    }
+                    else if (submission.SubmissionType == RazorPagesMovie.Models.SubmissionType.FileUpload)
+                    {
+                        <a href="@Url.Content($"~/{submission.FilePath}")">@submission.FileName</a>
+                    }
+                </td>
+                <td>@submission.SubmissionDate.ToString("g")</td>
+                <td>
+                    <a asp-page="Grading" asp-route-submissionId="@submission.SubmissionId">Grade</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Grade Distribution</h2>
+<div id="piechart_div"></div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var successMessage = $('#success-message');
+            if (successMessage.length) {
+                successMessage.delay(2000).fadeOut();
+            }
+        });
+    </script>
 }

@@ -18,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\RazorPagesMovie.csproj" />
     <ProjectReference Include="..\CacheCollectiveLMS\RazorPagesMovie.csproj" />
   </ItemGroup>
 

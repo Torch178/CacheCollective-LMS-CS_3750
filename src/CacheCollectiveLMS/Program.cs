@@ -1,10 +1,9 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
+using RazorPagesMovie.Controllers;
 var builder = WebApplication.CreateBuilder(args);
-
-// Constants
-var LOGIN_COOKIE_TIMEOUT = TimeSpan.FromDays(1);
 
 // Add services to the container.
 
@@ -16,15 +15,12 @@ builder.Services.AddAuthentication("ClaimBasedSchema").AddCookie("ClaimBasedSche
 {
     options.LoginPath = "/Users/Login";
     options.LogoutPath = "/Users/Logout";
-    options.Cookie.HttpOnly = true;
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = LOGIN_COOKIE_TIMEOUT;
 });
 
 // Add session services for the IsInstructor session field
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = LOGIN_COOKIE_TIMEOUT; // Set session timeout
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
     options.Cookie.HttpOnly = true; // Make the cookie accessible only via HTTP
     options.Cookie.IsEssential = true; // Required for session to work
 });
@@ -58,6 +54,11 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.MapControllerRoute(
+    name:"WebHook",
+    pattern:"{controller=WebHook}/action=RecieveRequest");
 
+//{controller=Payment}/{action=RecieveRequest}
+
+app.MapRazorPages();
 app.Run();

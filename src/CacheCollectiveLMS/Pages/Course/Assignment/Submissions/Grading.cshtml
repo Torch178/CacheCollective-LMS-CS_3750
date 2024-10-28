@@ -30,6 +30,7 @@
             </div>
         </div>
 
+        <!-- New Row for Success Message -->
         @if (TempData["Message"] != null)
         {
             <div class="row mb-4">
@@ -41,6 +42,7 @@
             </div>
         }
 
+        <!-- Row for Submitted Content and Grading Form -->
         <div class="row mb-4">
             <!-- Submitted Content Column -->
             <div class="col-md-6">
@@ -60,7 +62,8 @@
                         {
                             <div class="border p-3 bg-light">
                                 <h6 class="mb-3">File Submission:</h6>
-                                <a class="btn btn-link" href="@Url.Content($"~/{Model.Submission.FilePath}")" download> download_@Model.Submission.FileName
+                                <a class="btn btn-link" href="@Url.Content($"~/{Model.Submission.FilePath}")" target="_blank">
+                                    @Model.Submission.FileName
                                 </a>
                             </div>
                         }
@@ -82,6 +85,7 @@
                                        value="@Model.Submission.GradedPoints" min="0" max="@ViewData["MaxPoints"]" required />
                             </div>
 
+                            <!-- Comments Section (Instructor Comments) -->
                             <div class="mb-3">
                                 <label for="InstructorComments" class="form-label">Instructor Comments:</label>
                                 <textarea id="InstructorComments" name="InstructorComments" class="form-control" rows="3">@Model.Submission.InstructorComments</textarea>

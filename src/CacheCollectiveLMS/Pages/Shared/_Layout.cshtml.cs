@@ -16,28 +16,8 @@ namespace RazorPagesMovie.Pages.Shared
             _context = context;
         }
 
-        [BindProperty]
-        public User CurrentUser { get; set; }
-
         public async Task<IActionResult> OnGetAsync()
         {
-            Console.WriteLine("Layout Loaded");
-            if (CurrentUser == null)
-            {
-                // Fetch user from claims
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (userIdClaim == null) { return RedirectToPage("./Login"); }
-                if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("./Login"); } // invalid userId
-
-                var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
-                if (user == null) { return NotFound(); }
-
-                CurrentUser = user;
-            }
-
-            ViewData["IsInstructor"] = CurrentUser.IsInstructor;
-            Console.WriteLine(ViewData["IsInstructor"]);
-
             return Page();
         }
     }

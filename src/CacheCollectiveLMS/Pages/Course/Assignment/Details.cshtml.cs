@@ -20,6 +20,7 @@ namespace RazorPagesMovie.Pages.Course.Assignment
             _context = context;
         }
 
+
         [BindProperty]
         public int AGrades { get; set; }
         public int BGrades { get; set; }

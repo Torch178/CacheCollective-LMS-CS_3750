@@ -8,6 +8,7 @@ using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace RazorPagesMovie.Pages.Course.Assignment
 {
@@ -25,6 +26,9 @@ namespace RazorPagesMovie.Pages.Course.Assignment
 
         [BindProperty(SupportsGet = true)]
         public int CourseId { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int UserId { get; set; }
 
         [BindProperty]
         public Submission Submission { get; set; } = default!;
@@ -63,10 +67,16 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                 return NotFound();
             }
 
+            // Fetch user id from claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null) { return RedirectToPage("/Users/Login"); }
+            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("/Users/Login"); } // invalid userId
+
             // Initialize the Submission object
             Submission = new Submission
             {
-                AssignmentId = AssignmentId
+                AssignmentId = AssignmentId,
+                UserId = userId
             };
 
             return Page();

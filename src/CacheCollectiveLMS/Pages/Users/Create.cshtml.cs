@@ -5,8 +5,6 @@ using RazorPagesMovie.Models;
 using RazorPagesMovie.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using Stripe;
-using Stripe.Checkout;
 
 namespace RazorPagesMovie.Pages.Users
 {
@@ -19,11 +17,6 @@ namespace RazorPagesMovie.Pages.Users
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
-        }
-
-        public class StripeOptions
-        {
-            public string option { get; set; }
         }
 
         public IActionResult OnGet()
@@ -54,20 +47,6 @@ namespace RazorPagesMovie.Pages.Users
                 // Password hashing logic before saving the user
                 var passwordHasher = new PasswordHasher<User>();
                 User.Password = passwordHasher.HashPassword(User, User.Password);
-
-                if (!User.IsInstructor)
-                {
-                    User.tuitionDue = 0;
-                    User.tuitionPaid = 0;
-                    User.refundAmt = 0;
-                    User.TuitionId = Guid.NewGuid().ToString();
-
-                    //Create unique tuition product for student to make payments
-                    StripeConfiguration.ApiKey = "sk_test_51Q6simP6Fkhfsw4osozLyQK35jEf9YNVBsyRSyEN80Colog02BNiuhb4lg4wNN604wapVshVJvi7D5JINpJGiogY00fJyblERC";
-                    var options = new ProductCreateOptions { Name = "Tuition_" + User.Id.ToString(), Id = User.TuitionId };
-                    var service = new ProductService();
-                    service.Create(options);
-                }
 
                 _context.User.Add(User);
                 await _context.SaveChangesAsync();

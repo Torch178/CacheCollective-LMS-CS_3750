@@ -161,41 +161,6 @@ namespace RazorPagesMovie.Migrations
                     b.ToTable("Movie");
                 });
 
-            modelBuilder.Entity("RazorPagesMovie.Models.PaymentDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("createdDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("payMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("semester")
-                        .HasColumnType("int");
-
-                    b.Property<int>("status")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("total")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id", "userId")
-                        .IsUnique();
-
-                    b.ToTable("PaymentDetails");
-                });
-
             modelBuilder.Entity("RazorPagesMovie.Models.Submission", b =>
                 {
                     b.Property<int>("SubmissionId")
@@ -291,23 +256,10 @@ namespace RazorPagesMovie.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("TuitionId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Zip")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
-
-                    b.Property<decimal?>("refundAmt")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("tuitionDue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("tuitionPaid")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

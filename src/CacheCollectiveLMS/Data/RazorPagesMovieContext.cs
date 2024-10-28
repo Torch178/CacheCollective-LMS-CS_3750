@@ -20,7 +20,6 @@ namespace RazorPagesMovie.Data
         public DbSet<RazorPagesMovie.Models.Enrollment> Enrollment { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.Assignment> Assignment { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.Submission> Submission { get; set; } = default!;
-        public DbSet<RazorPagesMovie.Models.PaymentDetails> PaymentDetails { get; set; } = default!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,13 +41,6 @@ namespace RazorPagesMovie.Data
                 entity.Property(s => s.AssignmentId).IsRequired();
                 entity.Property(s => s.UserId).IsRequired();
                 entity.Property(s => s.SubmissionDate).IsRequired();
-            });
-
-            modelBuilder.Entity<PaymentDetails>(entity =>
-            {
-                entity.HasKey(a => a.Id);
-                entity.Property(s=>s.userId).IsRequired();
-                entity.HasIndex( a => new { a.Id, a.userId }).IsUnique();
             });
 
         }

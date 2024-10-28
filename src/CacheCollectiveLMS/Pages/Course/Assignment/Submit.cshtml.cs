@@ -27,6 +27,9 @@ namespace RazorPagesMovie.Pages.Course.Assignment
         [BindProperty(SupportsGet = true)]
         public int CourseId { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public int UserId { get; set; }
+
         [BindProperty]
         public Submission Submission { get; set; } = default!;
 
@@ -52,8 +55,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment
 
         public async Task<IActionResult> OnGetAsync()
         {
-
-
             if (AssignmentId == 0)
             {
                 return NotFound();
@@ -66,10 +67,16 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                 return NotFound();
             }
 
+            // Fetch user id from claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null) { return RedirectToPage("/Users/Login"); }
+            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("/Users/Login"); } // invalid userId
+
             // Initialize the Submission object
             Submission = new Submission
             {
-                AssignmentId = AssignmentId
+                AssignmentId = AssignmentId,
+                UserId = userId
             };
 
             return Page();
@@ -77,13 +84,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment
 
         public async Task<IActionResult> OnPostAsync()
         {
-
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null) { return RedirectToPage("./Login"); }
-            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("./Login"); } // invalid userId
-
-            var loggedInUser = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
-
             // Fetch the assignment manually based on AssignmentId
             Assignment = await _context.Assignment.FirstOrDefaultAsync(a => a.Id == AssignmentId);
             if (Assignment == null)
@@ -130,7 +130,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                     Submission.SubmissionType = SubmissionType.TextEntry;
                     Submission.SubmissionDate = DateTime.Now;
                     Submission.GradedPoints = null;
-                    Submission.UserId = loggedInUser.Id;
 
                     _context.Submission.Add(Submission);
                 }
@@ -189,7 +188,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment
                         Submission.SubmissionType = SubmissionType.FileUpload;
                         Submission.SubmissionDate = DateTime.Now;
                         Submission.GradedPoints = null;
-                        Submission.UserId = loggedInUser.Id;
 
                         _context.Submission.Add(Submission);
                     }

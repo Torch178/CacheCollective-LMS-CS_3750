@@ -65,12 +65,7 @@ namespace RazorPagesMovie.Pages.Users
 
             var claimsIdentity = new ClaimsIdentity(userClaims, "User");
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-            var claimsAuthenticationProperties = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1)
-            };
-            await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal, claimsAuthenticationProperties);
+            await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
 
             HttpContext.Session.SetString("IsInstructor", userExists.IsInstructor.ToString());
 

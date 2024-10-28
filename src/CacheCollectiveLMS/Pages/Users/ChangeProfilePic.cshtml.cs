@@ -32,6 +32,7 @@ namespace RazorPagesMovie.Pages.Users
         [BindProperty]
         public ImageUploadViewModel ViewModel { get; set; }
         public User User { get; set; }
+        
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)

@@ -19,7 +19,7 @@
             <th>Submission Type</th>
             @if (IsInstructor != "True")
             {
-                <th>Grade</th> <!-- Grade column only for students -->
+                <th>My Score</th> <!-- Grade column only for students -->
             }
             <th>Actions</th>
         </tr>
@@ -38,7 +38,7 @@
                 {
                     <td>
                         <!-- Display the grade, or "Not Graded" if no grade exists -->
-                        @Model.AssignmentGrades[assignment.Id]?.ToString() ?? "Not Graded"
+                         Not Graded
                     </td>
                 }
 
@@ -63,6 +63,13 @@
         }
     </tbody>
 </table>
+
+@if (IsInstructor != "True")
+{
+    <div class="mt-3 p-3 border bg-light">
+        <strong>Total Grade:</strong> undefined
+    </div>
+}
 
 @if (IsInstructor == "True")
 {

@@ -1,5 +1,4 @@
 ﻿@page
-@using Microsoft.AspNetCore.Http;
 @model RazorPagesMovie.Pages.Course.Assignment.IndexModel
 @inject IHttpContextAccessor HttpContextAccessor;
 
@@ -10,7 +9,6 @@
 
 <h2>Assignments for @Model.CourseName</h2>
 
-<!-- List Assignments -->
 <table class="table">
     <thead>
         <tr>
@@ -19,6 +17,10 @@
             <th>Max Points</th>
             <th>Due Date</th>
             <th>Submission Type</th>
+            @if (IsInstructor != "True")
+            {
+                <th>Grade</th> <!-- Grade column only for students -->
+            }
             <th>Actions</th>
         </tr>
     </thead>
@@ -31,8 +33,16 @@
                 <td>@assignment.MaxPoints</td>
                 <td>@assignment.DueDate.ToShortDateString()</td>
                 <td>@assignment.SubmissionType</td>
-                <td>
 
+                @if (IsInstructor != "True")
+                {
+                    <td>
+                        <!-- Display the grade, or "Not Graded" if no grade exists -->
+                        @Model.AssignmentGrades[assignment.Id]?.ToString() ?? "Not Graded"
+                    </td>
+                }
+
+                <td>
                     @if (IsInstructor == "True")
                     {
                         <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Edit</a>
@@ -47,15 +57,12 @@
                     {
                         <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a>
                         <a asp-page="./Submit" asp-route-AssignmentId="@assignment.Id" asp-route-CourseId="@Model.CourseId">Submit</a>
-                        
                     }
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<!-- Link to Create a New Assignment, passing CourseId -->
 
 @if (IsInstructor == "True")
 {

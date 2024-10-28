@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
+using System.Security.Claims;
 
 namespace RazorPagesMovie.Pages
 {
@@ -16,11 +18,18 @@ namespace RazorPagesMovie.Pages
             _context = context;
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
+            // Fetch user from claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null) { return RedirectToPage("/Users/Login"); }
+            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("/Users/Login"); } // invalid userId
 
-            return Redirect("/Users/Login");
-            
+            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
+            if (user == null) { return RedirectToPage("/Users/Login"); }
+
+            HttpContext.Session.SetString("IsInstructor", user.IsInstructor.ToString());
+            return Redirect("/Users/Index");
         }
     }
 }

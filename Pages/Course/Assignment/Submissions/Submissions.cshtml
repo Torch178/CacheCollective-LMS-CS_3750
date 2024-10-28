@@ -27,7 +27,7 @@
     }
 </script>
 
-<h2>Submissions for Assignment: @Model.Submission.FirstOrDefault()?.AssignmentId</h2>
+<h2>Submissions for Assignment: @Model.CurrentAssignment.Title</h2>
 
 @if (ViewData["Message"] != null)
 {
@@ -83,6 +83,9 @@ else
         </tbody>
     </table>
 
-    <h2>Grade Distribution</h2>
-    <div id="piechart_div"></div>
+    @if(Model.SubmissionsGraded == true)
+    {
+        <h2 id="piechart_title">Grade Distribution</h2>
+        <div id="piechart_div"></div>
+    }
 }

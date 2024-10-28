@@ -56,7 +56,6 @@ namespace RazorPagesMovie.Pages.Users
             }
 
             await _context.SaveChangesAsync();
-            await CurrentUser.updateTuition(_context);
             return RedirectToPage();
         }
     }

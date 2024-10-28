@@ -27,7 +27,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
                 return NotFound();
             }
 
-            // Fetch the submission with the given submissionId
             Submission = await _context.Submission
                 .FirstOrDefaultAsync(s => s.SubmissionId == submissionId);
 
@@ -36,7 +35,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
                 return NotFound();
             }
 
-            // Fetch the assignment for max points
             var assignment = await _context.Assignment
                 .FirstOrDefaultAsync(a => a.Id == Submission.AssignmentId);
 
@@ -50,10 +48,8 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
             return Page();
         }
 
-        // Method to handle the form submission
         public async Task<IActionResult> OnPostAsync(int submissionId)
         {
-            // Fetch the submission
             Submission = await _context.Submission.FindAsync(submissionId);
 
             if (Submission == null)
@@ -61,7 +57,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
                 return NotFound();
             }
 
-            // Update the GradedPoints and Comments
             if (ModelState.IsValid)
             {
                 var gradedPoints = Request.Form["GradedPoints"];
@@ -69,20 +64,15 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
 
                 if (double.TryParse(gradedPoints, out double points))
                 {
-                    // Update the graded points
                     Submission.GradedPoints = points;
-
-                    // Update the instructor comments
                     Submission.InstructorComments = instructorComments;
 
-                    // Mark the entity as modified
                     _context.Entry(Submission).State = EntityState.Modified;
-
-                    // Save the changes to the database
                     await _context.SaveChangesAsync();
 
+                    // Set TempData message
                     TempData["Message"] = "Grade saved successfully!";
-                    return RedirectToPage("Submissions", new { assignmentId = Submission.AssignmentId });
+                    return RedirectToPage("/Course/Assignment/Submissions/Submissions", new { assignmentId = Submission.AssignmentId });
                 }
                 else
                 {
@@ -90,7 +80,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
                 }
             }
 
-            // If validation fails, return the page again with the same data
             return Page();
         }
     }

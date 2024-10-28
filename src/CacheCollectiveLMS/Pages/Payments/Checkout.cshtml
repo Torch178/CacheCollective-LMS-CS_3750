@@ -15,12 +15,10 @@
             <img src="https://i.imgur.com/EHyR2nP.png" alt="The cover of Stubborn Attachments" />
             <div class="description">
                 <h3>Tuition</h3>
-                <h5>$ @Model.price</h5>
+                <h5>$100.00</h5>
             </div>
         </div>
         <form asp-action="OnPost" method="POST">
-            <input type="hidden" asp-for="ViewModel.ID"  />
-            <input type="hidden" asp-for="ViewModel.charge" />
             <button type="submit" id="checkout-button">Checkout</button>
         </form>
     </section>

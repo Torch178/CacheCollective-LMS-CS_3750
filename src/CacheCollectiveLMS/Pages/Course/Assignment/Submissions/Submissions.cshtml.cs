@@ -26,11 +26,17 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
         public int DGrades { get; set; }
         public int FGrades { get; set; }
 
+        [BindProperty]
+        public bool SubmissionsGraded { get; set; }
 
+        [BindProperty]
         public IList<Submission> Submission { get; set; } = default!;
+        public Models.Assignment CurrentAssignment { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? assignmentId)
         {
+            AGrades = BGrades = CGrades = DGrades = FGrades = 0;
+
             if (assignmentId == null)
             {
                 return NotFound();
@@ -40,10 +46,13 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
             var assignment = await _context.Assignment
                 .FirstOrDefaultAsync(a => a.Id == assignmentId);
 
+            CurrentAssignment = assignment;
+
             if (assignment == null)
             {
                 return NotFound();
             }
+            int assignmentsGraded = 0;
 
             // Fetch the submissions for the specified assignmentId
             Submission = await _context.Submission
@@ -52,7 +61,10 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
 
             foreach (var submission in Submission)
             {
-                double gradePercentage = (submission.GradedPoints ?? 0) / assignment.MaxPoints;
+                if (submission.GradedPoints.HasValue == false) continue;
+                assignmentsGraded += 1;
+
+                double gradePercentage = (submission.GradedPoints ?? 0) / assignment.MaxPoints * 100;
                 if (gradePercentage >= 90)
                 {
                     AGrades++;
@@ -73,6 +85,11 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
                 {
                     FGrades++;
                 }
+            }
+
+            if (assignmentsGraded >= Submission.Count)
+            {
+                SubmissionsGraded = true;
             }
 
             if (Submission == null || Submission.Count == 0)

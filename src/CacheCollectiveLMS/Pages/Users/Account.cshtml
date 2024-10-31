@@ -2,9 +2,40 @@
 @model RazorPagesMovie.Pages.Users.AccountModel
 @{
     ViewData["Title"] = "Account";
+    string balance = (Model.CurrentUser.tuitionDue - Model.CurrentUser.tuitionPaid).ToString();
 }
 
-<h1>Tuition</h1>
-<h2>@Model.TotalTuition.ToString("C")</h2>
+<h1>Account Overview</h1>
 
-<a href="/Payments/Checkout">Pay Tuition</a>
+<div class="card" style="width: 18rem;">
+    <div class="card-header">
+        Tuition
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><span class="fw-bold">Tuition Due: </span>$ @Model.CurrentUser.tuitionDue.ToString()</li>
+        <li class="list-group-item"><span class="fw-bold">Tuition Paid: </span>$ @Model.CurrentUser.tuitionPaid.ToString()</li>
+        @if (Model.CurrentUser.refundAmt != null && Model.CurrentUser.refundAmt > 0)
+        {
+            <li class="list-group-item bg-success text-black"><span class="fw-bold">Refund Owed: </span>$ @Model.CurrentUser.refundAmt.ToString()</li>
+        }
+        @if (Model.balanceDue)
+        {
+            <li class="list-group-item bg-dark text-white"><span class="fw-bold ">Remaining Balance: </span>$ @balance</li>
+        }
+    </ul>
+</div>
+
+
+
+<span>@Model.msg</span>
+<br />
+
+@if (Model.balanceDue)
+{
+    <a href="/Payments/Checkout">Pay Tuition</a>
+}
+
+@if (Model.prevPayments)
+{
+    <a href="/Payments/History">View Payment History</a>
+}

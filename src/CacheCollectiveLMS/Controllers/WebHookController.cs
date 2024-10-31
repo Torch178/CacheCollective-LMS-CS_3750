@@ -39,29 +39,31 @@ namespace RazorPagesMovie.Controllers
         public async Task<IActionResult> RecieveRequest()
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-            Session data = JsonConvert.DeserializeObject<Session>(json);
             try
             {
                 var stripeEvent = EventUtility.ParseEvent(json);
                 var signatureHeader = Request.Headers["Stripe-Signature"];
                 stripeEvent = EventUtility.ConstructEvent(json,
                     signatureHeader, endpointSecret);
-                if (data == null)
-                {
-                    Console.WriteLine("Error: Deserialized Session Object is Null");
-                    return BadRequest();
-                }
-                var prodId = data.LineItems.ToList().FirstOrDefault().Id;
-
-                var user = await _context.User.FirstOrDefaultAsync(e => e.TuitionId == prodId);
+               
 
                 // Handle the event
                 if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
                 {
-                    var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                    
+                    var data = stripeEvent.Data.Object as Session;
                     // Then define and call a method to handle the successful payment intent.
                     // handlePaymentIntentSucceeded(paymentIntent) - Not implemented yet;
                     //Collect Data for PaymentDetails constructor
+                    if (data == null)
+                    {
+                        Console.WriteLine("Error: Deserialized Session Object is Null");
+                        return BadRequest();
+                    }
+                    var prodId = data.LineItems.ToList().FirstOrDefault().Id;
+
+                    var user = await _context.User.FirstOrDefaultAsync(e => e.TuitionId == prodId);
+
                     int id = user.Id;
                     long? amtPaid = data.AmountTotal;
                     string payMethod = data.PaymentIntent.PaymentMethod.Card.Last4;
@@ -70,7 +72,7 @@ namespace RazorPagesMovie.Controllers
 
                     await user.payTuition(amtPaid, _context);
 
-                    switch (paymentIntent.Status)
+                    switch (data.PaymentIntent.Status)
                     {
                         case ("succeeded"):
                             if (user.refundAmt != null && user.refundAmt > 0) status = 3;

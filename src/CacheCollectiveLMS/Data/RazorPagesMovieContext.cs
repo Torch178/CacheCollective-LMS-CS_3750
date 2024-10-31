@@ -48,7 +48,6 @@ namespace RazorPagesMovie.Data
             {
                 entity.HasKey(a => a.Id);
                 entity.Property(s => s.userId).IsRequired();
-                entity.HasIndex(a => new { a.Id, a.userId }).IsUnique();
             });
 
         }

@@ -4,14 +4,14 @@
     {
         public int Id { get; set; }
         public int userId { get; set; }
-        public long? total { get; set; }
+        public decimal? total { get; set; }
         public DateTime createdDate { get; set; }
         public string payMethod { get; set; }
         public Semesters semester { get; set; }
         public PayStatus status { get; set; }
 
         //Constructor
-        public PaymentDetails(int userId, long? total, DateTime createdDate, string payMethod)
+        public PaymentDetails(int userId, decimal? total, DateTime createdDate, string payMethod)
         {
             this.userId = userId;
             this.total = total;

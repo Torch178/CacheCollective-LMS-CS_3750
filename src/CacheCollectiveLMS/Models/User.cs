@@ -87,8 +87,8 @@ namespace RazorPagesMovie.Models
 
         public async Task<decimal?> updateRefund(RazorPagesMovie.Data.RazorPagesMovieContext context)
         {
-
-            if (tuitionPaid > tuitionDue) { refundAmt = (tuitionPaid - tuitionDue); }
+            decimal? balance = this.GetBalance();
+            if (balance < 0) { refundAmt = -balance; }
             else refundAmt = 0;
             await context.SaveChangesAsync();
             return refundAmt;
@@ -113,12 +113,18 @@ namespace RazorPagesMovie.Models
             return tuitionDue;
         }
 
-        public async Task<decimal?> payTuition(long? amt, RazorPagesMovie.Data.RazorPagesMovieContext context)
+        public async Task<decimal?> payTuition(decimal? amt, RazorPagesMovie.Data.RazorPagesMovieContext context)
         {
             tuitionPaid += amt;
             await context.SaveChangesAsync();
             await updateRefund(context);
             return tuitionPaid;
+        }
+
+        public decimal? GetBalance()
+        {
+            decimal? balance = this.tuitionDue - this.tuitionPaid;
+            return balance;
         }
 
 

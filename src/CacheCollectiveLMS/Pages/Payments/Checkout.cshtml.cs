@@ -37,7 +37,7 @@ namespace RazorPagesMovie.Pages.Payments
         [BindProperty]
         public PaymentViewModel ViewModel { get; set; }
         public User CurrentUser { get; set; }
-        public decimal? price { get; set; }
+        public decimal balance { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -48,12 +48,12 @@ namespace RazorPagesMovie.Pages.Payments
             if (user == null) { return NotFound(); }
 
             CurrentUser = user;
-            price = (CurrentUser.tuitionDue - CurrentUser.tuitionPaid);
+            balance = (decimal)CurrentUser.GetBalance();
 
             ViewModel = new PaymentViewModel()
             {
-                charge = (decimal)price,
-                ID = CurrentUser.TuitionId
+                ID = CurrentUser.TuitionId,
+                charge = balance,
 
             };
 
@@ -74,7 +74,7 @@ namespace RazorPagesMovie.Pages.Payments
                 UnitAmountDecimal = ViewModel.charge * 100,
                 Currency = "usd",
             };
-
+            
             var priceService = new PriceService();
             var new_price = priceService.Create(priceCreateOptions);
 

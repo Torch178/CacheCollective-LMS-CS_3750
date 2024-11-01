@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RazorPagesMovie.Models;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace RazorPagesMovie.Pages.Users
 {

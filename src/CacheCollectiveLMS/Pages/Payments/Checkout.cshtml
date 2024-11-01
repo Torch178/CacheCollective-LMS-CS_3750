@@ -14,13 +14,17 @@
         <div class="product">
             <img src="https://i.imgur.com/EHyR2nP.png" alt="The cover of Stubborn Attachments" />
             <div class="description">
-                <h3>Tuition</h3>
-                <h5>$ @Model.price</h5>
+                <h3>Total Balance Due:</h3>
+                <h5>$ @Model.balance</h5>
             </div>
         </div>
         <form asp-action="OnPost" method="POST">
-            <input type="hidden" asp-for="ViewModel.ID"  />
-            <input type="hidden" asp-for="ViewModel.charge" />
+            <div class="form-group">
+            <input type="hidden" asp-for="ViewModel.ID" readonly />
+            <label asp-for="ViewModel.charge" class="control-label">Enter Payment Amount: </label>
+            <input asp-for="ViewModel.charge" type="number" value="@Model.balance" min="1" max="@Model.balance" step=".01" required class="form-control"/>
+            <span asp-validation-for="ViewModel.charge" class="text-danger"></span>
+            </div>
             <button type="submit" id="checkout-button">Checkout</button>
         </form>
     </section>

@@ -19,7 +19,7 @@ namespace RazorPagesMovie.Pages.Payments
         {
             _context = context;
         }
-
+        public User CurrentUser { get; set; }
         public string successMsg { get; set; }
         public async Task<IActionResult> OnGetAsync(decimal? amt)
         {
@@ -28,14 +28,16 @@ namespace RazorPagesMovie.Pages.Payments
             if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("./Login"); } // invalid userId
 
             var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
+            if (user == null) { return NotFound(); }
+            else CurrentUser = user;
 
-            int id = user.Id;
+            int id = CurrentUser.Id;
             decimal? amtPaid = amt;
             string payMethod = "4242";
             DateTime payDate = DateTime.Now;
             int status = 4;
 
-            await user.payTuition(amtPaid, _context);
+            await CurrentUser.payTuition(amtPaid, _context);
 
             PaymentDetails pd = new PaymentDetails(id, amtPaid, payDate, payMethod);
             _context.PaymentDetails.Add(pd);
@@ -45,7 +47,7 @@ namespace RazorPagesMovie.Pages.Payments
             //is run to update the paystatus of PaymentDetails object, much like the updateTuition function for the User class.
             //It is initialized as pending in the initial constructor method.
             await pd.SetPayStatus(status, _context);
-            successMsg = string.Format("Tuition Payment of {0} successfully processed! Remaining balance is {1}", amt.ToString(), user.GetBalance().ToString());
+            successMsg = string.Format("Tuition Payment of $ {0} successfully processed! Remaining balance is $ {1}", amt.ToString(), CurrentUser.GetBalance().ToString());
             return Page();
         }
     }

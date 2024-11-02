@@ -58,6 +58,14 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+//api controller route for collecting payment data post checkout from stripe
+/* ***! - Fix later - !*** controller routing not working properly, either no Json is sent to controller, or Routing
+ * on normal Razorpages malfunctions, implementing workaround,by sending static data to success page post-checkout
+ * might get back to this later
+app.MapControllerRoute(
+    name: "WebHook",
+    pattern: "WebHook/RecieveRequest");
+*/
 app.MapRazorPages();
 
 app.Run();

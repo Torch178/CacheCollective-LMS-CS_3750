@@ -199,7 +199,11 @@ namespace CacheCollectiveTest.PageTests
             // Arrange
             // --- Set up the necessary objects, data, and conditions required for the test. This includes initializing variables, creating mock data, or setting up dependencies.
             var context = GetInMemoryContext();
+            //ensure database is cleared and in a clean state (empty) for testing
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
             InitTuitionDue(context);
+
             var student = await context.User.FirstAsync();
             // Set up page model now
             var regPageModel = new RegistrationModel(context)
@@ -253,13 +257,13 @@ namespace CacheCollectiveTest.PageTests
             Assert.AreEqual(expected3, user.tuitionDue, "Test 3 Failed, Didn't update tuitionDue upon dropping enrolled course");
             Assert.AreEqual(0, user.tuitionPaid);
             Assert.AreEqual(0, user.refundAmt);
-            await context.Database.EnsureDeletedAsync();
         }
         
         
         [TestMethod()]
         public async Task TuitionPaidUpdate_AfterCheckout_Test()
         {
+
             //Payment amt will be sent to Success page to test that tuitionPaid is being updated and payment is saved in PaymentDetails object
 
             //Three steps in test methods
@@ -267,6 +271,9 @@ namespace CacheCollectiveTest.PageTests
             // Arrange
             // --- Set up the necessary objects, data, and conditions required for the test. This includes initializing variables, creating mock data, or setting up dependencies.
             var context = GetInMemoryContext();
+            //ensure database is cleared and in a clean state (empty) for testing
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
             InitTuitionPaid(context);
             var student = await context.User.FirstAsync();
             // Set up page model now
@@ -317,7 +324,7 @@ namespace CacheCollectiveTest.PageTests
             Assert.AreEqual((decimal?)800, user.tuitionDue);
             Assert.AreEqual((decimal?)0, user.GetBalance());
             Assert.AreEqual(0, user.refundAmt);
-            await context.Database.EnsureDeletedAsync();
+            
         }
     }
 }

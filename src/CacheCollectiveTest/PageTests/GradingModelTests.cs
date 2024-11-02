@@ -41,6 +41,9 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
         {
             // Arrange
             var context = GetInMemoryContext();
+            //ensure database is cleared and in a clean state (empty) for testing
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
             var pageModel = new GradingModel(context);
 
             // Act
@@ -57,6 +60,9 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
         {
             // Arrange
             var context = GetInMemoryContext();
+            //ensure database is cleared and in a clean state (empty) for testing
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
             var submission = new Submission
             {
                 SubmissionId = 1,
@@ -89,7 +95,6 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.IsTrue(pageModel.ModelState.ContainsKey("GradedPoints"));
             Assert.IsFalse(pageModel.ModelState.IsValid); // Ensure the model state is invalid
-            await context.Database.EnsureDeletedAsync();
         }
     }
 }

@@ -92,6 +92,7 @@ namespace CacheCollectiveTest
             // Check that the enrollment was created
             var enrollment = await context.Enrollment.FirstOrDefaultAsync(e => e.UserId == studentUser.Id && e.CourseId == testCourse.CourseId);
             Assert.IsNotNull(enrollment); // Ensure enrollment exists
+            await context.Database.EnsureDeletedAsync();
         }
 
     }

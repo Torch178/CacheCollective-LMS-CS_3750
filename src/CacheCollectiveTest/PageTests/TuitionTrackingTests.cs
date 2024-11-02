@@ -22,10 +22,10 @@ namespace CacheCollectiveTest.PageTests
     {
         //This tests that the Tuition Due for a student account dynamically updates when registering(inc+) and dropping classes(dec-)
         //This is to create an in memory database to use for this test only. Stops the test from being ruined by wrong live data
-        private RazorPagesMovieContext GetInMemoryContext(int i)
+        private RazorPagesMovieContext GetInMemoryContext()
         {
             var options = new DbContextOptionsBuilder<RazorPagesMovieContext>()
-                .UseInMemoryDatabase(databaseName: String.Format("InMemoryDatabase{0}", i))
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
                 .Options;
 
             return new RazorPagesMovieContext(options);
@@ -198,7 +198,7 @@ namespace CacheCollectiveTest.PageTests
             // ---
             // Arrange
             // --- Set up the necessary objects, data, and conditions required for the test. This includes initializing variables, creating mock data, or setting up dependencies.
-            var context = GetInMemoryContext(1);
+            var context = GetInMemoryContext();
             InitTuitionDue(context);
             var student = await context.User.FirstAsync();
             // Set up page model now
@@ -253,6 +253,7 @@ namespace CacheCollectiveTest.PageTests
             Assert.AreEqual(expected3, user.tuitionDue, "Test 3 Failed, Didn't update tuitionDue upon dropping enrolled course");
             Assert.AreEqual(0, user.tuitionPaid);
             Assert.AreEqual(0, user.refundAmt);
+            await context.Database.EnsureDeletedAsync();
         }
         
         
@@ -265,7 +266,7 @@ namespace CacheCollectiveTest.PageTests
             // ---
             // Arrange
             // --- Set up the necessary objects, data, and conditions required for the test. This includes initializing variables, creating mock data, or setting up dependencies.
-            var context = GetInMemoryContext(2);
+            var context = GetInMemoryContext();
             InitTuitionPaid(context);
             var student = await context.User.FirstAsync();
             // Set up page model now
@@ -316,6 +317,7 @@ namespace CacheCollectiveTest.PageTests
             Assert.AreEqual((decimal?)800, user.tuitionDue);
             Assert.AreEqual((decimal?)0, user.GetBalance());
             Assert.AreEqual(0, user.refundAmt);
+            await context.Database.EnsureDeletedAsync();
         }
     }
 }

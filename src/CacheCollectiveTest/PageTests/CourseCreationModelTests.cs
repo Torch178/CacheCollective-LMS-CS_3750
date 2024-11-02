@@ -99,7 +99,7 @@ namespace CacheCollectiveTest
             Assert.IsNotNull(course); // Verify course was created
             Assert.AreEqual("Test McTestSon", course.Instructor); // Verify instructor name was set properly
             Assert.AreEqual("Monday, Wednesday", course.MeetingDays);
-
+            await context.Database.EnsureDeletedAsync();
         }
     }
 }

@@ -89,6 +89,7 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.IsTrue(pageModel.ModelState.ContainsKey("GradedPoints"));
             Assert.IsFalse(pageModel.ModelState.IsValid); // Ensure the model state is invalid
+            await context.Database.EnsureDeletedAsync();
         }
     }
 }

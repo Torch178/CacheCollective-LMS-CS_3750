@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
 using RazorPagesMovie.Pages.Course;
+using RazorPagesMovie.Pages.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace CacheCollectiveTest.PageTests
         }
 
         [TestMethod()]
-        public async Task RegistrationModelTest()
+        public async Task TuitionTrackingTest()
         {
             //Three steps in test methods
             // ---
@@ -47,7 +48,7 @@ namespace CacheCollectiveTest.PageTests
             // --- Set up the necessary objects, data, and conditions required for the test. This includes initializing variables, creating mock data, or setting up dependencies.
             var context = GetInMemoryContext();
 
-            // Create valid instructor user
+            // Create valid student user
             var student = new User
             {
                 Id = 1,
@@ -55,43 +56,80 @@ namespace CacheCollectiveTest.PageTests
                 Password = "TestPassword123",
                 FirstName = "Test",
                 LastName = "McTestSon",
+                Birthdate = DateTime.MinValue,
                 IsInstructor = false,
                 City = "Test",
                 State = "UT",
                 StreetAddress = "1234w 5678s",
-                Zip = "12345"
+                Zip = "12345",
+                tuitionDue = 0,
+                tuitionPaid = 0,
+                refundAmt = 0,
             };
             //create courses for enrollment
-            var course = new Course
+            var course1 = new Course
             {
+                CourseId = 1,
+                InstructorCourseId = 1,
                 Department = Department.CS,
                 Number = 1010,
                 Title = "Test Course",
                 Capacity = 10,
                 CreditHours = 4,
+                MeetingDays = "Monday, Friday",
+                StartTime = TimeSpan.Zero,
+                EndTime = TimeSpan.Zero,
+                Location = "Campus",
+
+            };
+            var course2 = new Course
+            {
+                CourseId = 2,
+                InstructorCourseId = 1,
+                Department = Department.CS,
+                Number = 2010,
+                Title = "Test Course",
+                Capacity = 10,
+                CreditHours = 4,
+                MeetingDays = "Monday, Friday",
+                StartTime = TimeSpan.Zero,
+                EndTime = TimeSpan.Zero,
+                Location = "Campus",
+
+            };
+            var course3 = new Course
+            {
+                CourseId = 3,
+                InstructorCourseId = 1,
+                Department = Department.CS,
+                Number = 3010,
+                Title = "Test Course",
+                Capacity = 10,
+                CreditHours = 4,
+                MeetingDays = "Monday, Friday",
+                StartTime = TimeSpan.Zero,
+                EndTime = TimeSpan.Zero,
                 Location = "Campus",
 
             };
             context.User.Add(student);
             await context.SaveChangesAsync();
+            context.Course.Add(course1);
+            await context.SaveChangesAsync();
+            context.Course.Add(course2);
+            await context.SaveChangesAsync();
+            context.Course.Add(course3);
+            await context.SaveChangesAsync();
 
             // Set up page model now
-            var coursePageModel = new CourseCreationModel(context)
+            var regPageModel = new RegistrationModel(context)
             {
-                CurrentCourse = new RazorPagesMovie.Models.Course
-                {
-                    Department = Department.CS,
-                    Number = 1010,
-                    Title = "Test Course",
-                    Capacity = 10,
-                    CreditHours = 4,
-                    Location = "Campus",
-                },
-                SelectedMeetingDays = new List<string> { "Monday", "Wednesday" }
+                CurrentUser = student,
+                Course = new List<Course> { course1, course2, course3 },
             };
 
-            // Simulate a logged in instructor
-            coursePageModel.PageContext.HttpContext = new DefaultHttpContext
+            // Simulate a logged in student
+            regPageModel.PageContext.HttpContext = new DefaultHttpContext
             {
                 User = CreateStudent(student.Id)
             };
@@ -99,18 +137,37 @@ namespace CacheCollectiveTest.PageTests
             // ---
             // Act
             // --- Perform the action or method you want to test. This is where you call the method and execute the logic being tested.
-            var result = await coursePageModel.OnPostAsync();
-
-
             // ---
             // Assert
             //  --- Verify that the outcome of the action is as expected. This involves checking results, validating state changes, or ensuring that the correct behavior occurred.
-            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult)); // Ensure the result is a redirect
-            var course = await context.Course.FirstOrDefaultAsync(c => c.Title == "Test Course");
-            Assert.IsNotNull(course); // Verify course was created
-            Assert.AreEqual("Test McTestSon", course.Instructor); // Verify instructor name was set properly
-            Assert.AreEqual("Monday, Wednesday", course.MeetingDays);
-            
+            var user = await context.User.FindAsync(student.Id);
+            decimal initial = 0;
+            decimal expected1 = 400;
+            decimal expected2 = 800;
+            decimal expected3 = 400;
+
+            //Initial Test, check User model is not null and tuition data is initialized correctly
+            Assert.IsNotNull(user);
+            Assert.AreEqual(initial, user.tuitionDue, "Initial Test");
+
+
+            //Test 1
+            var result1 = await regPageModel.OnPostRegistrationAsync(1);
+            user = await context.User.FindAsync(student.Id);
+            Assert.IsInstanceOfType(result1, typeof(RedirectToPageResult)); // Ensure the result is a redirect
+            Assert.AreEqual(expected1, user.tuitionDue, "Test 1");
+
+            //Test 2
+            var result2 = await regPageModel.OnPostRegistrationAsync(2);
+            user = await context.User.FindAsync(student.Id);
+            Assert.IsInstanceOfType(result2, typeof(RedirectToPageResult)); // Ensure the result is a redirect
+            Assert.AreEqual(expected2, user.tuitionDue, "Test 2");
+
+            //Test 3
+            var result3 = await regPageModel.OnPostRegistrationAsync(1);
+            user = await context.User.FindAsync(student.Id);
+            Assert.IsInstanceOfType(result3, typeof(RedirectToPageResult)); // Ensure the result is a redirect
+            Assert.AreEqual(expected3, user.tuitionDue, "Test 3");
         }
     }
 }

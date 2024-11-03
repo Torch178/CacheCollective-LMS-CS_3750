@@ -4,9 +4,9 @@
 @{
     ViewData["Title"] = "Edit Profile Picture";
     string src_path = "Images/Profile_Pics/default.png";
-    if (Model.User.ProfilePic != null)
+    if (Model.CurrentUser.ProfilePic != null)
     {
-        src_path = Model.User.ProfilePic;
+        src_path = Model.CurrentUser.ProfilePic;
     }
 }
 

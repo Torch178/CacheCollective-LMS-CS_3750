@@ -40,7 +40,9 @@ namespace CacheCollectiveTest
         {
             //Arrange
             var context = GetInMemoryContext();
-
+            //ensure database is cleared and in a clean state (empty) for testing
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
             var studentUser = new RazorPagesMovie.Models.User
             {
                 Id = 1,
@@ -92,7 +94,6 @@ namespace CacheCollectiveTest
             // Check that the enrollment was created
             var enrollment = await context.Enrollment.FirstOrDefaultAsync(e => e.UserId == studentUser.Id && e.CourseId == testCourse.CourseId);
             Assert.IsNotNull(enrollment); // Ensure enrollment exists
-            await context.Database.EnsureDeletedAsync();
         }
 
     }

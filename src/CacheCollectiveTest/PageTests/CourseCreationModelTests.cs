@@ -46,7 +46,9 @@ namespace CacheCollectiveTest
             // Arrange
             // --- Set up the necessary objects, data, and conditions required for the test. This includes initializing variables, creating mock data, or setting up dependencies.
             var context = GetInMemoryContext();
-
+            //ensure database is cleared and in a clean state (empty) for testing
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
             // Create valid instructor user
             var instructorUser = new User 
             { 
@@ -98,8 +100,7 @@ namespace CacheCollectiveTest
             var course = await context.Course.FirstOrDefaultAsync(c => c.Title == "Test Course");
             Assert.IsNotNull(course); // Verify course was created
             Assert.AreEqual("Test McTestSon", course.Instructor); // Verify instructor name was set properly
-            Assert.AreEqual("Monday, Wednesday", course.MeetingDays);
-            await context.Database.EnsureDeletedAsync();
+            Assert.AreEqual("Monday, Wednesday", course.MeetingDays);;
         }
     }
 }

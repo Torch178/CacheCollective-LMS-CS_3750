@@ -12,7 +12,7 @@ namespace CacheCollectiveTest.SeleniumTests
         [TestInitialize]
         public void Setup() 
         {
-            driver = new ChromeDriver(@"D:\WebDrivers\chromedriver-win64");
+            driver = new ChromeDriver();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
         }
 

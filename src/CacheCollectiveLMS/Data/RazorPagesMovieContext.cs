@@ -14,12 +14,12 @@ namespace RazorPagesMovie.Data
         {
         }
 
-        public DbSet<RazorPagesMovie.Models.Movie> Movie { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.User> User { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.Course> Course { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.Enrollment> Enrollment { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.Assignment> Assignment { get; set; } = default!;
         public DbSet<RazorPagesMovie.Models.Submission> Submission { get; set; } = default!;
+        public DbSet<RazorPagesMovie.Models.Notification> Notification { get; set; } = default!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +43,15 @@ namespace RazorPagesMovie.Data
                 entity.Property(s => s.SubmissionDate).IsRequired();
             });
 
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasKey(s => s.Id);
+                entity.Property(s => s.CourseId).IsRequired();
+                entity.Property(s => s.AssignmentId).IsRequired();
+                entity.Property(s => s.UserId).IsRequired();
+                entity.Property(s => s.DateCreated).IsRequired();
+            });
         }
     }
 }

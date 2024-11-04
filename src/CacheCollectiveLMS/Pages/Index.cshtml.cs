@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
 using System.Security.Claims;
+using RazorPagesMovie.Services;
 
 namespace RazorPagesMovie.Pages
 {
@@ -11,11 +12,13 @@ namespace RazorPagesMovie.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly RazorPagesMovie.Data.RazorPagesMovieContext _context;
+        private readonly NotificationService _notificationService;
 
-        public IndexModel(ILogger<IndexModel> logger, RazorPagesMovieContext context)
+        public IndexModel(ILogger<IndexModel> logger, RazorPagesMovieContext context, NotificationService notificationService)
         {
             _logger = logger;
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<IActionResult> OnGet()
@@ -30,6 +33,19 @@ namespace RazorPagesMovie.Pages
 
             HttpContext.Session.SetString("IsInstructor", user.IsInstructor.ToString());
             return Redirect("/Users/Index");
+        }
+
+        public async Task<IActionResult> OnPostMarkAsReadAsync(int notificationId)
+        {
+            await _notificationService.MarkNotificationAsReadAsync(notificationId);
+
+            var notification = await _context.Notification.Where(n => n.Id == notificationId).FirstOrDefaultAsync();
+            if (notification == null)
+            {
+                return RedirectToPage("/Index");
+            }
+
+            return RedirectToPage("/Course/Assignment/Details", new { id = notification.AssignmentId });
         }
     }
 }

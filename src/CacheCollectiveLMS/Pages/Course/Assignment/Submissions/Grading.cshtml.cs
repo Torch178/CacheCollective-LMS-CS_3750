@@ -5,16 +5,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
+using RazorPagesMovie.Services;
 
 namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
 {
     public class GradingModel : PageModel
     {
         private readonly RazorPagesMovieContext _context;
+        private readonly NotificationService _notificationService;
 
-        public GradingModel(RazorPagesMovieContext context)
+        public GradingModel(RazorPagesMovieContext context, NotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         [BindProperty]
@@ -69,6 +72,9 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions
 
                     _context.Entry(Submission).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
+
+                    var assignment = await _context.Assignment.Where(a => a.Id == Submission.AssignmentId).FirstOrDefaultAsync();
+                    await _notificationService.AddNotificationAsync(Submission.UserId, assignment.CourseId, Submission.AssignmentId, "Graded");
 
                     // Set TempData message
                     TempData["Message"] = "Grade saved successfully!";

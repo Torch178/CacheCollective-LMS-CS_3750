@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
+using RazorPagesMovie.Pages.Course.Assignment.Submissions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Azure;
 using Humanizer;
+using RazorPagesMovie.Services;
 
 namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
 {
@@ -41,7 +43,8 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
         {
             // Arrange
             var context = GetInMemoryContext();
-            var pageModel = new GradingModel(context);
+            var notificationService = new NotificationService(context);
+            var pageModel = new GradingModel(context, notificationService);
 
             // Act
             var result = await pageModel.OnGetAsync(null);
@@ -57,6 +60,7 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
         {
             // Arrange
             var context = GetInMemoryContext();
+            var notificationService = new NotificationService(context);
             var submission = new Submission
             {
                 SubmissionId = 1,
@@ -65,7 +69,7 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
             context.Submission.Add(submission);
             await context.SaveChangesAsync();
 
-            var pageModel = new GradingModel(context);
+            var pageModel = new GradingModel(context, notificationService);
             pageModel.Submission = submission;
 
             // Simulate the user and invalid form data

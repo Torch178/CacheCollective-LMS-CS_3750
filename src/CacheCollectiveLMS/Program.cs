@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
+using RazorPagesMovie.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Constants
@@ -9,6 +10,7 @@ var LOGIN_COOKIE_TIMEOUT = TimeSpan.FromDays(1);
 // Add services to the container.
 
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<NotificationService>();
 
 // For claim-based authorization
 builder.Services.AddHttpContextAccessor();
@@ -33,13 +35,6 @@ builder.Services.AddDbContext<RazorPagesMovieContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("RazorPagesMovieContext") ?? throw new InvalidOperationException("Connection string 'RazorPagesMovieContext' not found.")));
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-
-    SeedData.Initialize(services);
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() == false)

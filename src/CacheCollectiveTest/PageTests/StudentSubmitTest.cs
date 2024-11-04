@@ -1,24 +1,22 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RazorPagesMovie.Models;
-using RazorPagesMovie.Data;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorPagesMovie.Pages.Users;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RazorPagesMovie.Data;
+using RazorPagesMovie.Models;
+using RazorPagesMovie.Pages.Course.Assignment;
+using System.Security.Claims;
 
-namespace CacheCollectiveTest
+namespace CacheCollectiveTest.PageTests
 {
     [TestClass]
-    public class StudentRegistrationTest
+    public class StudentSubmitTest
     {
-
         //This is to create an in memory database to use for this test only. Stops the test from being ruined by wrong live data
         private RazorPagesMovieContext GetInMemoryContext()
         {
             var options = new DbContextOptionsBuilder<RazorPagesMovieContext>()
                 .UseInMemoryDatabase(databaseName: "InMemoryDatabase")
+                .EnableSensitiveDataLogging()
                 .Options;
 
             return new RazorPagesMovieContext(options);
@@ -36,14 +34,14 @@ namespace CacheCollectiveTest
         }
 
         [TestMethod]
-        public async Task OnPostRegistrationAsync_StudentShouldRegisterCorrectly()
+        public async Task OnPostSubmitAsync_StudentShouldSubmitCorrectly()
         {
             //Arrange
             var context = GetInMemoryContext();
 
             var studentUser = new RazorPagesMovie.Models.User
             {
-                Id = 3,
+                Id = 2,
                 Email = "TestEmail@Test.com",
                 Password = "TestPassword123",
                 FirstName = "Test",
@@ -57,7 +55,7 @@ namespace CacheCollectiveTest
             context.User.Add(studentUser);
             await context.SaveChangesAsync();
 
-            var testCourse = new RazorPagesMovie.Models.Course
+            var testCourse = new Course
             {
                 CourseId = 1,
                 Department = Department.CS,
@@ -71,10 +69,32 @@ namespace CacheCollectiveTest
             context.Course.Add(testCourse);
             await context.SaveChangesAsync();
 
-            var pageModel = new RegistrationModel(context)
+            var testAssignment = new Assignment
+            {
+                Id = 1,
+                CourseId = 1,
+                Title = "Test Assignment",
+                Description = "Test",
+                MaxPoints = 10,
+                DueDate = DateTime.Now + TimeSpan.FromDays(1),
+                SubmissionType = SubmissionType.TextEntry
+            };
+            context.Assignment.Add(testAssignment);
+            await context.SaveChangesAsync();
+
+            var testSubmission = new Submission
+            {
+                AssignmentId = 1,
+                UserId = 1
+            };
+
+            var pageModel = new SubmitModel(context)
             {
                 CurrentUser = studentUser,
-                Course = new List<RazorPagesMovie.Models.Course> { testCourse }
+                AssignmentId = 1,
+                CourseId = 1,
+                SubmittedText = "Test",
+                Submission = testSubmission
             };
 
             pageModel.PageContext.HttpContext = new DefaultHttpContext
@@ -82,17 +102,14 @@ namespace CacheCollectiveTest
                 User = CreateUser(studentUser.Id)
             };
 
-
             //Act
-            var result = await pageModel.OnPostRegistrationAsync(testCourse.CourseId);
-
+            var result = await pageModel.OnPostAsync();
 
             //Assert
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            // Check that the enrollment was created
-            var enrollment = await context.Enrollment.FirstOrDefaultAsync(e => e.UserId == studentUser.Id && e.CourseId == testCourse.CourseId);
-            Assert.IsNotNull(enrollment); // Ensure enrollment exists
+            // Check that the submission was created
+            var submission = await context.Submission.FirstOrDefaultAsync(s => s.UserId == studentUser.Id && s.AssignmentId == testAssignment.Id);
+            Assert.IsNotNull(submission); // Ensure submission exists
         }
-
     }
 }

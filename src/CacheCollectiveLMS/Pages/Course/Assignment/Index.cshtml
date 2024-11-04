@@ -1,5 +1,5 @@
 ﻿@page
-@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Http
 @model RazorPagesMovie.Pages.Course.Assignment.IndexModel
 @inject IHttpContextAccessor HttpContextAccessor;
 
@@ -19,11 +19,12 @@
             <th>Max Points</th>
             <th>Due Date</th>
             <th>Submission Type</th>
+            <th>Grade</th> <!-- New column for grades -->
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var assignment in Model.Assignment)
+        @foreach (var assignment in Model.Assignments) // Make sure Assignments is plural
         {
             <tr>
                 <td>@assignment.Title</td>
@@ -32,7 +33,17 @@
                 <td>@assignment.DueDate.ToShortDateString()</td>
                 <td>@assignment.SubmissionType</td>
                 <td>
+                    @if (Model.Grades.TryGetValue(assignment.Id, out var grade)) // Check for grade
+                    {
+                        @grade
+                    }
+                    else
+                    {
+                        <span>No Grade</span>
+                    }
+                </td>
 
+                <td>
                     @if (IsInstructor == "True")
                     {
                         <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Edit</a>
@@ -47,7 +58,6 @@
                     {
                         <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a>
                         <a asp-page="./Submit" asp-route-AssignmentId="@assignment.Id" asp-route-CourseId="@Model.CourseId">Submit</a>
-                        
                     }
                 </td>
             </tr>
@@ -55,9 +65,15 @@
     </tbody>
 </table>
 
-<!-- Link to Create a New Assignment, passing CourseId -->
-
 @if (IsInstructor == "True")
 {
     <a asp-page="./Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Create New Assignment</a>
 }
+
+<!-- Total Grades Section -->
+<div class="mt-4">
+    <h3>Total Points</h3>
+    <p>Total Points Available: @Model.TotalPoints</p>
+    <p>Total Points Earned: @Model.TotalGrades</p>
+    <p>Final Grade: @Model.TotalPercentage.ToString("F2")% (@Model.LetterGrade)</p> <!-- Display letter grade -->
+</div>

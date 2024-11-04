@@ -44,6 +44,8 @@ namespace RazorPagesMovie.Data
                 entity.Property(s => s.SubmissionDate).IsRequired();
             });
 
+
+
             modelBuilder.Entity<PaymentDetails>(entity =>
             {
                 entity.HasKey(a => a.Id);

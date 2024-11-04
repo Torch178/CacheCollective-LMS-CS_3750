@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Attributes;
 
@@ -75,12 +76,15 @@ namespace RazorPagesMovie.Models
         public string Zip { get; set; }
 
         [Display(Name = "Tuition Due")]
+        [Precision(10, 2)]
         public decimal? tuitionDue { get; set; }
 
         [Display(Name = "Tuition Paid")]
+        [Precision(10, 2)]
         public decimal? tuitionPaid { get; set; }
 
         [Display(Name = "Tuition Refund")]
+        [Precision(10, 2)]
         public decimal? refundAmt { get; set; }
 
         public string? TuitionId { get; set; } = "N/A";

@@ -1,9 +1,12 @@
-﻿namespace RazorPagesMovie.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace RazorPagesMovie.Models
 {
     public class PaymentDetails
     {
         public int Id { get; set; }
         public int userId { get; set; }
+        [Precision(10, 2)]
         public decimal? total { get; set; }
         public DateTime createdDate { get; set; }
         public string payMethod { get; set; }

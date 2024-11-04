@@ -90,7 +90,6 @@ namespace CacheCollectiveTest.PageTests
 
             var pageModel = new SubmitModel(context)
             {
-                CurrentUser = studentUser,
                 AssignmentId = 1,
                 CourseId = 1,
                 SubmittedText = "Test",

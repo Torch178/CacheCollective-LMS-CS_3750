@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPagesMovie.Models;
 using RazorPagesMovie.Data;
-using RazorPagesMovie.Pages.Movies;
 using RazorPagesMovie.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;

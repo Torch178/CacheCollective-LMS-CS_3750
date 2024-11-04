@@ -30,14 +30,14 @@
             bar: { groupWidth: '50%' }
         };
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-        chart.draw(data, options);6
+        chart.draw(data, options);
     }
 </script>
 
 <h1>Details</h1>
 
 <div>
-    <h4>Assignment</h4>
+    <h4>Assignment - @Model.Assignment.Title</h4>
     @if (IsInstructor == "False" && Model.CurrentSubmission is Models.Submission)
     {
         double? gradePercentage = (@Model.CurrentSubmission.GradedPoints / @Model.Assignment.MaxPoints) * 100;

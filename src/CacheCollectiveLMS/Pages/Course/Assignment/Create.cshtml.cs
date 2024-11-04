@@ -8,16 +8,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
+using RazorPagesMovie.Services;
 
 namespace RazorPagesMovie.Pages.Course.Assignment
 {
     public class CreateModel : PageModel
     {
         private readonly RazorPagesMovie.Data.RazorPagesMovieContext _context;
+        private readonly NotificationService _notificationService;
 
-        public CreateModel(RazorPagesMovie.Data.RazorPagesMovieContext context)
+        public CreateModel(RazorPagesMovie.Data.RazorPagesMovieContext context, NotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
 
@@ -55,6 +58,12 @@ namespace RazorPagesMovie.Pages.Course.Assignment
             Assignment.CourseId = CourseId;
             _context.Assignment.Add(Assignment);
             await _context.SaveChangesAsync();
+
+            var students = await _context.Enrollment.Where(e => e.CourseId == CourseId).ToListAsync();
+            foreach (var student in students)
+            {
+                await _notificationService.AddNotificationAsync(student.UserId, CourseId, Assignment.Id, "Created");
+            }
 
             return RedirectToPage("Index", new { courseId = CourseId });
         }

@@ -40,7 +40,9 @@ namespace CacheCollectiveTest
         {
             //Arrange
             var context = GetInMemoryContext();
-
+            //ensure database is cleared and in a clean state (empty) for testing
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
             var studentUser = new RazorPagesMovie.Models.User
             {
                 Id = 3,

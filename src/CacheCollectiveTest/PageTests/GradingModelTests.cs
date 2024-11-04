@@ -44,6 +44,10 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
             // Arrange
             var context = GetInMemoryContext();
             var notificationService = new NotificationService(context);
+          
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
+          
             var pageModel = new GradingModel(context, notificationService);
 
             // Act
@@ -61,6 +65,11 @@ namespace RazorPagesMovie.Pages.Course.Assignment.Submissions.Tests
             // Arrange
             var context = GetInMemoryContext();
             var notificationService = new NotificationService(context);
+          
+            //ensure database is cleared and in a clean state (empty) for testing
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
+          
             var submission = new Submission
             {
                 SubmissionId = 1,

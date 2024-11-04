@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Attributes;
 
 namespace RazorPagesMovie.Models
@@ -72,6 +74,63 @@ namespace RazorPagesMovie.Models
         [RegularExpression(@"^(([0-9][0-9][0-9][0-9][0-9][-][0-9][0-9][0-9][0-9])|[0-9][0-9][0-9][0-9][0-9])")]
         [Required]
         public string Zip { get; set; }
+
+        [Display(Name = "Tuition Due")]
+        [Precision(10, 2)]
+        public decimal? tuitionDue { get; set; }
+
+        [Display(Name = "Tuition Paid")]
+        [Precision(10, 2)]
+        public decimal? tuitionPaid { get; set; }
+
+        [Display(Name = "Tuition Refund")]
+        [Precision(10, 2)]
+        public decimal? refundAmt { get; set; }
+
+        public string? TuitionId { get; set; } = "N/A";
+
+        public async Task<decimal?> updateRefund(RazorPagesMovie.Data.RazorPagesMovieContext context)
+        {
+            decimal? balance = this.GetBalance();
+            if (balance < 0) { refundAmt = -balance; }
+            else refundAmt = 0;
+            await context.SaveChangesAsync();
+            return refundAmt;
+        }
+
+        public async Task<decimal?> updateTuition(RazorPagesMovie.Data.RazorPagesMovieContext context)
+        {
+            short numCredits = 0;
+            var Enrollments = await context.Enrollment.Where(e => e.UserId == this.Id).Join(context.Course, enrollment => enrollment.CourseId, course => course.CourseId, (enrollment, course) => course).ToListAsync();
+            if (Enrollments == null || Enrollments.Count == 0) { tuitionDue = 0; }
+            else
+            {
+                foreach (var enrollment in Enrollments)
+                {
+                    numCredits += enrollment.CreditHours;
+                }
+                tuitionDue = (numCredits * 100);
+            }
+
+            await context.SaveChangesAsync();
+            await updateRefund(context);
+            return tuitionDue;
+        }
+
+        public async Task<decimal?> payTuition(decimal? amt, RazorPagesMovie.Data.RazorPagesMovieContext context)
+        {
+            tuitionPaid += amt;
+            await context.SaveChangesAsync();
+            await updateRefund(context);
+            return tuitionPaid;
+        }
+
+        public decimal? GetBalance()
+        {
+            decimal? balance = this.tuitionDue - this.tuitionPaid;
+            return balance;
+        }
+
 
     }
 }

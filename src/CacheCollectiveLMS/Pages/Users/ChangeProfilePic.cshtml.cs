@@ -1,18 +1,14 @@
-using System;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Drawing.Text;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
 using RazorPagesMovie.ViewModels;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Client;
+using System.Configuration;
+
 
 namespace RazorPagesMovie.Pages.Users
 {
@@ -31,26 +27,24 @@ namespace RazorPagesMovie.Pages.Users
 
         [BindProperty]
         public ImageUploadViewModel ViewModel { get; set; }
-        public User User { get; set; }
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public User CurrentUser { get; set; }
+        public async Task<IActionResult> OnGetAsync()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+     
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null) { return RedirectToPage("./Login"); }
+            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("./Login"); } // invalid userId
+
             //grab user object from Id passed to get
-            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
+            if (user == null) { return NotFound(); }
 
             ViewModel = new ImageUploadViewModel()
             {
                 Id = user.Id,
             };
 
-            User = user;
+            CurrentUser = user;
             return Page();
         }
 
@@ -60,78 +54,35 @@ namespace RazorPagesMovie.Pages.Users
         {
             //grab current user using the id value passed to the View model
             var user = await _context.User.FirstOrDefaultAsync(m => m.Id == ViewModel.Id);
-            //Store path for old profile pic to be deleted
-            string? oldProfilePic = user.ProfilePic;
+            string serverFolder;
 
-            if (!ModelState.IsValid)
+            //user.FirstName + user.LastName + user.Id.ToString()
+            if (!ModelState.IsValid || user == null || ViewModel.ImageFile == null)
             {
                 return Page();
             }
 
+            //Get file extension to append onto end of file path
+            var ext = System.IO.Path.GetExtension(ViewModel.ImageFile.FileName);
 
-
-            if (user != null)
+            //if no user has no profile pic, create a new file path for the pic and save the path to the user model
+            if (user.ProfilePic == null)
             {
-                if (ViewModel.ImageFile != null)
-                {
-
-                    string dir = "Images/Profile_Pics/";
-                    if (user.IsInstructor) dir += "Instructors/";
-                    else dir += "Students/";
-                    dir += user.FirstName + "_" + user.LastName + Guid.NewGuid().ToString() + ViewModel.ImageFile.FileName;
-                    //append directory path onto root to get full path
-                    string serverFolder = Path.Combine(_environment.WebRootPath, dir);
-
-
-                    //store newly uploaded file to path in serverFolder
-                    await ViewModel.ImageFile.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-
-                    //save path and file name of image in local project directory to user model
-                    user.ProfilePic = dir;
-
-                }
-                //update database entity
-
-                _context.Attach(user).State = EntityState.Modified;
+                string dir = "Images/Profile_Pics/";
+                if (user.IsInstructor) dir += "Instructors/";
+                else dir += "Students/";
+                dir += user.FirstName + user.LastName + user.Id.ToString() + ext;
+                //append directory path onto root to get full path
+                serverFolder = Path.Combine(_environment.WebRootPath, dir);
+                user.ProfilePic = dir;
+                await _context.SaveChangesAsync();
             }
-
-            try
+            else
             {
-
-                //save changes to database
-                var changes = await _context.SaveChangesAsync();
-
-                //*!---->Bug<----!*
-                //*****************************Delete Old profile pic algorthim causing an error
-                //delete old file after updating database with new file path
-                //if (!string.IsNullOrWhiteSpace(oldProfilePic))
-                //{
-                //    //check to see that database has been udated before deleting old file
-                //    while (!(changes > 0))
-                //    {
-                //        //Do Nothing
-                //    }
-                //    string path = Path.Combine(_environment.WebRootPath, oldProfilePic);
-                //    FileInfo file = new FileInfo(path);
-
-
-                //    if (file.Exists) { file.MoveTo(Path.Combine(_environment.WebRootPath, "Images/Profile_Pics/OldProfilePics")); }
-                //}
-
+                serverFolder = Path.Combine(_environment.WebRootPath, user.ProfilePic);
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(ViewModel.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-
+            
+            await ViewModel.ImageFile.CopyToAsync(new FileStream(serverFolder, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite));
             return RedirectToPage("./Profile");
         }
 

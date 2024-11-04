@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RazorPagesMovie.Models;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace RazorPagesMovie.Pages.Users
 {
@@ -17,11 +20,9 @@ namespace RazorPagesMovie.Pages.Users
 
         [BindProperty]
         public User CurrentUser { get; set; }
-        [BindProperty]
-        public double TotalTuition { get; set; }
-        [BindProperty]
-        public List<RazorPagesMovie.Models.Course> UserCourses { get; set; }
-
+        public string msg { get; set; } = "";
+        public bool balanceDue { get; set; }
+        public bool prevPayments { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             // Fetch user from claims
@@ -31,10 +32,17 @@ namespace RazorPagesMovie.Pages.Users
 
             var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
             if (user == null) { return NotFound(); }
-
-            UserCourses = await _context.Enrollment.Where(e => e.UserId == user.Id).Join(_context.Course, enrollment => enrollment.CourseId, course => course.CourseId, (enrollment, course) => course).ToListAsync();
             CurrentUser = user;
-            TotalTuition = UserCourses.Sum(c => c.CreditHours) * 100;
+            var owed = CurrentUser.GetBalance();
+
+            // ***! - TODO Fix Later - !*** Throws error when fetching list of PaymentDetails from DB context. Throws 
+            //Error for converting from Int64 to Decimal Data type when querying database for some reason
+            //IList<PaymentDetails> payments = await _context.PaymentDetails.Where(e => e.userId == user.Id).ToListAsync();
+            prevPayments = false;
+
+            if (owed > 0) { balanceDue = true; msg = "Remaining Balance Due: $" + owed.ToString(); }
+            else if (owed < 0) { balanceDue = false; msg = "You are owed a refund of $" + user.refundAmt.ToString() + "."; }
+            else { balanceDue = false; msg = "Tuition fully paid. No upcoming payments due."; }
 
             return Page();
         }

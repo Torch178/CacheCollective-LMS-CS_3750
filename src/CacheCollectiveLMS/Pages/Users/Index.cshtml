@@ -54,52 +54,65 @@
                                     <h4>To-Do</h4>
                                 </div>
                             </div>
-                        <!--To-Do Items--->
-                        <div class="row" id="todo-container" tabindex="0">
-                            @{
-                                var courses = Model.Course;
-                            }
-                            @foreach (var assignment in Model.ToDoList)
-                            {
-                                //Get course matching Assignment to populate course name into todo item
-                                var course = Model.Course.First(e => e.CourseId == assignment.CourseId);
+                        <!--To-Do Tab Labels--->
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="Todo-tab" data-bs-toggle="tab" data-bs-target="#Todo" type="button" role="tab" aria-controls="Todo" aria-selected="true">Todo</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="Archive-tab" data-bs-toggle="tab" data-bs-target="#Archive" type="button" role="tab" aria-controls="Archive" aria-selected="false">Archive</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <!--To-Do Tab--->
+                            <div class="tab-pane fade show active" id="Todo" role="tabpanel" aria-labelledby="Todo-tab">
+                                <div class="row" id="todo-container" tabindex="0">
+                                    @{
+                                        var courses = Model.Course;
+                                    }
+                                    @foreach (var assignment in Model.ToDoList)
+                                    {
+                                        //Get course matching Assignment to populate course name into todo item
+                                        var course = Model.Course.First(e => e.CourseId == assignment.CourseId);
 
-                                //Determine how soon Assignments are coming due by caluclating difference in DateTime
-                                var dateDiff = (assignment.DueDate - DateTime.Now).Days ;
+                                        //Determine how soon Assignments are coming due by caluclating difference in DateTime
+                                        var dateDiff = (assignment.DueDate - DateTime.Now).Days;
 
-                                //assign a border color based on assignment being past-due, due soon, or due later (>7days)
-                                string border = "border-default";
-                                if (dateDiff < 7 && dateDiff > 0) border = "border-warning";
-                                else if (dateDiff <= 0) border = "border-danger";
-                                else border = "border-success";
+                                        //assign a border color based on assignment being past-due, due soon, or due later (>7days)
+                                        string border = "border-default";
+                                        if (dateDiff < 7 && dateDiff > 0) border = "border-warning";
+                                        else if (dateDiff <= 0) border = "border-danger";
 
-                                //Individual To-Do Item Content
-                                <div class="col col-12 p-2 mt-1 mb-1 todo-item " id="@assignment.Id">
-                                <a asp-page="/Course/Assignment/Details" asp-route-id="@assignment.Id" class="plain-link">
-                                        <div class="input-group object-fit-none m-1 border  @border border-3 rounded">
-                                
-                                <div class="container w-100 ">
-                                                <h6 class="text-wrap">@course.Department @course.Number @course.Title</h6>
-                                    <div class="text-wrap">@assignment.Title</div>   
-                                    
+                                        //Individual To-Do Item Content
+                                        <div class="col col-12 p-2 mt-1 mb-1 todo-item " id="@assignment.Id">
+                                            <a asp-page="/Course/Assignment/Details" asp-route-id="@assignment.Id" class="plain-link">
+                                                <div class="input-group object-fit-none m-1 border  @border border-3 rounded">
+                                                    <div class="container w-100 ">
+                                                        <h6 class="text-wrap">@course.Department @course.Number @course.Title</h6>
+                                                        <div class="text-wrap">@assignment.Title</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div class="container w-100">
+                                                <div class="text-wrap d-grid float-start align-content-start"><span class="fw-bold text-wrap">Due Date:</span> @assignment.DueDate</div>
+                                                <button todo-id="@assignment.Id" class="btn d-flex btn-outline-secondary bg-danger text-white float-end align-content-end" type="button" onclick="DeleteTodo(this);"
+                                                        id="button-addon2 ">
+                                                    X
+                                                </button>
+                                                <hr />
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                                
-                                </div>
-                                </a>
-                                <div class="container w-100">
-                                    <div class="text-wrap d-grid float-start align-content-start"><span class="fw-bold text-wrap">Due Date:</span> @assignment.DueDate</div>
-                                        <button todo-id="@assignment.Id" class="btn d-flex btn-outline-secondary bg-danger text-white float-end align-content-end" type="button" onclick="DeleteTodo(this);"
-                                            id="button-addon2 ">
-                                        X
-                                    </button>
-                                        <hr />
-                                </div>
-                                    
-                                </div>
+                            </div>
+                            <!--To-Do Archive Tab--->
+                            <div class="tab-pane fade" id="Archive" role="tabpanel" aria-labelledby="Archive-tab">
+                                <!--Archive Goes Here--->
+                            </div>
+                        </div>
 
-                                
-                                
-                            }
+                        
+                            
                         </div>
                         </div>
                     </div>

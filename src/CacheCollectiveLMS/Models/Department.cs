@@ -3,9 +3,9 @@
     public enum Department
     {
         CS,         // Computer Science
-        Math,       // Mathematics
-        Music,      // Music
-        Accounting, // Accounting
-        English     // English
+        MATH,       // Mathematics
+        MUS,        // Music
+        ACC,        // Accounting
+        ENG         // English
     }
 }

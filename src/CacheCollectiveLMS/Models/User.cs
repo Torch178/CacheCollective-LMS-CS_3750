@@ -77,15 +77,15 @@ namespace RazorPagesMovie.Models
 
         [Display(Name = "Tuition Due")]
         [Precision(10, 2)]
-        public decimal? tuitionDue { get; set; }
+        public decimal? tuitionDue { get; set; } = 0;
 
         [Display(Name = "Tuition Paid")]
         [Precision(10, 2)]
-        public decimal? tuitionPaid { get; set; }
+        public decimal? tuitionPaid { get; set; } = 0;
 
         [Display(Name = "Tuition Refund")]
         [Precision(10, 2)]
-        public decimal? refundAmt { get; set; }
+        public decimal? refundAmt { get; set; } = 0;
 
         public string? TuitionId { get; set; } = "N/A";
 

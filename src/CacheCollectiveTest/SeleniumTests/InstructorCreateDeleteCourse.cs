@@ -2,6 +2,8 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
+
 
 
 namespace CacheCollectiveTest.SeleniumTests
@@ -41,8 +43,8 @@ namespace CacheCollectiveTest.SeleniumTests
                 { "CurrentCourse.Capacity", "10" },
                 { "CurrentCourse.CreditHours", "2" },
                 { "CurrentCourse.MeetingDays", "Monday,Tuesday,Wednesday,Thursday" },
-                { "CurrentCourse.StartTime", "930AM" },
-                { "CurrentCourse.EndTime", "1020AM" },
+                { "CurrentCourse.StartTime", "09:30AM" },  // Standard format
+                { "CurrentCourse.EndTime", "10:20AM" },    // Standard format
                 { "CurrentCourse.Location", "Room 204" }
             };
 
@@ -57,14 +59,15 @@ namespace CacheCollectiveTest.SeleniumTests
             {
                 if (entry.Key == "CurrentCourse.MeetingDays")
                 {
-                    foreach (var day in entry.Value.Split(","))
+                    foreach (var day in entry.Value.Split(','))
                     {
                         Assert.IsTrue(driver.PageSource.Contains(day.Trim()));
                     }
                 }
                 else if (entry.Key.Contains("Time"))
                 {
-                    string formattedTime = DateTime.Parse(entry.Value).ToString("HH:mm:ss");
+                    // Format time for assertion as "HH:mm:ss" (e.g., 09:30:00)
+                    string formattedTime = DateTime.ParseExact(entry.Value, "hh:mmtt", null).ToString("HH:mm:ss");
                     Assert.IsTrue(driver.PageSource.Contains(formattedTime));
                 }
                 else
@@ -73,11 +76,17 @@ namespace CacheCollectiveTest.SeleniumTests
                 }
             }
 
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            var deleteLink = driver.FindElement(By.XPath("//tr[td[contains(text(), 'Music Theory 3')]]//a[contains(text(), 'Delete')]"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteLink);
+            var confirmDeleteButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.CssSelector("input[type='submit'][value='Delete']")));
+            confirmDeleteButton.Click();
+
         }
 
         private void Login()
         {
-            driver.FindElement(By.Id("User_Email")).SendKeys("Camerontrejo2000@gmail.com");
+            driver.FindElement(By.Id("User_Email")).SendKeys("testinstructor@test.com");
             driver.FindElement(By.Id("User_Password")).SendKeys("Password");
             driver.FindElement(By.ClassName("btn")).Click();
         }

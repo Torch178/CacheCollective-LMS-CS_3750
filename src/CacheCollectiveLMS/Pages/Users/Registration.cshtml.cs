@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Models;
 using System.Security.Claims;
 using RazorPagesMovie.Models;
+using System.Text.Json;
 
 namespace RazorPagesMovie.Pages.Users
 {
@@ -57,6 +58,19 @@ namespace RazorPagesMovie.Pages.Users
 
             await _context.SaveChangesAsync();
             await CurrentUser.updateTuition(_context);
+
+            // Update HTTP Session State Courses
+            IList<Models.Course> Courses;
+            if (CurrentUser.IsInstructor == false)
+            {
+                Courses = await _context.Enrollment.Where(e => e.UserId == CurrentUser.Id).Join(_context.Course, enrollment => enrollment.CourseId, course => course.CourseId, (enrollment, course) => course).ToListAsync();
+            }
+            else
+            {
+                Courses = await _context.Course.Where(c => c.InstructorCourseId == CurrentUser.Id).ToListAsync();
+            }
+            HttpContext.Session.SetString("Courses", JsonSerializer.Serialize(Courses));
+
             return RedirectToPage();
         }
     }

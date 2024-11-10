@@ -6,6 +6,8 @@ using RazorPagesMovie.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Stripe;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace RazorPagesMovie.Pages.Users
 {
@@ -80,6 +82,17 @@ namespace RazorPagesMovie.Pages.Users
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                 await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
 
+                // Update HTTP Session State Courses
+                IList<Models.Course> Courses;
+                if (User.IsInstructor == false)
+                {
+                    Courses = await _context.Enrollment.Where(e => e.UserId == User.Id).Join(_context.Course, enrollment => enrollment.CourseId, course => course.CourseId, (enrollment, course) => course).ToListAsync();
+                }
+                else
+                {
+                    Courses = await _context.Course.Where(c => c.InstructorCourseId == User.Id).ToListAsync();
+                }
+                HttpContext.Session.SetString("Courses", JsonSerializer.Serialize(Courses));
                 HttpContext.Session.SetString("IsInstructor", User.IsInstructor.ToString());
 
                 return RedirectToPage("./Index");

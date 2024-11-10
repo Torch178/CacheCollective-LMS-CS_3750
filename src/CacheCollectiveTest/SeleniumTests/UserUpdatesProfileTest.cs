@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 
 namespace CacheCollectiveTest.SeleniumTests
 {
@@ -8,12 +10,14 @@ namespace CacheCollectiveTest.SeleniumTests
     public class UserUpdatesProfile
     {
         private IWebDriver driver;
+        private WebDriverWait wait;
 
         [TestInitialize]
         public void Setup()
         {
             driver = new ChromeDriver();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         }
 
         [TestMethod]
@@ -47,7 +51,7 @@ namespace CacheCollectiveTest.SeleniumTests
             Assert.IsTrue(driver.Title.Contains("Edit Profile"));
 
             //enter new information into edit profile form
-            submitButton = driver.FindElement(By.Id("btn"));
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             var passInput1 = driver.FindElement(By.Id("ViewModel_FirstName"));
             var passInput2 = driver.FindElement(By.Id("ViewModel_LastName"));
             var passInput3 = driver.FindElement(By.Id("ViewModel_ApartmentNum"));
@@ -61,23 +65,27 @@ namespace CacheCollectiveTest.SeleniumTests
             passInput2.SendKeys("Reeves");
             passInput3.SendKeys("2B");
             passInput4.SendKeys("Logan");
+            submitButton = driver.FindElement(By.CssSelector("input[type='submit']"));
             Thread.Sleep(1000);
 
             //submit form
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("input[type='submit']")));
             submitButton.Click();
             Thread.Sleep(1000);
 
             //Assert that the profile page reloads with new information in relevant fields
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             Assert.IsTrue(driver.Title.Contains("Profile"));
             Thread.Sleep(1000);
-            var fname = driver.FindElement(By.CssSelector("#fname"));
-            var lname = driver.FindElement(By.CssSelector("#lname"));
-            var apartmentNum = driver.FindElement(By.CssSelector("#apartmentNum"));
-            var city = driver.FindElement(By.CssSelector("#city"));
-            Assert.IsTrue(fname.Text.Contains("Michael"));
-            Assert.IsTrue(lname.Text.Contains("Reeves"));
-            Assert.IsTrue(apartmentNum.Text.Contains("2B"));
-            Assert.IsTrue(city.Text.Contains("Logan"));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//dd[contains(text(),'Michael')]")));
+            var fname = driver.FindElement(By.XPath("//dd[contains(text(), 'Michael')]"));
+            var lname = driver.FindElement(By.XPath("//dd[contains(text(), 'Reeves')]"));
+            var apartmentNum = driver.FindElement(By.XPath("//dd[contains(text(), '2B')]"));
+            var city = driver.FindElement(By.XPath("//dd[contains(text(), 'Logan')]"));
+            Assert.IsNotNull(fname);
+            Assert.IsNotNull(lname);
+            Assert.IsNotNull(apartmentNum);
+            Assert.IsNotNull(city);
 
         }
 

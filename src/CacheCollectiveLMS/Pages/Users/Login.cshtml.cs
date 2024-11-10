@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using System.Text.Json;
 
 namespace RazorPagesMovie.Pages.Users
 {
@@ -71,6 +72,17 @@ namespace RazorPagesMovie.Pages.Users
             };
             await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal, claimsAuthenticationProperties);
 
+
+            IList<Models.Course> Courses;
+            if (userExists.IsInstructor == false)
+            {
+                Courses = await _context.Enrollment.Where(e => e.UserId == userExists.Id).Join(_context.Course, enrollment => enrollment.CourseId, course => course.CourseId, (enrollment, course) => course).ToListAsync();
+            }
+            else
+            {
+                Courses = await _context.Course.Where(c => c.InstructorCourseId == userExists.Id).ToListAsync();
+            }
+            HttpContext.Session.SetString("Courses", JsonSerializer.Serialize(Courses));
             HttpContext.Session.SetString("IsInstructor", userExists.IsInstructor.ToString());
 
             return RedirectToPage("./Index");

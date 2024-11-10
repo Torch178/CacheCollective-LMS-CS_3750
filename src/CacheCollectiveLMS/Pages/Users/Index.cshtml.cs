@@ -6,6 +6,7 @@ using Microsoft.Identity.Client;
 using RazorPagesMovie.Models;
 using System.Configuration;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace RazorPagesMovie.Pages.Users
 {
@@ -39,14 +40,7 @@ namespace RazorPagesMovie.Pages.Users
 
             //Get Course Content for user
             CurrentUser = user;
-            if (CurrentUser.IsInstructor == false)
-            {
-                Course = await _context.Enrollment.Where(e => e.UserId == user.Id).Join(_context.Course, enrollment => enrollment.CourseId, course => course.CourseId, (enrollment, course) => course).ToListAsync();
-            }
-            else
-            {
-                Course = await _context.Course.Where(c => c.InstructorCourseId == user.Id).ToListAsync();
-            }
+            Course = JsonSerializer.Deserialize<IList<Models.Course>>(HttpContext.Session.GetString("Courses"));
 
             //Collect assignments from courses
             foreach (var course in Course)

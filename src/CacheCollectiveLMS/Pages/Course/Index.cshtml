@@ -5,6 +5,11 @@
 @{
     ViewData["Title"] = "Course List";
     var IsInstructor = HttpContext.Session.GetString("IsInstructor");
+    <style>
+        th, td {
+            text-align: center;
+        }
+    </style>
 }
 
 <h1>Courses</h1>
@@ -28,16 +33,16 @@
                 @Html.DisplayNameFor(model => model.Course[0].Capacity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].CreditHours)
+                Credit Hours
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].MeetingDays)
+                Meeting Days
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].StartTime)
+                Start Time
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].EndTime)
+                End Time
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Course[0].Location)
@@ -70,10 +75,10 @@
                 @Html.DisplayFor(modelItem => item.MeetingDays)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
+                @(new DateTime(item.StartTime.Ticks).ToString("hh:mm tt"))
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
+                @(new DateTime(item.EndTime.Ticks).ToString("hh:mm tt"))
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Location)

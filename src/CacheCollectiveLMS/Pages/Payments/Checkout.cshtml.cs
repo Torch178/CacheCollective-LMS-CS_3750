@@ -33,11 +33,11 @@ namespace RazorPagesMovie.Pages.Payments
         {
             public string option { get; set; }
         }
-
         [BindProperty]
         public PaymentViewModel ViewModel { get; set; }
         public User CurrentUser { get; set; }
         public decimal balance { get; set; }
+        public string tuitionId {  get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -49,10 +49,11 @@ namespace RazorPagesMovie.Pages.Payments
 
             CurrentUser = user;
             balance = (decimal)CurrentUser.GetBalance();
+            tuitionId = user.TuitionId;
 
             ViewModel = new PaymentViewModel()
             {
-                ID = CurrentUser.TuitionId,
+                ID = user.TuitionId,
                 charge = balance,
 
             };

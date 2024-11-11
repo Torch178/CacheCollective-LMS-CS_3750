@@ -71,9 +71,11 @@
 }
 
 <!-- Total Grades Section -->
-<div class="mt-4">
-    <h3>Total Points</h3>
-    <p>Total Points Available: @Model.TotalPoints</p>
-    <p>Total Points Earned: @Model.TotalGrades</p>
-    <p>Final Grade: @Model.TotalPercentage.ToString("F2")% (@Model.LetterGrade)</p> <!-- Display letter grade -->
-</div>
+@if (IsInstructor == "False"){ <!-- Show this section only for students -->
+    <div class="mt-4">
+        <h3>Total Points</h3>
+        <p>Total Points Available: @Model.TotalPoints</p>
+        <p>Total Points Earned: @Model.TotalGrades</p>
+        <p>Final Grade: @Model.TotalPercentage.ToString("F2")% (@Model.LetterGrade)</p> <!-- Display letter grade -->
+    </div>
+}

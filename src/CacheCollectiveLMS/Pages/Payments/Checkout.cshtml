@@ -20,12 +20,12 @@
         </div>
         <form asp-action="OnPost" method="POST">
             <div class="form-group">
-            <input type="hidden" asp-for="ViewModel.ID" readonly />
+            <input type="hidden" asp-for="ViewModel.ID" value="@Model.tuitionId" />
             <label asp-for="ViewModel.charge" class="control-label">Enter Payment Amount: </label>
             <input asp-for="ViewModel.charge" type="number" value="@Model.balance" min="1" max="@Model.balance" step=".01" required class="form-control"/>
             <span asp-validation-for="ViewModel.charge" class="text-danger"></span>
             </div>
-            <button type="submit" id="checkout-button">Checkout</button>
+            <button type="submit" id="checkout-button" role="button" class="btn btn-primary">Checkout</button>
         </form>
     </section>
 </body>

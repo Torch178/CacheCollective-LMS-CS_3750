@@ -5,6 +5,7 @@ using RazorPagesMovie.Data;
 using RazorPagesMovie.Models;
 using System.Security.Claims;
 using RazorPagesMovie.Services;
+using System.Text.Json;
 
 namespace RazorPagesMovie.Pages
 {
@@ -21,17 +22,35 @@ namespace RazorPagesMovie.Pages
             _notificationService = notificationService;
         }
 
+        public User CurrentUser { get; set; }
+
         public async Task<IActionResult> OnGet()
         {
-            // Fetch user from claims
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null) { return RedirectToPage("/Users/Login"); }
-            if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("/Users/Login"); } // invalid userId
+            if (CurrentUser == null)
+            {
+                // Fetch user from claims
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userIdClaim == null) { return RedirectToPage("/Users/Login"); }
+                if (!int.TryParse(userIdClaim, out var userId)) { return RedirectToPage("/Users/Login"); } // invalid userId
 
-            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
-            if (user == null) { return RedirectToPage("/Users/Login"); }
+                var user = await _context.User.FirstOrDefaultAsync(m => m.Id == userId);
+                if (user == null) { return RedirectToPage("/Users/Login"); }
 
-            HttpContext.Session.SetString("IsInstructor", user.IsInstructor.ToString());
+                CurrentUser = user;
+
+                IList<Models.Course> Courses;
+                if (user.IsInstructor == false)
+                {
+                    Courses = await _context.Enrollment.Where(e => e.UserId == user.Id).Join(_context.Course, enrollment => enrollment.CourseId, course => course.CourseId, (enrollment, course) => course).ToListAsync();
+                }
+                else
+                {
+                    Courses = await _context.Course.Where(c => c.InstructorCourseId == user.Id).ToListAsync();
+                }
+                HttpContext.Session.SetString("IsInstructor", user.IsInstructor.ToString());
+                HttpContext.Session.SetString("Courses", JsonSerializer.Serialize(Courses));
+            }
+
             return Redirect("/Users/Index");
         }
 

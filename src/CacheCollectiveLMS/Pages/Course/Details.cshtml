@@ -5,95 +5,68 @@
 @{
     ViewData["Title"] = $"{Model.CurrentCourse.Department} {Model.CurrentCourse.Number} {Model.CurrentCourse.Title}";
     var IsInstructor = HttpContext.Session.GetString("IsInstructor");
-    <style>
-        hr {
-            margin-top: 20px;
-        }
-    </style>
 }
 
-<h1>@Html.DisplayFor(model => model.CurrentCourse.Title)</h1>
-    
-<div>
+<div class="container my-5">
+    <!-- Page Title -->
+    <h1 class="text-center mb-4">@Html.DisplayFor(model => model.CurrentCourse.Title)</h1>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.Department)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.Department)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.Number)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.Number)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.Capacity)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.Capacity)
-        </dd>
-        <dt class="col-sm-2">
-            Credit Hours
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.CreditHours)
-        </dd>
-        <dt class="col-sm-2">
-            Meeting Days
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.MeetingDays)
-        </dd>
-        <dt class="col-sm-2">
-            Start Time
-        </dt>
-        <dd class="col-sm-10">
-            @(new DateTime(Model.CurrentCourse.StartTime.Ticks).ToString("hh:mm tt"))
-        </dd>
-        <dt class="col-sm-2">
-            End Time
-        </dt>
-        <dd class="col-sm-10">
-            @(new DateTime(Model.CurrentCourse.EndTime.Ticks).ToString("hh:mm tt"))
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.Location)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.Location)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.Instructor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.Instructor)
-        </dd>
-    </dl>
-</div>
-<div>
-    @if (IsInstructor == "True")
-    {
-        <a asp-page="./Edit" asp-route-id="@Model.CurrentCourse.CourseId">Edit</a>
-        <span>|</span>
-        <a asp-page="./Index">Back to List</a>
-    }
-    else
-    {
-        <a asp-page="/Users/Index">Back to Dashboard</a>
-    }
-</div>
-<hr />
-<div>
-    <p>
-        <a asp-page="Assignment/Index" asp-route-courseId="@Model.CurrentCourse.CourseId">View Assignments</a>
-    </p>
+
+    <!-- Centered Course Details Display -->
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Narrower width for a focused, centered appearance -->
+            <dl class="row justify-content-center">
+                <dt class="col-sm-5 text-end fw-bold">Department</dt>
+                <dd class="col-sm-7 text-start">@Html.DisplayFor(model => model.CurrentCourse.Department)</dd>
+
+                <dt class="col-sm-5 text-end fw-bold">Course Number</dt>
+                <dd class="col-sm-7 text-start">@Html.DisplayFor(model => model.CurrentCourse.Number)</dd>
+
+                <dt class="col-sm-5 text-end fw-bold">Title</dt>
+                <dd class="col-sm-7 text-start">@Html.DisplayFor(model => model.CurrentCourse.Title)</dd>
+
+                <dt class="col-sm-5 text-end fw-bold">Capacity</dt>
+                <dd class="col-sm-7 text-start">@Html.DisplayFor(model => model.CurrentCourse.Capacity)</dd>
+
+                <dt class="col-sm-5 text-end fw-bold">Credit Hours</dt>
+                <dd class="col-sm-7 text-start">@Html.DisplayFor(model => model.CurrentCourse.CreditHours)</dd>
+
+                <dt class="col-sm-5 text-end fw-bold">Meeting Days</dt>
+                <dd class="col-sm-7 text-start">@Html.DisplayFor(model => model.CurrentCourse.MeetingDays)</dd>
+
+                <dt class="col-sm-5 text-end fw-bold">Start Time</dt>
+                <dd class="col-sm-7 text-start">@(new DateTime(Model.CurrentCourse.StartTime.Ticks).ToString("hh:mm tt"))</dd>
+
+                <dt class="col-sm-5 text-end fw-bold">End Time</dt>
+                <dd class="col-sm-7 text-start">@(new DateTime(Model.CurrentCourse.EndTime.Ticks).ToString("hh:mm tt"))</dd>
+
+                <dt class="col-sm-5 text-end fw-bold">Location</dt>
+                <dd class="col-sm-7 text-start">@Html.DisplayFor(model => model.CurrentCourse.Location)</dd>
+
+                <dt class="col-sm-5 text-end fw-bold">Instructor</dt>
+                <dd class="col-sm-7 text-start">@Html.DisplayFor(model => model.CurrentCourse.Instructor)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-center mt-4 gap-3">
+        @if (IsInstructor == "True")
+        {
+            <a asp-page="./Edit" asp-route-id="@Model.CurrentCourse.CourseId" class="btn btn-outline-primary">Edit</a>
+            <a asp-page="./Index" class="btn btn-outline-secondary">Back to List</a>
+        }
+        else
+        {
+            <a asp-page="/Users/Index" class="btn btn-outline-secondary">Back to Dashboard</a>
+        }
+    </div>
+
+    <hr class="my-4">
+
+    <!-- View Assignments Link -->
+    <div class="text-center">
+        <a asp-page="Assignment/Index" asp-route-courseId="@Model.CurrentCourse.CourseId" class="btn btn-info">View Assignments</a>
+    </div>
 </div>

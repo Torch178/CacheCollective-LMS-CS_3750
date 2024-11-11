@@ -3,81 +3,56 @@
 
 @{
     ViewData["Title"] = "Delete";
-    <style>
-        hr {
-            margin-top: 20px;
-        }
-    </style>
 }
-<h1>Are you sure you want to delete @Model.Course.Title?</h1>
-<div>
+
+<div class="container my-5">
+    <!-- Page Title -->
+    <h1 class="text-center mb-4">Are you sure you want to delete @Model.Course.Title?</h1>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Course.Department)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.Department)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Course.Number)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.Number)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Course.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Course.Capacity)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.Capacity)
-        </dd>
-        <dt class="col-sm-2">
-            Credit Hours
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.CreditHours)
-        </dd>
-        <dt class="col-sm-2">
-            Meeting Days
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.MeetingDays)
-        </dd>
-        <dt class="col-sm-2">
-            Start Time
-        </dt>
-        <dd class="col-sm-10">
-            @(new DateTime(Model.Course.StartTime.Ticks).ToString("hh:mm tt"))
-        </dd>
-        <dt class="col-sm-2">
-           End Time
-        </dt>
-        <dd class="col-sm-10">
-            @(new DateTime(Model.Course.EndTime.Ticks).ToString("hh:mm tt"))
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Course.Location)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.Location)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Course.Instructor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.Instructor)
-        </dd>
-    </dl>
-    
-    <form method="post">
-        <input type="hidden" asp-for="Course.CourseId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+
+    <!-- Centered Course Details Display -->
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 text-center"> <!-- Narrower width and centered text alignment -->
+            <dl class="row justify-content-center">
+                <dt class="col-sm-6 fw-bold text-end">Department</dt>
+                <dd class="col-sm-6 text-start">@Html.DisplayFor(model => model.Course.Department)</dd>
+
+                <dt class="col-sm-6 fw-bold text-end">Course Number</dt>
+                <dd class="col-sm-6 text-start">@Html.DisplayFor(model => model.Course.Number)</dd>
+
+                <dt class="col-sm-6 fw-bold text-end">Title</dt>
+                <dd class="col-sm-6 text-start">@Html.DisplayFor(model => model.Course.Title)</dd>
+
+                <dt class="col-sm-6 fw-bold text-end">Capacity</dt>
+                <dd class="col-sm-6 text-start">@Html.DisplayFor(model => model.Course.Capacity)</dd>
+
+                <dt class="col-sm-6 fw-bold text-end">Credit Hours</dt>
+                <dd class="col-sm-6 text-start">@Html.DisplayFor(model => model.Course.CreditHours)</dd>
+
+                <dt class="col-sm-6 fw-bold text-end">Meeting Days</dt>
+                <dd class="col-sm-6 text-start">@Html.DisplayFor(model => model.Course.MeetingDays)</dd>
+
+                <dt class="col-sm-6 fw-bold text-end">Start Time</dt>
+                <dd class="col-sm-6 text-start">@(new DateTime(Model.Course.StartTime.Ticks).ToString("hh:mm tt"))</dd>
+
+                <dt class="col-sm-6 fw-bold text-end">End Time</dt>
+                <dd class="col-sm-6 text-start">@(new DateTime(Model.Course.EndTime.Ticks).ToString("hh:mm tt"))</dd>
+
+                <dt class="col-sm-6 fw-bold text-end">Location</dt>
+                <dd class="col-sm-6 text-start">@Html.DisplayFor(model => model.Course.Location)</dd>
+
+                <dt class="col-sm-6 fw-bold text-end">Instructor</dt>
+                <dd class="col-sm-6 text-start">@Html.DisplayFor(model => model.Course.Instructor)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Centered Confirmation Buttons -->
+    <div class="d-flex justify-content-center mt-4 gap-3">
+        <form method="post">
+            <input type="hidden" asp-for="Course.CourseId" />
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
         <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
-    </form>
+    </div>
 </div>

@@ -5,96 +5,60 @@
 @{
     ViewData["Title"] = "Course List";
     var IsInstructor = HttpContext.Session.GetString("IsInstructor");
-    <style>
-        th, td {
-            text-align: center;
-        }
-    </style>
 }
-<h1>Courses</h1>
-<p>
-    <a asp-page="Create" class="btn btn-primary">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Course[0].Department)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Course[0].Number)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Course[0].Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Course[0].Capacity)
-            </th>
-            <th>
-                Credit Hours
-            </th>
-            <th>
-                Meeting Days
-            </th>
-            <th>
-                Start Time
-            </th>
-            <th>
-                End Time
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Course[0].Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Course[0].Instructor)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Course) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Department)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Capacity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreditHours)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeetingDays)
-            </td>
-            <td>
-                @(new DateTime(item.StartTime.Ticks).ToString("hh:mm tt"))
-            </td>
-            <td>
-                @(new DateTime(item.EndTime.Ticks).ToString("hh:mm tt"))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Instructor)
-            </td>
-            <td>
-                    <a asp-page="Details" asp-route-id="@item.CourseId">Details</a>
-                    <span>|</span>
-                    @if (IsInstructor == "True")
-                    {
-                        <a asp-page="Edit" asp-route-id="@item.CourseId">Edit</a>
-                        <span>|</span>
-                    }
-                    <a asp-page="Delete" asp-route-id="@item.CourseId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="container my-5">
+    <!-- Page Title -->
+    <h1 class="text-center mb-4">Courses</h1>
+
+    <!-- "Create New" Button -->
+    <div class="text-end mb-3">
+        <a asp-page="Create" class="btn btn-outline-primary">Create New</a>
+    </div>
+
+    <!-- Courses Table -->
+    <div class="table-responsive">
+        <table class="table table-striped align-middle text-center">
+            <thead class="bg-light">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Course[0].Department)</th>
+                    <th>@Html.DisplayNameFor(model => model.Course[0].Number)</th>
+                    <th>@Html.DisplayNameFor(model => model.Course[0].Title)</th>
+                    <th>@Html.DisplayNameFor(model => model.Course[0].Capacity)</th>
+                    <th>Credit Hours</th>
+                    <th>Meeting Days</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>@Html.DisplayNameFor(model => model.Course[0].Location)</th>
+                    <th>@Html.DisplayNameFor(model => model.Course[0].Instructor)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Course)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Department)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Number)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Capacity)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CreditHours)</td>
+                        <td>@Html.DisplayFor(modelItem => item.MeetingDays)</td>
+                        <td>@(new DateTime(item.StartTime.Ticks).ToString("hh:mm tt"))</td>
+                        <td>@(new DateTime(item.EndTime.Ticks).ToString("hh:mm tt"))</td>
+                        <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Instructor)</td>
+                        <td>
+                            <a asp-page="Details" asp-route-id="@item.CourseId" class="btn btn-link text-info p-0 me-2">Details</a>
+                            @if (IsInstructor == "True")
+                            {
+                                <a asp-page="Edit" asp-route-id="@item.CourseId" class="btn btn-link text-warning p-0 me-2">Edit</a>
+                            }
+                            <a asp-page="Delete" asp-route-id="@item.CourseId" class="btn btn-link text-danger p-0">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

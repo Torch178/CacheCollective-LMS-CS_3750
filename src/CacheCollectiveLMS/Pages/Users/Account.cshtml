@@ -5,37 +5,68 @@
     string balance = (Model.CurrentUser.tuitionDue - Model.CurrentUser.tuitionPaid).ToString();
 }
 
-<h1>Account Overview</h1>
+<h1 class="text-center my-4">Account Overview</h1>
 
-<div class="card" style="width: 18rem;">
-    <div class="card-header">
-        Tuition
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-primary">
+                    <h5 class="mb-0">Tuition</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="fw-bold">Tuition Due:</span> <span>$ @Model.CurrentUser.tuitionDue.ToString()</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="fw-bold">Tuition Paid:</span> <span>$ @Model.CurrentUser.tuitionPaid.ToString()</span>
+                    </li>
+                    @if (Model.CurrentUser.refundAmt != null && Model.CurrentUser.refundAmt > 0)
+                    {
+                            <li class="list-group-item d-flex justify-content-between bg-success text-white">
+                                <span class="fw-bold">Refund Owed:</span> <span>$ @Model.CurrentUser.refundAmt.ToString()</span>
+                            </li>
+                    }
+                    @if (Model.balanceDue)
+                    {
+                            <li class="list-group-item d-flex justify-content-between bg-warning text-dark">
+                                <span class="fw-bold">Remaining Balance:</span> <span>$ @balance</span>
+                            </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="text-center my-3">
+                <span class="text-danger">@Model.msg</span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                @if (Model.balanceDue)
+                {
+                        <a href="/Payments/Checkout" class="btn btn-primary">Pay Tuition</a>
+                }
+
+                @if (Model.prevPayments)
+                {
+                        <a href="/Payments/History" class="btn btn-secondary">View Payment History</a>
+                }
+            </div>
+        </div>
     </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item"><span class="fw-bold">Tuition Due: </span>$ @Model.CurrentUser.tuitionDue.ToString()</li>
-        <li class="list-group-item"><span class="fw-bold">Tuition Paid: </span>$ @Model.CurrentUser.tuitionPaid.ToString()</li>
-        @if (Model.CurrentUser.refundAmt != null && Model.CurrentUser.refundAmt > 0)
-        {
-            <li class="list-group-item bg-success text-black"><span class="fw-bold">Refund Owed: </span>$ @Model.CurrentUser.refundAmt.ToString()</li>
-        }
-        @if (Model.balanceDue)
-        {
-            <li class="list-group-item bg-dark text-white"><span class="fw-bold ">Remaining Balance: </span>$ @balance</li>
-        }
-    </ul>
 </div>
 
-
-
-<span>@Model.msg</span>
-<br />
-
-@if (Model.balanceDue)
-{
-    <a href="/Payments/Checkout">Pay Tuition</a>
-}
-
-@if (Model.prevPayments)
-{
-    <a href="/Payments/History">View Payment History</a>
-}
+<style>
+    h1 {
+        font-size: 2rem;
+        color: #343a40;
+    }
+    .card {
+        border-radius: 0.5rem;
+    }
+    .card-header {
+        font-size: 1.2rem;
+    }
+    .btn {
+        width: 48%;
+    }
+</style>

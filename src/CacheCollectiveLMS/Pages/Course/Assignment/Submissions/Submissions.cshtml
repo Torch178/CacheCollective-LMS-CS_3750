@@ -19,7 +19,7 @@
         ]);
 
         var options = {
-            is3D: true,
+            is3D: true, // 3D chart
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart_div'));
@@ -27,8 +27,9 @@
     }
 </script>
 
-<h2>Submissions for Assignment: @Model.CurrentAssignment.Title</h2>
+<h2 class="mb-4">Submissions for Assignment: @Model.CurrentAssignment.Title</h2>
 
+<!-- Success Message -->
 @if (TempData["Message"] != null)
 {
     <div id="success-message" class="alert alert-success">
@@ -36,8 +37,10 @@
     </div>
 }
 
-    <table class="table">
-        <thead>
+<!-- Submissions Table -->
+<div class="table-responsive mt-4">
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
             <tr>
                 <th>Student ID</th>
                 <th>Submission Type</th>
@@ -61,7 +64,7 @@
                         }
                         else
                         {
-                            <span>Not Graded</span>
+                            <span class="text-muted">Not Graded</span>
                         }
                     </td>
                     <td>@ViewData["MaxPoints"]</td> <!-- Display MaxPoints from ViewData -->
@@ -72,23 +75,27 @@
                         }
                         else if (submission.SubmissionType == RazorPagesMovie.Models.SubmissionType.FileUpload)
                         {
-                            <a href="@Url.Content($"~/{submission.FilePath}")">@submission.FileName</a>
+                            <a href="@Url.Content($"~/{submission.FilePath}")" class="btn btn-link btn-sm" target="_blank">
+                                @submission.FileName
+                            </a>
                         }
                     </td>
                     <td>@submission.SubmissionDate.ToString("g")</td>
                     <td>
-                        <a asp-page="Grading" asp-route-submissionId="@submission.SubmissionId">Grade</a>
+                        <a asp-page="Grading" asp-route-submissionId="@submission.SubmissionId" class="btn btn-outline-primary btn-sm">Grade</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+</div>
 
-    @if (Model.SubmissionsGraded == true)
-    {
-        <h2 id="piechart_title">Grade Distribution</h2>
-        <div id="piechart_div"></div>
-    }
+<!-- Grade Distribution Pie Chart -->
+@if (Model.SubmissionsGraded == true)
+{
+    <h3 class="mt-5" id="piechart_title">Grade Distribution</h3>
+    <div id="piechart_div" style="width: 100%; height: 500px;"></div>
+}
 
 @section Scripts {
     <script>

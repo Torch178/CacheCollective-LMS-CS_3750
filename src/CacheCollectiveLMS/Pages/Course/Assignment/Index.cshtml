@@ -8,74 +8,93 @@
     var IsInstructor = HttpContext.Session.GetString("IsInstructor");
 }
 
-<h2>Assignments for @Model.CourseName</h2>
+<h2 class="mb-4">Assignments for @Model.CourseName</h2>
 
 <!-- List Assignments -->
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Max Points</th>
-            <th>Due Date</th>
-            <th>Submission Type</th>
-            <th>Grade</th> <!-- New column for grades -->
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var assignment in Model.Assignments) // Make sure Assignments is plural
-        {
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
             <tr>
-                <td>@assignment.Title</td>
-                <td>@assignment.Description</td>
-                <td>@assignment.MaxPoints</td>
-                <td>@assignment.DueDate.ToShortDateString()</td>
-                <td>@assignment.SubmissionType</td>
-                <td>
-                    @if (Model.Grades.TryGetValue(assignment.Id, out var grade)) // Check for grade
-                    {
-                        @grade
-                    }
-                    else
-                    {
-                        <span>No Grade</span>
-                    }
-                </td>
-
-                <td>
-                    @if (IsInstructor == "True")
-                    {
-                        <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Edit</a>
-                        <span>|</span>
-                        <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a>
-                        <span>|</span>
-                        <a asp-page="Delete" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Delete</a>
-                        <span>|</span>
-                        <a asp-page="Submissions/Submissions" asp-route-AssignmentId="@assignment.Id">Submissions</a>
-                    }
-                    else
-                    {
-                        <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId">Details</a>
-                        <a asp-page="./Submit" asp-route-AssignmentId="@assignment.Id" asp-route-CourseId="@Model.CourseId">Submit</a>
-                    }
-                </td>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Max Points</th>
+                <th>Due Date</th>
+                <th>Submission Type</th>
+                @if (IsInstructor != "True")
+                {
+                    <th>Grade</th>
+                }
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var assignment in Model.Assignments)
+            {
+                <tr>
+                    <td>@assignment.Title</td>
+                    <td>@assignment.Description</td>
+                    <td>@assignment.MaxPoints</td>
+                    <td>@assignment.DueDate.ToShortDateString()</td>
+                    <td>@assignment.SubmissionType</td>
+                    @if (IsInstructor != "True")
+                    {
+                        <td>
+                            @if (Model.Grades.TryGetValue(assignment.Id, out var grade))
+                            {
+                                @grade
+                            }
+                            else
+                            {
+                                <span class="text-muted">No Grade</span>
+                            }
+                        </td>
+                    }
+                    <td>
+                        @if (IsInstructor == "True")
+                        {
+                            <a asp-page="Edit" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <span class="mx-1">|</span>
+                            <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId" class="btn btn-sm btn-outline-secondary">Details</a>
+                            <span class="mx-1">|</span>
+                            <a asp-page="Delete" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId" class="btn btn-sm btn-outline-danger">Delete</a>
+                            <span class="mx-1">|</span>
+                            <a asp-page="Submissions/Submissions" asp-route-AssignmentId="@assignment.Id" class="btn btn-sm btn-outline-info">Submissions</a>
+                        }
+                        else
+                        {
+                            <a asp-page="Details" asp-route-id="@assignment.Id" asp-route-courseId="@Model.CourseId" class="btn btn-sm btn-outline-secondary">Details</a>
+                            <a asp-page="./Submit" asp-route-AssignmentId="@assignment.Id" asp-route-CourseId="@Model.CourseId" class="btn btn-sm btn-outline-success">Submit</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @if (IsInstructor == "True")
 {
-    <a asp-page="./Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Create New Assignment</a>
+    <div class="mt-4">
+        <a asp-page="./Create" asp-route-courseId="@Model.CourseId" class="btn btn-lg btn-primary">Create New Assignment</a>
+    </div>
 }
 
 <!-- Total Grades Section -->
-@if (IsInstructor == "False"){ <!-- Show this section only for students -->
+@if (IsInstructor == "False")
+{
+    <!-- Show this section only for students -->
     <div class="mt-4">
         <h3>Total Points</h3>
         <p>Total Points Available: @Model.TotalPoints</p>
         <p>Total Points Earned: @Model.TotalGrades</p>
-        <p>Final Grade: @Model.TotalPercentage.ToString("F2")% (@Model.LetterGrade)</p> <!-- Display letter grade -->
+        <p>Final Grade: @Model.TotalPercentage.ToString("F2")% (@Model.LetterGrade)</p>
+    </div>
+}
+
+<!-- Add a notification for no assignments -->
+@if (!Model.Assignments.Any())
+{
+    <div class="alert alert-warning mt-4" role="alert">
+        No assignments available for this course.
     </div>
 }

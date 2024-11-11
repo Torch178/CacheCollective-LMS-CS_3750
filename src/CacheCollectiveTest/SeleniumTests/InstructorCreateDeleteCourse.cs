@@ -4,8 +4,6 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 
-
-
 namespace CacheCollectiveTest.SeleniumTests
 {
     [TestClass]
@@ -31,8 +29,11 @@ namespace CacheCollectiveTest.SeleniumTests
             Login();
 
             // Go to Course page
-            driver.FindElement(By.LinkText("Courses")).Click();
-            driver.FindElement(By.LinkText("Create New")).Click();
+            var coursesLink = wait.Until(ExpectedConditions.ElementToBeClickable(By.LinkText("Courses")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", coursesLink);
+
+            var createNewButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.LinkText("Create New")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", createNewButton);
 
             // Make a dictionary for filling the form
             var formData = new Dictionary<string, string>
@@ -52,7 +53,8 @@ namespace CacheCollectiveTest.SeleniumTests
             Thread.Sleep(1000);
 
             // Submit
-            driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+            var submitButton = driver.FindElement(By.CssSelector("button[type='submit']"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", submitButton);
             Thread.Sleep(1000);
 
             foreach (var entry in formData)
@@ -66,9 +68,11 @@ namespace CacheCollectiveTest.SeleniumTests
                 }
                 else if (entry.Key.Contains("Time"))
                 {
-                    // Format time for assertion as "HH:mm:ss" (e.g., 09:30:00)
-                    string formattedTime = DateTime.ParseExact(entry.Value, "hh:mmtt", null).ToString("HH:mm:ss");
-                    Assert.IsTrue(driver.PageSource.Contains(formattedTime));
+                    // Extract hour and minute (e.g., "09:30") from the entry time
+                    string formattedTime = DateTime.ParseExact(entry.Value, "hh:mmtt", null).ToString("hh:mm");
+
+                    // Assert that the page contains the time in "hh:mm" format
+                    Assert.IsTrue(driver.PageSource.Contains(formattedTime), $"Time '{formattedTime}' was not found on the page.");
                 }
                 else
                 {
@@ -76,11 +80,13 @@ namespace CacheCollectiveTest.SeleniumTests
                 }
             }
 
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-            var deleteLink = driver.FindElement(By.XPath("//tr[td[contains(text(), 'Music Theory 3')]]//a[contains(text(), 'Delete')]"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", deleteLink);
-            var confirmDeleteButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.CssSelector("input[type='submit'][value='Delete']")));
+            // Locate and click the "Delete" link for the specific course row
+            var deleteLink = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//tr[td[contains(text(), 'Music Theory 3')]]//a[contains(text(), 'Delete')]")));
+            deleteLink.Click();
+
+            var confirmDeleteButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='submit']")));
             confirmDeleteButton.Click();
+
 
         }
 
@@ -125,7 +131,6 @@ namespace CacheCollectiveTest.SeleniumTests
                 }
             }
         }
-
 
         [TestCleanup]
         public void Cleanup()

@@ -83,6 +83,7 @@ namespace RazorPagesMovie.Pages.Course
             if (loggedInUser.IsInstructor)
             {
                 CurrentCourse.Instructor = $"{loggedInUser.FirstName} {loggedInUser.LastName}";
+                CurrentCourse.InstructorCourseId = loggedInUser.Id;
             }
             else
             {

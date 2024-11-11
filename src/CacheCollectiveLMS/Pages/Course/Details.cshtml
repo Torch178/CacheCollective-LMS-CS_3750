@@ -5,6 +5,11 @@
 @{
     ViewData["Title"] = $"{Model.CurrentCourse.Department} {Model.CurrentCourse.Number} {Model.CurrentCourse.Title}";
     var IsInstructor = HttpContext.Session.GetString("IsInstructor");
+    <style>
+        hr {
+            margin-top: 20px;
+        }
+    </style>
 }
 
 <h1>@Html.DisplayFor(model => model.CurrentCourse.Title)</h1>
@@ -37,28 +42,28 @@
             @Html.DisplayFor(model => model.CurrentCourse.Capacity)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.CreditHours)
+            Credit Hours
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CurrentCourse.CreditHours)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.MeetingDays)
+            Meeting Days
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CurrentCourse.MeetingDays)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.StartTime)
+            Start Time
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.StartTime)
+            @(new DateTime(Model.CurrentCourse.StartTime.Ticks).ToString("hh:mm tt"))
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentCourse.EndTime)
+            End Time
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CurrentCourse.EndTime)
+            @(new DateTime(Model.CurrentCourse.EndTime.Ticks).ToString("hh:mm tt"))
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CurrentCourse.Location)

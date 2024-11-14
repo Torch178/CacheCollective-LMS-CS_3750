@@ -10,106 +10,69 @@
     }
 }
 
+@* @Html.DisplayNameFor(model => model.currUser.ProfilePic)
+<img src="~/@src_path" alt="~/Images/Profile_Pics/default.png" class="rounded-circle float-center w-25 h-auto">
+@Html.DisplayNameFor(model => model.currUser.Email)
+@Html.DisplayFor(model => model.currUser.Email)
+@Html.DisplayNameFor(model => model.currUser.FirstName)
+@Html.DisplayFor(model => model.currUser.FirstName)
+@Html.DisplayNameFor(model => model.currUser.LastName)
+@Html.DisplayFor(model => model.currUser.LastName)
+@Html.DisplayNameFor(model => model.currUser.Birthdate)
+@Html.DisplayFor(model => model.currUser.Birthdate)
+@Html.DisplayNameFor(model => model.currUser.StreetAddress)
+@Html.DisplayFor(model => model.currUser.StreetAddress)
+@Html.DisplayNameFor(model => model.currUser.ApartmentNum)
+@Html.DisplayFor(model => model.currUser.ApartmentNum)
+@Html.DisplayNameFor(model => model.currUser.City)
+@Html.DisplayFor(model => model.currUser.City)
+@Html.DisplayNameFor(model => model.currUser.State)
+@Html.DisplayFor(model => model.currUser.State)
+@Html.DisplayNameFor(model => model.currUser.Zip)
+@Html.DisplayFor(model => model.currUser.Zip)
 
-<div class="card w-50 sm-text-center" >
-    <div class="card-header"><h3>User Profile</h3></div>
-    <div class="card-body">
-    <div class="card-text">
-    <dl class="row list-inline">
-        <dt class="col-sm-2 list-inline-item">
-            @Html.DisplayNameFor(model => model.currUser.ProfilePic)
-        </dt>
-        <dd class="col-sm-10 list-inline-item center">
-            <img src="~/@src_path" alt="~/Images/Profile_Pics/default.png" class="rounded-circle float-center w-25 h-auto">
-        </dd>
-        <dt class="col-sm-2 list-inline-item">
-            @Html.DisplayNameFor(model => model.currUser.Email)
-        </dt>
-        <dd class="col-sm-10 list-inline-item" id="email">
-            @Html.DisplayFor(model => model.currUser.Email)
-        </dd>
-        <dt class="col-sm-2 list-inline-item">
-            @Html.DisplayNameFor(model => model.currUser.FirstName)
-        </dt>
-        <dd class="col-sm-10 list-inline-item" id="fname">
-            @Html.DisplayFor(model => model.currUser.FirstName)
-        </dd>
-        <dt class="col-sm-2 list-inline-item" >
-            @Html.DisplayNameFor(model => model.currUser.LastName)
-        </dt>
-        <dd class="col-sm-10 list-inline-item" id="lname">
-            @Html.DisplayFor(model => model.currUser.LastName)
-        </dd>
-        <dt class="col-sm-2 list-inline-item">
-            @Html.DisplayNameFor(model => model.currUser.Birthdate)
-        </dt>
-        <dd class="col-sm-10 list-inline-item" id="bdate">
-            @Html.DisplayFor(model => model.currUser.Birthdate)
-        </dd>
-        <dt class="col-sm-2 list-inline-item">
-            Account Type
-        </dt>
-        @if (Model.currUser.IsInstructor)
-        {
-            <dd class="col-sm-10 list-inline-item" id="instructor">
-                Instructor
-            </dd>
-        }
-        else
-        {
-            <dd class="col-sm-10 list-inline-item" id="student">
-                Student
-            </dd>
-        }
-        <dt class="col-sm-2 list-inline-item">
-            @Html.DisplayNameFor(model => model.currUser.StreetAddress)
-        </dt>
-        <dd class="col-sm-10 list-inline-item" id="street">
-            @Html.DisplayFor(model => model.currUser.StreetAddress)
-        </dd>
-        @if(Model.currUser.ApartmentNum == null)
-        {
-            <dt class="col-sm-2 list-inline-item">
-                @Html.DisplayNameFor(model => model.currUser.ApartmentNum)
-            </dt>
-            <dd class="col-sm-10 list-inline-item" id="apartmentNum">
-                N/A
-            </dd>
-        }
-        else
-        {
-            <dt class="col-sm-2 list-inline-item">
-                @Html.DisplayNameFor(model => model.currUser.ApartmentNum)
-            </dt>
-            <dd class="col-sm-10 list-inline-item" id="apartmentNum">
-                @Html.DisplayFor(model => model.currUser.ApartmentNum)
-            </dd>
-        }
-        
-        <dt class="col-sm-2 list-inline-item">
-            @Html.DisplayNameFor(model => model.currUser.City)
-        </dt>
-        <dd class="col-sm-10 list-inline-item" id="city">
-            @Html.DisplayFor(model => model.currUser.City)
-        </dd>
-        <dt class="col-sm-2 list-inline-item">
-            @Html.DisplayNameFor(model => model.currUser.State)
-        </dt>
-        <dd class="col-sm-10 list-inline-item" id="state">
-            @Html.DisplayFor(model => model.currUser.State)
-        </dd>
-        <dt class="col-sm-2 list-inline-item">
-            @Html.DisplayNameFor(model => model.currUser.Zip)
-        </dt>
-        <dd class="col-sm-10 list-inline-item" id="zip">
-            @Html.DisplayFor(model => model.currUser.Zip)
-        </dd>
-    </dl>
+
+<a asp-page="./ChangeProfilePic" id="edit_profile_pic" role="button" class="btn btn-primary">Change Profile Picture</a> |
+<a asp-page="./Edit_Profile" id="edit_profile_link" asp-route-id="@Model.currUser.Id" role="button" class="btn btn-primary"> Edit</a> |
+<a asp-page="./Index" role="button" class="btn btn-primary">Back to List</a> *@
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-lg-0 col-1"></div>
+        <div class="col-lg-3 col-5"><h3>Profile Pic</h3></div>
+        <div class="col-lg-9 col-5"><h3>User Details</h3></div>
+        <div class="col-lg-0 col-1"></div>
     </div>
+    <div class="row">
+        <div class="col-lg-0 col-1"></div>
+        <div class="col-lg-3 col-5">img</div>
+        <div class="col-lg-9 col-5">
+            <div class="card">
+                <div class="card-header">
+                    Personal
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-start fw-bold">An item</li>
+                    <li class="list-group-item text-center">A second item</li>
+                </ul>
+                <div class="card-header">
+                    Address
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-start fw-bold">An item</li>
+                    <li class="list-group-item text-center">A second item</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-0 col-1"></div>
     </div>
-</div>
-<div>
-    <a asp-page="./ChangeProfilePic" id="edit_profile_pic" role="button" class="btn btn-primary">Change Profile Picture</a> |
-    <a asp-page="./Edit_Profile" id="edit_profile_link" asp-route-id="@Model.currUser.Id" role="button" class="btn btn-primary"> Edit</a> |
-    <a asp-page="./Index" role="button" class="btn btn-primary">Back to List</a>
+    <div class="row text-center">
+        <div class="col-lg-0 col-1"></div>
+        <div class="col-lg-3 col-5"></div>
+        <div class="col-lg-9 col-5 mx-auto">Edit</div>
+        <div class="col-lg-0 col-1"></div>
+    </div>
+    <div class="row text-center">
+        <div class="col-12 mx-auto">Home</div>
+    </div>
 </div>

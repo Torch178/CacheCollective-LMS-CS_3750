@@ -27,11 +27,11 @@ namespace CacheCollectiveTest.SeleniumTests
             Thread.Sleep(1000);
 
             var emailInput = driver.FindElement(By.Id("User_Email"));
-            emailInput.SendKeys("hankbank123@example.com");
+            emailInput.SendKeys("mccck@gmail.com");
             Thread.Sleep(1000);
 
             var passInput = driver.FindElement(By.Id("User_Password"));
-            passInput.SendKeys("gg2easy43");
+            passInput.SendKeys("password9876");
             Thread.Sleep(1000);
 
             var submitButton = driver.FindElement(By.ClassName("btn"));
@@ -42,16 +42,15 @@ namespace CacheCollectiveTest.SeleniumTests
 
             //navigate to profile
             driver.Navigate().GoToUrl("https://cachecollective.azurewebsites.net/Users/Profile");
-            Thread.Sleep(1000);
-            var editLink = driver.FindElement(By.LinkText("Edit"));
-
+            WebDriverWait wait = new WebDriverWait(driver,TimeSpan.FromSeconds(10));
+            var editLink =  wait.Until(ExpectedConditions.ElementToBeClickable(By.LinkText("Edit")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", editLink);
             //click on edit profile link
-            editLink.Click();
-            Thread.Sleep(1000);
+
             Assert.IsTrue(driver.Title.Contains("Edit Profile"));
 
             //enter new information into edit profile form
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             var passInput1 = driver.FindElement(By.Id("ViewModel_FirstName"));
             var passInput2 = driver.FindElement(By.Id("ViewModel_LastName"));
             var passInput3 = driver.FindElement(By.Id("ViewModel_ApartmentNum"));
@@ -60,17 +59,15 @@ namespace CacheCollectiveTest.SeleniumTests
             passInput2.Clear();
             passInput3.Clear();
             passInput4.Clear();
-            Thread.Sleep(1000);
             passInput1.SendKeys("Michael");
             passInput2.SendKeys("Reeves");
             passInput3.SendKeys("2B");
             passInput4.SendKeys("Logan");
-            submitButton = driver.FindElement(By.CssSelector("input[type='submit']"));
-            Thread.Sleep(1000);
+
+            submitButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("input[type='submit']")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", submitButton);
 
             //submit form
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("input[type='submit']")));
-            submitButton.Click();
             Thread.Sleep(1000);
 
             //Assert that the profile page reloads with new information in relevant fields

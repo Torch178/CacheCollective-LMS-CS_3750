@@ -60,7 +60,5 @@ namespace RazorPagesMovie.Pages.Users
 
             
         }
-
-       
     }
 }

@@ -4,120 +4,77 @@
     ViewData["Title"] = "Home";
 }
 
-<head>
-    <style>
-        
-    </style>
-    
-</head>
-<body >
+<body>
     <h1>
-        @Html.DisplayFor(model => model.CurrentUser.FirstName) @Html.DisplayFor(model => model.CurrentUser.LastName)
+        Welcome @Html.DisplayFor(model => model.CurrentUser.FirstName) @Html.DisplayFor(model => model.CurrentUser.LastName)!
     </h1>
-    <!--container start-->
-    <div class="container-fluid vh-100 w-100">
-        <div class="row justify-content-center align-content-start h-100 gx-3">
-            <!----------------------------------------------------------------------------------------------->
-            <!--Dashboard Cards-->
-            <div class="col-8">
-                <!--row-cols-2 sets max number of columns for each row to 2-->
-                <div class="row row-cols-2">
-                    <!--col col creates a nested container-->
+    <!-- Container Start -->
+    <div class="container-fluid vh-100">
+        <div class="row h-100 gx-3">
+            <!-- Dashboard Cards -->
+            <div class="col-12 col-lg-8 mb-4 mb-lg-0">
+                <div class="row row-cols-1 row-cols-md-2 g-4">
                     @foreach (var course in Model.Course)
                     {
-                        <a asp-page="/Course/Details" asp-route-id="@course.CourseId" class="plain-link" >
-                            <div class="col col">
-                                <!--Card contents-->
-                                    <div class="card course" style="width: 18rem;">
-                                        <div class="card-body">
-                                            <h5 class="card-title">@course.Title</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">@course.Department.ToString() - @course.Number</h6>
-                                            <p class="card-text">@course.MeetingDays @course.Location
-                                            @(course.StartTime.Hours % 12 == 0 ? 12 : course.StartTime.Hours % 12):@(course.StartTime.Minutes.ToString("D2")) @(course.StartTime.Hours >= 12 ? "PM" : "AM")
-                                            -
-                                            @(course.EndTime.Hours % 12 == 0 ? 12 : course.EndTime.Hours % 12):@(course.EndTime.Minutes.ToString("D2")) @(course.EndTime.Hours >= 12 ? "PM" : "AM")
-                                            </p>
-                                        </div>
+                        <div class="col">
+                            <a asp-page="/Course/Details" asp-route-id="@course.CourseId" class="text-decoration-none">
+                                <div class="card h-100 border-0 shadow-sm rounded-4">
+                                    <div class="card-body p-4">
+                                        <h5 class="card-title fw-bold text-primary">@course.Title</h5>
+                                        <h6 class="card-subtitle mb-3 text-muted">@course.Department.ToString() - @course.Number</h6>
+                                        <p class="card-text mb-1">
+                                            <span class="text-secondary">@course.MeetingDays @course.Location</span><br />
+                                            <span class="text-body-secondary">
+                                                @(course.StartTime.Hours % 12 == 0 ? 12 : course.StartTime.Hours % 12):@(course.StartTime.Minutes.ToString("D2")) @(course.StartTime.Hours >= 12 ? "PM" : "AM")
+                                                -
+                                                @(course.EndTime.Hours % 12 == 0 ? 12 : course.EndTime.Hours % 12):@(course.EndTime.Minutes.ToString("D2")) @(course.EndTime.Hours >= 12 ? "PM" : "AM")
+                                            </span>
+                                        </p>
                                     </div>
-                            </div>
-                        </a>
+                                </div>
+                            </a>
+                        </div>
                     }
                 </div>
             </div>
-            <!----------------------------------------------------------------------------------------------->
-            <!--To-Do List-->
-            <div class="col-4  justify-content-start" id="todo-area">
-                <div class="row justify-content-center align-items-center main-row" data-bs-spy="scroll" data-bs-target="#todo-container">
-                    <div class="col shadow main-col bg-white">
-                            <div class="row bg-primary text-white">
-                                <div class="col  p-2">
-                                    <h4>To-Do</h4>
-                                </div>
-                            </div>
-                        <!--To-Do Tab Labels--->
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="Todo-tab" data-bs-toggle="tab" data-bs-target="#Todo" type="button" role="tab" aria-controls="Todo" aria-selected="true">Todo</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="Archive-tab" data-bs-toggle="tab" data-bs-target="#Archive" type="button" role="tab" aria-controls="Archive" aria-selected="false">Archive</button>
-                            </li>
-                        </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <!--To-Do Tab--->
-                            <div class="tab-pane fade show active" id="Todo" role="tabpanel" aria-labelledby="Todo-tab">
-                                <div class="row" id="todo-container" tabindex="0">
-                                    @{
-                                        var courses = Model.Course;
-                                    }
-                                    @foreach (var assignment in Model.ToDoList)
-                                    {
-                                        //Get course matching Assignment to populate course name into todo item
-                                        var course = Model.Course.First(e => e.CourseId == assignment.CourseId);
 
-                                        //Determine how soon Assignments are coming due by caluclating difference in DateTime
-                                        var dateDiff = (assignment.DueDate - DateTime.Now).Days;
+            <!-- To-Do List -->
+            <div class="col-12 col-lg-4 mt-lg-0 mt-3" id="todo-area">
+                <div class="shadow-sm rounded-4 overflow-hidden bg-white">
+                    <!-- To-Do Header -->
+                    <div class="bg-primary text-white p-2 rounded-top">
+                        <h4 class="mb-0 fs-5">To-Do</h4>
+                    </div>
 
-                                        //assign a border color based on assignment being past-due, due soon, or due later (>7days)
-                                        string border = "border-default";
-                                        if (dateDiff < 7 && dateDiff > 0) border = "border-warning";
-                                        else if (dateDiff <= 0) border = "border-danger";
+                    <!-- To-Do Content with Rounded Corners -->
+                    <div class="tab-content p-2 rounded-bottom" id="myTabContent" style="max-height: 60vh; overflow-y: auto;">
+                        <div id="todo-container" class="row g-3" tabindex="0">
+                            @foreach (var assignment in Model.ToDoList)
+                            {
+                                var course = Model.Course.First(e => e.CourseId == assignment.CourseId);
+                                var dateDiff = (assignment.DueDate - DateTime.Now).Days;
+                                string borderColor = dateDiff < 7 && dateDiff > 0 ? "border-warning" : dateDiff <= 0 ? "border-danger" : "border-secondary";
 
-                                        //Individual To-Do Item Content
-                                        <div class="col col-12 p-2 mt-1 mb-1 todo-item " id="@assignment.Id">
-                                            <a asp-page="/Course/Assignment/Details" asp-route-id="@assignment.Id" class="plain-link">
-                                                <div class="input-group object-fit-none m-1 border  @border border-3 rounded">
-                                                    <div class="container w-100 ">
-                                                        <h6 class="text-wrap">@course.Department @course.Number @course.Title</h6>
-                                                        <div class="text-wrap">@assignment.Title</div>
-                                                    </div>
-                                                </div>
+                                <!-- Individual To-Do Item -->
+                                <div class="col-12 my-0" id="@assignment.Id">
+                                    <div class="card border-start @borderColor border-3 shadow-sm rounded-3">
+                                        <div class="card-body py-2 px-3">
+                                            <a asp-page="/Course/Assignment/Details" asp-route-id="@assignment.Id" class="text-decoration-none">
+                                                <h6 class="card-title fw-semibold text-primary mb-1 text-truncate">@course.Department @course.Number - @course.Title</h6>
+                                                <p class="card-text small text-truncate mb-1">@assignment.Title</p>
                                             </a>
-                                            <div class="container w-100">
-                                                <div class="text-wrap d-grid float-start align-content-start"><span class="fw-bold text-wrap">Due Date:</span> @assignment.DueDate</div>
-                                                <button todo-id="@assignment.Id" class="btn d-flex btn-outline-secondary bg-danger text-white float-end align-content-end" type="button" onclick="DeleteTodo(this);"
-                                                        id="button-addon2 ">
-                                                    X
-                                                </button>
-                                                <hr />
+                                            <div class="d-flex justify-content-between align-items-center small text-muted">
+                                                <span>Due: @assignment.DueDate.ToString("MMM dd, yyyy")</span>
                                             </div>
                                         </div>
-                                    }
+                                    </div>
                                 </div>
-                            </div>
-                            <!--To-Do Archive Tab--->
-                            <div class="tab-pane fade" id="Archive" role="tabpanel" aria-labelledby="Archive-tab">
-                                <!--Archive Goes Here--->
-                            </div>
-                        </div>
-
-                        
-                            
-                        </div>
+                            }
                         </div>
                     </div>
+                </div>
             </div>
-            <!----------------------------------------------------------------------------------------------->
+
         </div>
     </div>
 </body>

@@ -74,11 +74,11 @@ namespace CacheCollectiveTest.SeleniumTests
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             Assert.IsTrue(driver.Title.Contains("Profile"));
             Thread.Sleep(1000);
-            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//dd[contains(text(),'Michael')]")));
-            var fname = driver.FindElement(By.XPath("//dd[contains(text(), 'Michael')]"));
-            var lname = driver.FindElement(By.XPath("//dd[contains(text(), 'Reeves')]"));
-            var apartmentNum = driver.FindElement(By.XPath("//dd[contains(text(), '2B')]"));
-            var city = driver.FindElement(By.XPath("//dd[contains(text(), 'Logan')]"));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//li[contains(text(),'Michael')]")));
+            var fname = driver.FindElement(By.XPath("//li[contains(text(), 'Michael')]"));
+            var lname = driver.FindElement(By.XPath("//li[contains(text(), 'Reeves')]"));
+            var apartmentNum = driver.FindElement(By.XPath("//li[contains(text(), '2B')]"));
+            var city = driver.FindElement(By.XPath("//li[contains(text(), 'Logan')]"));
             Assert.IsNotNull(fname);
             Assert.IsNotNull(lname);
             Assert.IsNotNull(apartmentNum);

@@ -10,7 +10,7 @@
     }
 }
 
-<h1 class="text-center my-4">Edit Profile Picture</h1>
+<h1 class="text-center my-4">Change Profile Picture</h1>
 <hr />
 
 <div class="container">
@@ -18,27 +18,22 @@
         <div class="col-md-4 text-center">
             <form method="post" enctype="multipart/form-data" class="shadow-sm p-4 bg-light rounded">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
                 <input type="hidden" asp-for="ViewModel.Id"/>
-
                 <div class="mb-3">
                     <label asp-for="ViewModel.ImageFile" class="form-label">Select a Picture</label>
                     <input asp-for="ViewModel.ImageFile" class="form-control" id="formFile" accept=".png,.jpg,.jpeg,.gif,.tif">
                     <span asp-validation-for="ViewModel.ImageFile" class="text-danger"></span>
                 </div>
-
                 <div class="d-grid gap-2">
                     <input type="submit" value="Save" class="btn btn-primary btn-block" />
                 </div>
             </form>
-
             <div class="mt-3">
                 <a asp-page="./Profile" class="btn btn-outline-secondary">Back to Profile Page</a>
             </div>
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     @{
@@ -51,9 +46,6 @@
         font-size: 2rem;
         color: #343a40;
     }
-
-    
-
     .btn-block {
         width: 100%;
     }

@@ -44,6 +44,17 @@
                         <li class="list-group-item text-center">@Html.DisplayFor(model => model.currUser.LastName)</li>
                         <li class="list-group-item text-start fw-bold bg-secondary text-white">@Html.DisplayNameFor(model => model.currUser.Birthdate)</li>
                         <li class="list-group-item text-center">@Html.DisplayFor(model => model.currUser.Birthdate)</li>
+                        <li class="list-group-item text-start fw-bold bg-secondary text-white">Account Type</li>
+                        @{
+                            if (Model.currUser.IsInstructor)
+                            {
+                                <li class="list-group-item text-center">Instructor</li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item text-center">Student</li>
+                            }
+                        }
                     </ul>
                     <div class="card-header bg-dark text-white">
                         Address

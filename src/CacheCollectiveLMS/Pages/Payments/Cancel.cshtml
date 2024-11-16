@@ -5,11 +5,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Checkout canceled</title>
+    <title>Payment Canceled</title>
 </head>
 <body>
     <section>
-        <p>Forgot to add something to your cart? Shop around then come back to pay!</p>
+        <div class="card border-danger border-2 text-center mx-auto payment_card">
+            <div class="card-header bg-danger"></div>
+            <div class="card-body">
+                <h5 class="card-title">Payment Canceled</h5>
+                <p class="card-text"> Payment canceled. If you wish to make another payment, return to your account page and try again. </p>
+                <a asp-page="/Users/Account" role="button" class="btn btn-primary">Return to Account</a>
+                <a asp-page="/Users/Index" role="button" class="btn btn-primary">Home</a>
+            </div>
+            <div class="card-footer bg-danger text-body-secondary"></div>
+        </div>
     </section>
 </body>
 </html>

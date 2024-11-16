@@ -132,9 +132,10 @@ namespace RazorPagesMovie.Models
         public override string ToString()
         {
             string output = "";
-            output += "Payment Id: " + this.Id.ToString() + "\t";
-            output += "Amount Paid: " + this.total.ToString() + "\t";
+            output += "Payment Id: " + this.Id.ToString() + "\n";
+            output += "Amount Paid: " + this.total.ToString() + "\n";
             output += "Pay Method: " + "************" + this.payMethod + "\n";
+            output += "Payment Date: " + this.createdDate.ToString() + "\n";
             return output;
         }
     }

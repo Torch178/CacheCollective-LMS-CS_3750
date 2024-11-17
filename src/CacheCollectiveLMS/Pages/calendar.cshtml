@@ -1,14 +1,79 @@
-﻿@page ""
+﻿@page
 @model calendarModel
 @{
     ViewData["Title"] = "Calendar";
     var eventsJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Events);
 }
+
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 <head>
-    <meta charset='utf-8' />
-    <script src='~/lib/fullcalendar/dist/index.global.min.js'></script>
+    <meta charset="utf-8" />
+    <script src="~/lib/fullcalendar/dist/index.global.min.js"></script>
+    <style>
+        /* General Calendar Styles */
+        #calendar {
+            width: 100%; /* Ensures the calendar takes full width of its container */
+            margin: 0 auto;
+        }
+
+        /* Base style for events */
+        .fc-event {
+            border-radius: 4px; /* Rounded corners for event buttons */
+            padding: 6px 12px; /* Padding to make it look like a button */
+            font-weight: normal; /* Normal weight font for better readability */
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center content within the event */
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.9em; /* Slightly smaller font for a button-like look */
+            text-transform: uppercase; /* Optional: make text uppercase for a button feel */
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition */
+        }
+
+        /* Course events (soft blue) */
+        .course-event {
+            background-color: transparent; /* Transparent background */
+            color: #4A90E2; /* Soft Blue */
+            border: 2px solid #4A90E2; /* Border like a button outline */
+        }
+
+        /* Assignment events (soft red) */
+        .assignment-event {
+            background-color: transparent; /* Transparent background */
+            color: #E94E77; /* Soft Red */
+            border: 2px solid #E94E77; /* Border like a button outline */
+        }
+
+        /* Specific hover effect for course events (lighten soft blue) */
+        .assignment-event:hover {
+            background-color: rgba(233, 78, 119, 0.2); /* Lighten soft red on hover (for assignments) */
+            color: #E94E77; /* Soft Red */
+            border-color: #F1A7BB; /* Lighter red border */
+        }
+
+        /* Specific hover effect for course events (lighten soft blue) */
+        .course-event:hover {
+            background-color: rgba(74, 144, 226, 0.2); /* Lighten soft blue on hover (for courses) */
+            color: #4A90E2; /* Soft Blue */
+            border-color: #A5C7E9; /* Lighter blue border */
+        }
+
+        /* Ensuring the event title fits nicely inside the box */
+        .fc-event-title {
+            font-size: 0.85em; /* Adjust font size for better readability */
+            text-overflow: ellipsis; /* Ensure long titles get truncated */
+            white-space: nowrap; /* Prevent wrapping */
+            overflow: hidden; /* Hide overflowing text */
+        }
+
+        /* Remove the event dot (blue ball) that appears in the day grid */
+        .fc-daygrid-event-dot {
+            display: none !important; /* Hides the dot */
+        }
+
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
@@ -18,10 +83,27 @@
                 events: @Html.Raw(eventsJson),
                 eventClick: function (info) {
                     if (info.event.url) {
-                        window.location.href = info.event.url; // Redirect to the assignment detail page
+                        window.location.href = info.event.url; // Redirect to either course or assignment detail page
                     }
-                    info.jsEvent.preventDefault(); // Prevent the default behavior
-                }
+                    info.jsEvent.preventDefault(); // Prevent default behavior
+                },
+                editable: true,
+                droppable: true,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek,dayGridDay'
+                },
+                eventClassNames: function (info) {
+                    // Apply different classes based on event type
+                    if (info.event.extendedProps.type === 'assignment') {
+                        return ['assignment-event']; // Soft Red for assignments
+                    } else if (info.event.extendedProps.type === 'course') {
+                        return ['course-event']; // Soft Blue for courses
+                    }
+                    return [];
+                },
+                eventColor: '#4A90E2', // Default color (for course events)
             });
 
             calendar.render();
@@ -29,6 +111,6 @@
     </script>
 </head>
 <body>
-    <div id='calendar'></div>
+    <div id="calendar"></div> <!-- Calendar container -->
 </body>
 </html>

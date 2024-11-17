@@ -55,7 +55,7 @@ namespace RazorPagesMovie.Models
         [Display(Name = "Apartment Number")]
         [StringLength(10, MinimumLength = 1)]
         [RegularExpression(@"^[a-zA-Z0-9]*")]
-        public string ?ApartmentNum { get; set; }
+        public string? ApartmentNum { get; set; }
 
         [Display(Name = "City")]
         [StringLength(256, MinimumLength = 1)]
@@ -88,6 +88,9 @@ namespace RazorPagesMovie.Models
         public decimal? refundAmt { get; set; } = 0;
 
         public string? TuitionId { get; set; } = "N/A";
+
+        //Version field, used to track newest iteration of profile pic when user uplaods a new one and overwrites the old file
+        public int version { get; set; } = 0;
 
         public async Task<decimal?> updateRefund(RazorPagesMovie.Data.RazorPagesMovieContext context)
         {

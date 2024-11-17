@@ -75,11 +75,14 @@ namespace RazorPagesMovie.Pages.Users
                 //append directory path onto root to get full path
                 serverFolder = Path.Combine(_environment.WebRootPath, dir);
                 user.ProfilePic = dir;
+                user.version++;
                 await _context.SaveChangesAsync();
             }
             else
             {
+                user.version++;
                 serverFolder = Path.Combine(_environment.WebRootPath, user.ProfilePic);
+                await _context.SaveChangesAsync();
             }
             
             await ViewModel.ImageFile.CopyToAsync(new FileStream(serverFolder, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite));

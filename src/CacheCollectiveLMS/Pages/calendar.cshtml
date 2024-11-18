@@ -19,60 +19,57 @@
 
         /* Base style for events */
         .fc-event {
-            border-radius: 4px; /* Rounded corners for event buttons */
-            padding: 6px 12px; /* Padding to make it look like a button */
-            font-weight: normal; /* Normal weight font for better readability */
+            border-radius: 4px; /* Rounded corners */
+            padding: 6px 12px; /* Padding for a button-like appearance */
+            font-weight: normal;
             display: flex;
             align-items: center;
-            justify-content: center; /* Center content within the event */
+            justify-content: center;
             text-align: center;
             cursor: pointer;
-            font-size: 0.9em; /* Slightly smaller font for a button-like look */
-            text-transform: uppercase; /* Optional: make text uppercase for a button feel */
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition */
+            font-size: 0.9em;
+            text-transform: uppercase;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
 
-        /* Course events (soft blue) */
+        /* Course events (styled with blue color) */
         .course-event {
-            background-color: transparent; /* Transparent background */
-            color: #4A90E2; /* Soft Blue */
-            border: 2px solid #4A90E2; /* Border like a button outline */
+            background-color: transparent;
+            color: #4A90E2;
+            border: 2px solid #4A90E2;
         }
 
-        /* Assignment events (soft red) */
+        /* Assignment events (styled with red color) */
         .assignment-event {
-            background-color: transparent; /* Transparent background */
-            color: #E94E77; /* Soft Red */
-            border: 2px solid #E94E77; /* Border like a button outline */
+            background-color: transparent;
+            color: #E94E77;
+            border: 2px solid #E94E77;
         }
 
-        /* Specific hover effect for course events (lighten soft blue) */
-        .assignment-event:hover {
-            background-color: rgba(233, 78, 119, 0.2); /* Lighten soft red on hover (for assignments) */
-            color: #E94E77; /* Soft Red */
-            border-color: #F1A7BB; /* Lighter red border */
-        }
-
-        /* Specific hover effect for course events (lighten soft blue) */
+        /* Hover effect for course events (lightens the background color) */
         .course-event:hover {
-            background-color: rgba(74, 144, 226, 0.2); /* Lighten soft blue on hover (for courses) */
-            color: #4A90E2; /* Soft Blue */
-            border-color: #A5C7E9; /* Lighter blue border */
+            background-color: rgba(74, 144, 226, 0.2);
+            border-color: #A5C7E9;
         }
 
-        /* Ensuring the event title fits nicely inside the box */
+        /* Hover effect for assignment events (lightens the background color) */
+        .assignment-event:hover {
+            background-color: rgba(233, 78, 119, 0.2);
+            border-color: #F1A7BB;
+        }
+
+        /* Title overflow handling (truncate long titles) */
         .fc-event-title {
-            font-size: 0.85em; /* Adjust font size for better readability */
-            text-overflow: ellipsis; /* Ensure long titles get truncated */
-            white-space: nowrap; /* Prevent wrapping */
-            overflow: hidden; /* Hide overflowing text */
+            font-size: 0.85em;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
-        /* Remove the event dot (blue ball) that appears in the day grid */
+        /* Remove the default event dot (blue ball) in the day grid */
         .fc-daygrid-event-dot {
-            display: none !important; /* Hides the dot */
+            display: none !important;
         }
-
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -80,12 +77,13 @@
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: @Html.Raw(eventsJson),
+                events: @Html.Raw(eventsJson), // Pass the events from the backend
+                timezone: 'local', // Use local timezone for event times
                 eventClick: function (info) {
                     if (info.event.url) {
-                        window.location.href = info.event.url; // Redirect to either course or assignment detail page
+                        window.location.href = info.event.url; // Redirect to the event's URL
                     }
-                    info.jsEvent.preventDefault(); // Prevent default behavior
+                    info.jsEvent.preventDefault(); // Prevent default behavior (e.g., open in a new window)
                 },
                 editable: true,
                 droppable: true,
@@ -102,11 +100,10 @@
                         return ['course-event']; // Soft Blue for courses
                     }
                     return [];
-                },
-                eventColor: '#4A90E2', // Default color (for course events)
+                }
             });
 
-            calendar.render();
+            calendar.render(); // Render the calendar
         });
     </script>
 </head>

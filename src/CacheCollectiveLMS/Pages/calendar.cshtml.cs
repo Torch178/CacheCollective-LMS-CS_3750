@@ -48,13 +48,15 @@ namespace RazorPagesMovie.Pages
                     {
                         if (Enum.TryParse(meetingDay.Trim(), out DayOfWeek dayOfWeek))
                         {
+                            // Loop through the next 15 weeks (for example, showing a 15-week semester)
                             for (int weekOffset = 0; weekOffset < 15; weekOffset++)
                             {
                                 var eventDate = startOfWeek.AddDays((int)dayOfWeek + (weekOffset * 7));
                                 Events.Add(new
                                 {
                                     title = $"{course.Title} {course.Number}",
-                                    start = eventDate.Add(course.StartTime),
+                                    start = eventDate.Add(course.StartTime).ToUniversalTime(), // Ensure UTC format
+                                    end = eventDate.Add(course.EndTime).ToUniversalTime(), // Ensure UTC format
                                     url = Url.Page("/Course/Details", new { id = course.CourseId }),
                                     type = "course", // Mark it as a course event
                                 });
@@ -78,13 +80,15 @@ namespace RazorPagesMovie.Pages
                         {
                             if (Enum.TryParse(meetingDay.Trim(), out DayOfWeek dayOfWeek))
                             {
+                                // Loop through the next 15 weeks (for example, showing a 15-week semester)
                                 for (int weekOffset = 0; weekOffset < 15; weekOffset++)
                                 {
                                     var eventDate = startOfWeek.AddDays((int)dayOfWeek + (weekOffset * 7));
                                     Events.Add(new
                                     {
                                         title = $"{course.Title} {course.Number}",
-                                        start = eventDate.Add(course.StartTime),
+                                        start = eventDate.Add(course.StartTime).ToUniversalTime(), // Ensure UTC format
+                                        end = eventDate.Add(course.EndTime).ToUniversalTime(), // Ensure UTC format
                                         url = Url.Page("/Course/Details", new { id = course.CourseId }),
                                         type = "course", // Mark it as a course event
                                     });
@@ -92,6 +96,7 @@ namespace RazorPagesMovie.Pages
                             }
                         }
 
+                        // Handle assignments 
                         var assignments = await _context.Assignment
                             .Where(a => a.CourseId == course.CourseId)
                             .ToListAsync();
@@ -101,8 +106,8 @@ namespace RazorPagesMovie.Pages
                             Events.Add(new
                             {
                                 title = $"{assignment.Title}",
-                                start = assignment.DueDate,
-                                end = assignment.DueDate.AddSeconds(1),
+                                start = assignment.DueDate.ToUniversalTime(), // Convert to UTC
+                                end = assignment.DueDate.AddSeconds(1).ToUniversalTime(), // Add a second to represent the end time
                                 url = Url.Page("/Course/Assignment/Details", new { id = assignment.Id }),
                                 type = "assignment", // Mark it as an assignment event
                             });

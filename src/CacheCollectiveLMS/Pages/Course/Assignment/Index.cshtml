@@ -31,7 +31,14 @@
             @foreach (var assignment in Model.Assignments)
             {
                 <tr>
-                    <td>@assignment.Title</td>
+                    <td>
+                        @assignment.Title
+                        @if (Model.GradedAssignments.Contains(assignment))
+                        {
+                            <br />
+                            <span class="text-success">Assignment Graded</span>
+                        }
+                    </td>
                     <td>@assignment.Description</td>
                     <td>@assignment.MaxPoints</td>
                     <td>@assignment.DueDate.ToShortDateString()</td>

@@ -41,7 +41,7 @@
     <div class="card-body">
         <h4 class="card-title">Assignment: @Model.Assignment.Title</h4>
         <p class="card-text">
-            @if (IsInstructor == "False" && Model.CurrentSubmission is Models.Submission)
+            @if (IsInstructor == "False" && Model.CurrentSubmission is Models.Submission && Model.CurrentSubmission.GradedPoints.HasValue)
             {
                 double? gradePercentage = (@Model.CurrentSubmission.GradedPoints / @Model.Assignment.MaxPoints) * 100;
                 gradePercentage = Math.Truncate(gradePercentage ?? 0 * 100);
@@ -80,6 +80,12 @@
 
             <dt class="col-sm-3">Submission Type:</dt>
             <dd class="col-sm-9">@Model.Assignment.SubmissionType</dd>
+
+            @if (Model.Assignment.SubmissionType == Models.SubmissionType.FileUpload)
+            {
+                <dt class="col-sm-3">Download Submission:</dt>
+                <dd class="col-sm-9"> <a class="btn btn-link d-inline" href="@Url.Content($"~/{Model.CurrentSubmission.FilePath}")">@Model.CurrentSubmission.FileName</a> </dd>
+            }
         </dl>
 
         <!-- Submit Button (Compact) -->
@@ -110,5 +116,6 @@
     @if (IsInstructor == "True")
     {
         <a class="btn btn-outline-primary ml-2" asp-page="Edit" asp-route-id="@Model.Assignment.Id" asp-route-courseId="@Model.Assignment.CourseId">Edit Assignment</a>
+        <a class="btn btn-outline-primary ml-2" asp-page="Submissions/Submissions" asp-route-AssignmentId="@Model.Assignment.Id" class="btn btn-sm btn-outline-info">Submissions</a>
     }
 </div>

@@ -48,7 +48,22 @@ namespace RazorPagesMovie.Pages.Users
                 IList<Assignment> Assignments = await _context.Assignment.Where(e => e.CourseId == course.CourseId).ToListAsync();
                 foreach (var assignment in Assignments)
                 {
-                    ToDoList.Add(assignment);
+                    if (user.IsInstructor)
+                    {
+                        var submissions = await _context.Submission.Where(s => s.AssignmentId == assignment.Id).ToListAsync();
+                        int gradedSubmissionsCount = 0;
+                        foreach (var submission in submissions)
+                        {
+                            if (submission.GradedPoints.HasValue) gradedSubmissionsCount++;
+                        }
+
+                        if (submissions.Count > gradedSubmissionsCount) ToDoList.Add(assignment); // instructor hasn't graded all submissions
+                    }
+                    else
+                    {
+                        var submission = await _context.Submission.Where(s => s.AssignmentId == assignment.Id && s.UserId == user.Id).FirstOrDefaultAsync();
+                        if (submission == null) ToDoList.Add(assignment); // student hasn't submitted assignment
+                    }
                 }
             }
 

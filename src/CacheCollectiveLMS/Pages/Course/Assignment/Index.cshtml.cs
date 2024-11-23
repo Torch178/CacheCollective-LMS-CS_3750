@@ -18,6 +18,7 @@ namespace RazorPagesMovie.Pages.Course.Assignment
         }
 
         public IList<RazorPagesMovie.Models.Assignment> Assignments { get; set; } = new List<RazorPagesMovie.Models.Assignment>();
+        public IList<Models.Assignment> GradedAssignments { get; set; } = new List<Models.Assignment>();
         public Dictionary<int, double?> Grades { get; set; } = new Dictionary<int, double?>();
 
         [BindProperty(SupportsGet = true)]
@@ -60,6 +61,8 @@ namespace RazorPagesMovie.Pages.Course.Assignment
             {
                 if (submission.GradedPoints.HasValue)
                 {
+                    var assignment = await _context.Assignment.FindAsync(submission.AssignmentId);
+                    GradedAssignments.Add(assignment);
                     Grades[submission.AssignmentId] = submission.GradedPoints.Value;
                 }
             }

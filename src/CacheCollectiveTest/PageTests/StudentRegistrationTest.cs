@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RazorPagesMovie.Services;
+using System.Text;
 
 namespace CacheCollectiveTest
 {
@@ -35,11 +37,46 @@ namespace CacheCollectiveTest
             return new ClaimsPrincipal(identity);
         }
 
+        //Template session class to mock a real session for session states
+        public class TestSession : ISession
+        {
+            private readonly Dictionary<string, byte[]> _sessionStorage = new Dictionary<string, byte[]>();
+
+            public IEnumerable<string> Keys => _sessionStorage.Keys;
+
+            public bool IsAvailable => true;
+
+            public string Id => Guid.NewGuid().ToString();
+
+            public void Clear() => _sessionStorage.Clear();
+
+            public Task CommitAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+            public Task LoadAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+            public void Remove(string key) => _sessionStorage.Remove(key);
+
+            public void Set(string key, byte[] value) => _sessionStorage[key] = value;
+
+            public bool TryGetValue(string key, out byte[] value) => _sessionStorage.TryGetValue(key, out value);
+
+            public void SetString(string key, string value)
+            {
+                Set(key, Encoding.UTF8.GetBytes(value));
+            }
+
+            public string? GetString(string key)
+            {
+                return TryGetValue(key, out var value) ? Encoding.UTF8.GetString(value) : null;
+            }
+        }
+
         [TestMethod]
         public async Task OnPostRegistrationAsync_StudentShouldRegisterCorrectly()
         {
             //Arrange
             var context = GetInMemoryContext();
+
             //ensure database is cleared and in a clean state (empty) for testing
             await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
@@ -81,7 +118,8 @@ namespace CacheCollectiveTest
 
             pageModel.PageContext.HttpContext = new DefaultHttpContext
             {
-                User = CreateUser(studentUser.Id)
+                User = CreateUser(studentUser.Id),
+                Session = new TestSession()
             };
 
 

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Models;
 using System.Security.Claims;
-using RazorPagesMovie.Models;
 using System.Text.Json;
 
 namespace RazorPagesMovie.Pages.Users

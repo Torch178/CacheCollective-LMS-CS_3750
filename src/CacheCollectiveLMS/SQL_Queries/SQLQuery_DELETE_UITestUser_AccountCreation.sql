@@ -1,0 +1,1 @@
+DELETE FROM [dbo].[User] WHERE Email = 'testing@example.com';

@@ -225,7 +225,7 @@ namespace CacheCollectiveTest.PageTests
             await context.SaveChangesAsync();
         }
 
-        [TestMethod()]
+        [TestMethod()] // Tuition Test 1 --------------
         public async Task TuitionDueUpdate_OnCourseReg_Test()
         {
             //Three steps in test methods
@@ -295,7 +295,7 @@ namespace CacheCollectiveTest.PageTests
         }
         
         
-        [TestMethod()]
+        [TestMethod()] // Tuition Test 2 --------------
         public async Task TuitionPaidUpdate_AfterCheckout_Test()
         {
 

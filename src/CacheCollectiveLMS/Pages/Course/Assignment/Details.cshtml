@@ -81,7 +81,7 @@
             <dt class="col-sm-3">Submission Type:</dt>
             <dd class="col-sm-9">@Model.Assignment.SubmissionType</dd>
 
-            @if (IsInstructor == "False" && Model.Assignment.SubmissionType == Models.SubmissionType.FileUpload)
+            @if (IsInstructor == "False" && Model.CurrentSubmission != null && Model.Assignment.SubmissionType == Models.SubmissionType.FileUpload)
             {
                 <dt class="col-sm-3">Download Submission:</dt>
                 <dd class="col-sm-9"> <a class="btn btn-link d-inline" href="@Url.Content($"~/{Model.CurrentSubmission.FilePath}")">@Model.CurrentSubmission.FileName</a> </dd>
